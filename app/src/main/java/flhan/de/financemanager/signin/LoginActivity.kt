@@ -7,28 +7,23 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.GoogleApiClient
+import com.jakewharton.rxbinding2.view.clicks
 import flhan.de.financemanager.R
 import flhan.de.financemanager.base.BaseActivity
 import flhan.de.financemanager.base.app
 import flhan.de.financemanager.di.signin.LoginModule
-import kotlinx.android.synthetic.main.activity_login.*
 import javax.inject.Inject
 
 //TODO: This should not be the start of the application. Instead, FirebaseAuth.AuthstateListener -> see if user is not null.
 class LoginActivity : BaseActivity(), LoginContract.View, GoogleApiClient.OnConnectionFailedListener {
-    @Inject
-    lateinit var presenter: LoginContract.Presenter
     private val SIGN_IN_ID: Int = 12515
-
     private val component by lazy { app.appComponent.plus(LoginModule(this)) }
-
     private val mGoogleApiClient: GoogleApiClient by lazy {
         GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, mGoogleSignInOptions)
                 .build()
     }
-
     private val mGoogleSignInOptions: GoogleSignInOptions by lazy {
         GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -36,15 +31,17 @@ class LoginActivity : BaseActivity(), LoginContract.View, GoogleApiClient.OnConn
                 .build()
     }
 
-    private val loginButton: SignInButton
-        get() = this.login_with_google
+    private lateinit var loginButton: SignInButton
 
+    @Inject
+    lateinit var presenter: LoginContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         component.inject(this)
-        loginButton.setOnClickListener { startGoogleAuth() }
+        loginButton = findViewById<SignInButton>(R.id.login_with_google)
+        loginButton.clicks().subscribe { startGoogleAuth() }
     }
 
     private fun startGoogleAuth() {

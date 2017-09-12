@@ -10,10 +10,10 @@ class LoginPresenter(
 ) : LoginContract.Presenter {
 
     override fun startAuth(token: String) {
-        loginInteractor.login(token).subscribe({ result: AuthResult ->
-            if(result.isSuccessful) {
+        loginInteractor.login(token).subscribe { result: AuthResult ->
+            if (result.isSuccessful) {
             }
-        })
+        }
     }
 
 }
