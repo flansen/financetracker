@@ -5,6 +5,7 @@ import dagger.Provides
 import flhan.de.financemanager.di.ActivityScope
 import flhan.de.financemanager.signin.LoginActivity
 import flhan.de.financemanager.signin.LoginContract
+import flhan.de.financemanager.signin.LoginInteractorImpl
 import flhan.de.financemanager.signin.LoginPresenter
 
 /**
@@ -16,5 +17,5 @@ import flhan.de.financemanager.signin.LoginPresenter
 
     @Provides
     @ActivityScope
-    fun providesPresenter(loginView: LoginContract.View): LoginContract.Presenter = LoginPresenter(loginView)
+    fun providesPresenter(loginView: LoginContract.View, loginInteractor: LoginInteractorImpl): LoginContract.Presenter = LoginPresenter(loginView, loginInteractor)
 }
