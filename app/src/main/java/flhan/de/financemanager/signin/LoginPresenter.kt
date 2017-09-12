@@ -12,6 +12,8 @@ class LoginPresenter(
     override fun startAuth(token: String) {
         loginInteractor.login(token).subscribe { result: AuthResult ->
             if (result.isSuccessful) {
+            } else {
+                view.presentError(result.error)
             }
         }
     }

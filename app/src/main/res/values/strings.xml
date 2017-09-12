@@ -2,4 +2,9 @@
     <string name="app_name">financemanager</string>
     <string name="login_title">Financetracker</string>
     <string name="login_subtitle">Please sign in with your Google Account</string>
+    <string name="error_generic_title">Unhandled Error</string>
+    <string name="error_generic_body">An unhandled error occured.</string>
+    <string name="error_connection_title">No Internet Connection</string>
+    <string name="error_connection_body">Please connect your smartphone to the Internet.</string>
+
 </resources>

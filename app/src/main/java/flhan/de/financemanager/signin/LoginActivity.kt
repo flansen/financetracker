@@ -53,18 +53,23 @@ class LoginActivity : BaseActivity(), LoginContract.View, GoogleApiClient.OnConn
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == SIGN_IN_ID) {
             val result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
-            //TODO: Handle else case
             if (result.isSuccess) {
                 val acct = result.signInAccount
                 if (acct != null) {
                     val token = acct.idToken!!
                     presenter.startAuth(token)
                 }
+            } else {
+                showErrorDialog()
             }
         }
     }
 
     override fun onConnectionFailed(p0: ConnectionResult) {
-        //TODO: Handle
+        showErrorDialog(R.string.error_connection_body, R.string.error_connection_title)
+    }
+
+    override fun presentError(error: String?) {
+        showErrorDialog(error)
     }
 }
