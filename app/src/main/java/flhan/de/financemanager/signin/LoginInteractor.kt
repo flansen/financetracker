@@ -11,7 +11,7 @@ interface LoginInteractor {
 }
 
 class LoginInteractorImpl @Inject constructor(
-        val authManager: AuthManager
+        private val authManager: AuthManager
 ) : LoginInteractor {
 
     override fun login(token: String): Observable<AuthResult> {

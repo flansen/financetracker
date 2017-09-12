@@ -20,6 +20,7 @@ class AuthManagerImpl : AuthManager {
             val credential = GoogleAuthProvider.getCredential(token, null)
             mAuth.signInWithCredential(credential).addOnCompleteListener { task ->
                 e.onNext(AuthResult(task.exception.toString(), task.isSuccessful))
+                e.onComplete()
             }
         }
     }
