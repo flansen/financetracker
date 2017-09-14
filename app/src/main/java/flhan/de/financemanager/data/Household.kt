@@ -6,4 +6,4 @@ package flhan.de.financemanager.data
 data class Household (
         var name: String = "",
         var id: String = "",
-        var users: Set<User>)
+        var users: List<User>)
