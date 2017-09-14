@@ -6,5 +6,12 @@
     <string name="error_generic_body">An unhandled error occured.</string>
     <string name="error_connection_title">No Internet Connection</string>
     <string name="error_connection_body">Please connect your smartphone to the Internet.</string>
+    <string name="create_join_household_title">Create or Join a Household</string>
+    <string name="create_join_household_intro">In order to use the app, you need to create or join a household. You can join your mates household by his or her e-mail. Or create your own and invite another person to it.</string>
+    <string name="create_join_household_join_mail_hint">Your mate\'s mail</string>
+    <string name="create_join_household_join_groupheader">Join a Household</string>
+    <string name="create_join_household_create_groupheader">or Create your own</string>
+    <string name="create_join_household_join_name_hint">Give it a name</string>
+    <string name="done">Done</string>
 
 </resources>

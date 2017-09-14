@@ -12,6 +12,7 @@ import flhan.de.financemanager.R
 import flhan.de.financemanager.base.BaseActivity
 import flhan.de.financemanager.base.app
 import flhan.de.financemanager.di.signin.LoginModule
+import kotlinx.android.synthetic.main.activity_login.*
 import javax.inject.Inject
 
 //TODO: This should not be the start of the application. Instead, FirebaseAuth.AuthstateListener -> see if user is not null.
@@ -31,7 +32,7 @@ class LoginActivity : BaseActivity(), LoginContract.View, GoogleApiClient.OnConn
                 .build()
     }
 
-    private lateinit var loginButton: SignInButton
+    private val loginButton: SignInButton by lazy { login_with_google }
 
     @Inject
     lateinit var presenter: LoginContract.Presenter
@@ -40,7 +41,6 @@ class LoginActivity : BaseActivity(), LoginContract.View, GoogleApiClient.OnConn
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         component.inject(this)
-        loginButton = findViewById<SignInButton>(R.id.login_with_google)
         loginButton.clicks().subscribe { startGoogleAuth() }
     }
 
