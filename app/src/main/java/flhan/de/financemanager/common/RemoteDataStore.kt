@@ -6,11 +6,11 @@ import javax.inject.Inject
 /**
  * Created by Florian on 14.09.2017.
  */
-interface FirebaseClient {
+interface RemoteDataStore {
     fun init()
 }
 
-class FirebaseClientImpl @Inject constructor() : FirebaseClient {
+class FirebaseClient @Inject constructor() : RemoteDataStore {
     private val firebaseDatabase by lazy { FirebaseDatabase.getInstance() }
 
     override fun init() {

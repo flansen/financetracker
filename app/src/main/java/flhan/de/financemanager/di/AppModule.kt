@@ -3,9 +3,8 @@ package flhan.de.financemanager.di
 import dagger.Module
 import dagger.Provides
 import flhan.de.financemanager.App
-import flhan.de.financemanager.common.FirebaseClientImpl
-import flhan.de.financemanager.common.Repository
-import flhan.de.financemanager.common.RepositoryImpl
+import flhan.de.financemanager.common.FirebaseClient
+import flhan.de.financemanager.common.RemoteDataStore
 import flhan.de.financemanager.signin.AuthManager
 import flhan.de.financemanager.signin.AuthManagerImpl
 import javax.inject.Singleton
@@ -19,10 +18,9 @@ class AppModule(val app: App) {
 
     @Provides
     @Singleton
-    fun authManager(firebaseClient: FirebaseClientImpl): AuthManager = AuthManagerImpl(firebaseClient)
+    fun authManager(firebaseClient: FirebaseClient): AuthManager = AuthManagerImpl(firebaseClient)
 
     @Provides
     @Singleton
-    fun repository(firebaseClient: FirebaseClientImpl): Repository = RepositoryImpl(firebaseClient)
-
+    fun remoteDataStore(): RemoteDataStore = FirebaseClient()
 }

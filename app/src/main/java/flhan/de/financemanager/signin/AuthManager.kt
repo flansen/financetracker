@@ -2,7 +2,7 @@ package flhan.de.financemanager.signin
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import flhan.de.financemanager.common.FirebaseClient
+import flhan.de.financemanager.common.RemoteDataStore
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
 
@@ -14,7 +14,7 @@ interface AuthManager {
 }
 
 class AuthManagerImpl(
-        private val firebaseClient: FirebaseClient
+        private val remoteDataStore: RemoteDataStore
 ) : AuthManager {
     private val mAuth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
 
@@ -22,7 +22,7 @@ class AuthManagerImpl(
         return Observable.create { e: ObservableEmitter<AuthResult> ->
             val credential = GoogleAuthProvider.getCredential(token, null)
             mAuth.signInWithCredential(credential).addOnCompleteListener { task ->
-                if (task.isSuccessful) firebaseClient.init()
+                if (task.isSuccessful) remoteDataStore.init()
 
                 e.onNext(AuthResult(task.exception.toString(), task.isSuccessful))
                 e.onComplete()
