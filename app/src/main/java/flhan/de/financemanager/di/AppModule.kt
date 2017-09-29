@@ -14,7 +14,9 @@ import javax.inject.Singleton
  */
 @Module
 class AppModule(val app: App) {
-    @Provides @Singleton fun app() = app
+    @Provides
+    @Singleton
+    fun app() = app
 
     @Provides
     @Singleton

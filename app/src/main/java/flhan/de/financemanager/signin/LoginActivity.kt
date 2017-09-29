@@ -44,6 +44,10 @@ class LoginActivity : BaseActivity(), LoginContract.View, GoogleApiClient.OnConn
         loginButton.clicks().subscribe { startGoogleAuth() }
     }
 
+    override fun dismiss() {
+        finish()
+    }
+
     private fun startGoogleAuth() {
         val signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient)
         startActivityForResult(signInIntent, SIGN_IN_ID)

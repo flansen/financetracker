@@ -1,12 +1,10 @@
 package flhan.de.financemanager.di.signin
 
+import android.content.Context
 import dagger.Module
 import dagger.Provides
 import flhan.de.financemanager.di.ActivityScope
-import flhan.de.financemanager.signin.LoginActivity
-import flhan.de.financemanager.signin.LoginContract
-import flhan.de.financemanager.signin.LoginInteractorImpl
-import flhan.de.financemanager.signin.LoginPresenter
+import flhan.de.financemanager.signin.*
 
 /**
  * Created by Florian on 10.09.2017.
@@ -17,5 +15,11 @@ import flhan.de.financemanager.signin.LoginPresenter
 
     @Provides
     @ActivityScope
-    fun providesPresenter(loginView: LoginContract.View, loginInteractor: LoginInteractorImpl): LoginContract.Presenter = LoginPresenter(loginView, loginInteractor)
+    fun activityContext(): Context = activity
+
+    @Provides
+    @ActivityScope
+    fun providesPresenter(loginView: LoginContract.View,
+                          loginInteractor: LoginInteractorImpl,
+                          loginRouter: LoginRouterImpl): LoginContract.Presenter = LoginPresenter(loginView, loginInteractor, loginRouter)
 }

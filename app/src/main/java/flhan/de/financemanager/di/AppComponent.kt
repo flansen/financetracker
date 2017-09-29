@@ -2,6 +2,8 @@ package flhan.de.financemanager.di
 
 import dagger.Component
 import flhan.de.financemanager.App
+import flhan.de.financemanager.di.createjoinhousehold.CreateJoinHouseholdComponent
+import flhan.de.financemanager.di.createjoinhousehold.CreateJoinHouseholdModule
 import flhan.de.financemanager.di.signin.LoginComponent
 import flhan.de.financemanager.di.signin.LoginModule
 import javax.inject.Singleton
@@ -14,4 +16,5 @@ import javax.inject.Singleton
 interface AppComponent {
     fun inject(app: App)
     fun plus(loginModule: LoginModule): LoginComponent
+    fun plus(createJoinHouseholdModule: CreateJoinHouseholdModule): CreateJoinHouseholdComponent
 }

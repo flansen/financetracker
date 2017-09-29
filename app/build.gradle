@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 
 android {
@@ -22,11 +21,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    kapt { generateStubs = true }
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "com.android.support:appcompat-v7:$rootProject.supportVersion"
+    implementation "com.android.support:design:$rootProject.supportVersion"
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.1', {
@@ -35,6 +36,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlinVersion"
     compile "io.reactivex.rxjava2:rxandroid:$rootProject.rxAndroidVersion"
     compile "io.reactivex.rxjava2:rxkotlin:$rootProject.rxkotlinVersion"
+
     compile "com.jakewharton.rxbinding2:rxbinding-kotlin:$rootProject.rxbindingVersion"
     compile "com.jakewharton.rxbinding2:rxbinding-support-v4-kotlin:$rootProject.rxbindingVersion"
     compile "com.jakewharton.rxbinding2:rxbinding-appcompat-v7-kotlin:$rootProject.rxbindingVersion"
@@ -47,8 +49,6 @@ dependencies {
 
     compile "com.google.dagger:dagger:$rootProject.daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
-
 }
-
 
 apply plugin: 'com.google.gms.google-services'

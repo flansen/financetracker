@@ -6,6 +6,7 @@ package flhan.de.financemanager.signin
 interface LoginContract {
     interface View {
         fun presentError(error: String?)
+        fun dismiss()
     }
 
     interface Presenter {
