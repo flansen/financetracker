@@ -17,25 +17,38 @@ class EmailValidatorTest {
 
     @Test
     fun `invalid no @ sign`() {
-        var emailWithoutAt = "testtest.de"
+        val emailWithoutAt = "testtest.de"
         Assert.assertFalse(sut.validate(emailWithoutAt))
     }
 
     @Test
     fun `invalid too short`() {
-        var shortMail = "a@b.e"
+        val shortMail = "a@b.e"
         Assert.assertFalse(sut.validate(shortMail))
     }
 
     @Test
     fun `invalid short domain`() {
-        var invalidDomainMail = "abc@bef.e"
+        val invalidDomainMail = "abc@bef.e"
         Assert.assertFalse(sut.validate(invalidDomainMail))
     }
 
     @Test
+    fun `invalid no domain`() {
+        val invalidDomainMail = "abc@bef"
+        Assert.assertFalse(sut.validate(invalidDomainMail))
+    }
+
+    @Test
+    fun `invalid no dot`() {
+        val invalidDomainMail = "abc@befde"
+        Assert.assertFalse(sut.validate(invalidDomainMail))
+    }
+
+
+    @Test
     fun `valid`() {
-        var validMail = "test@user.de"
-        Assert.assertFalse(sut.validate(validMail))
+        val validMail = "test@user.de"
+        Assert.assertTrue(sut.validate(validMail))
     }
 }

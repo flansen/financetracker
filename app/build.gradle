@@ -49,6 +49,10 @@ dependencies {
 
     compile "com.google.dagger:dagger:$rootProject.daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
+
+    testCompile 'org.jetbrains.spek:spek-api:1.1.5'
+    testCompile 'org.jetbrains.spek:spek-junit-platform-engine:1.1.5'
+    testCompile "org.junit.platform:junit-platform-runner:1.0.0"
 }
 
 apply plugin: 'com.google.gms.google-services'
