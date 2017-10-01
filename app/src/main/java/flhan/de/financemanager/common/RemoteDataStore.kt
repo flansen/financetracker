@@ -18,16 +18,27 @@ class FirebaseClient @Inject constructor() : RemoteDataStore {
     }
 }
 
-/*
-*                 val mDatabase = FirebaseDatabase.getInstance().getReference()
-                val user1 = User("name1","mail1")
-                val user2 = User("name2","mail2")
-                val users = ArrayList<User>()
-                users.apply { add(user1); add(user2) }
-                val household = Household("hhname","", users)
-                val ref = mDatabase.child("households").push()
-                household.id = ref.key
-                ref.setValue(household)
+/*private fun testStore() {
+    val database = FirebaseDatabase.getInstance()
+    val reference = database.getReference("")
 
-*
-* */
+    val emptyList = ArrayList<User>()
+
+    val households: List<Household> = mutableListOf(
+            Household("Household 1", "", emptyList),
+            Household("Household 2", "", emptyList)
+    )
+
+    households.forEach {
+        val key = reference.child("households").push().key
+        it.id = key
+        reference.child("households").child(key).setValue(it)
+    }
+
+    val user = User("Name", "test@web.de")
+    households[0].users.add(user)
+    val nkey = reference.child("households/${households[0].id}/users/").push().key
+    user.id = nkey
+    reference.child("households/${households[0].id}/users/").child(nkey).setValue(user)
+}
+*/
