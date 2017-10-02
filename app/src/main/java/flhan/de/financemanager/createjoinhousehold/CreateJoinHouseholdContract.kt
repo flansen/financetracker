@@ -9,11 +9,14 @@ interface CreateJoinHouseholdContract {
     interface View {
         var nameObservable: Observable<CharSequence>
         var emailObservable: Observable<CharSequence>
+        var stateObservable: Observable<ViewState>
     }
 
     interface Presenter {
         var canSubmitObservable: Observable<Boolean>
 
         fun attach()
+        fun detach()
+        fun onDoneClick()
     }
 }
