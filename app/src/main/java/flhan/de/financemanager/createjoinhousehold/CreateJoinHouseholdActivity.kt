@@ -9,7 +9,6 @@ import com.jakewharton.rxbinding2.widget.textChangeEvents
 import flhan.de.financemanager.R
 import flhan.de.financemanager.base.app
 import flhan.de.financemanager.di.createjoinhousehold.CreateJoinHouseholdModule
-import flhan.de.financemanager.extensions.toast
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
@@ -37,20 +36,20 @@ class CreateJoinHouseholdActivity : AppCompatActivity(), CreateJoinHouseholdCont
         setupTextListeners()
         setupFocusListeners()
 
-        stateObservable = emailObservable.map { name -> ViewState(name.toString(), InputState.Join) }
-                .mergeWith(nameObservable.map { mail -> ViewState(mail.toString(), InputState.Create) })
+        stateObservable = emailObservable.map { ViewState(it.toString(), InputState.Join) }
+                .mergeWith(nameObservable.map { ViewState(it.toString(), InputState.Create) })
 
         presenter.attach()
 
-        presenter.canSubmitObservable.subscribe { canSubmit ->
-            this.canSubmit = canSubmit
+        presenter.canSubmitObservable.subscribe {
+            this.canSubmit = it
             invalidateOptionsMenu()
         }.addTo(disposables)
     }
 
     private fun setupTextListeners() {
-        nameObservable = create_join_household_create_name_text.textChangeEvents().map { ev -> ev.text() }
-        emailObservable = create_join_household_join_mail_text.textChangeEvents().map { ev -> ev.text() }
+        nameObservable = create_join_household_create_name_text.textChangeEvents().map { it.text() }
+        emailObservable = create_join_household_join_mail_text.textChangeEvents().map { it.text() }
     }
 
     private fun setupFocusListeners() {

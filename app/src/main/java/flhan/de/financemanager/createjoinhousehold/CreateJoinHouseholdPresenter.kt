@@ -4,7 +4,6 @@ import flhan.de.financemanager.common.validators.EmailValidator
 import flhan.de.financemanager.common.validators.NameValidator
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.functions.BiFunction
 import io.reactivex.rxkotlin.addTo
 
 /**
@@ -22,17 +21,16 @@ class CreateJoinHouseholdPresenter(
     private var viewState: ViewState? = null
 
     override fun attach() {
-        canSubmitObservable = view.stateObservable.map { state ->
-            when(state.inputState)
-            {
-                InputState.Create -> return@map isValidName(state.text)
-                InputState.Join -> return@map isValidMail(state.text)
+        canSubmitObservable = view.stateObservable.map {
+            when (it.inputState) {
+                InputState.Create -> return@map isValidName(it.text)
+                InputState.Join -> return@map isValidMail(it.text)
                 else -> return@map false
             }
         }
 
-        view.stateObservable.subscribe { currentState ->
-            viewState = currentState
+        view.stateObservable.subscribe {
+            viewState = it
         }.addTo(disposables)
     }
 
