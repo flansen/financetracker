@@ -37,15 +37,15 @@ class CreateJoinHouseholdActivity : AppCompatActivity(), CreateJoinHouseholdCont
         setupTextListeners()
         setupFocusListeners()
 
-        presenter.canSubmitObservable.subscribe { canSubmit ->
-            this.canSubmit = canSubmit
-            invalidateOptionsMenu()
-        }.addTo(disposables)
-
         stateObservable = emailObservable.map { name -> ViewState(name.toString(), InputState.Join) }
                 .mergeWith(nameObservable.map { mail -> ViewState(mail.toString(), InputState.Create) })
 
         presenter.attach()
+
+        presenter.canSubmitObservable.subscribe { canSubmit ->
+            this.canSubmit = canSubmit
+            invalidateOptionsMenu()
+        }.addTo(disposables)
     }
 
     private fun setupTextListeners() {
