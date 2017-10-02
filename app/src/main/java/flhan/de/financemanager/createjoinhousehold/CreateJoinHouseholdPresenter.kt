@@ -22,12 +22,14 @@ class CreateJoinHouseholdPresenter(
     private var viewState: ViewState? = null
 
     override fun attach() {
-        canSubmitObservable = Observable.combineLatest(
-                view.emailObservable,
-                view.nameObservable,
-                BiFunction { mail: CharSequence, name: CharSequence -> isValidMail(mail) || isValidName(name) })
-                .distinctUntilChanged()
-                .startWith(false)
+        canSubmitObservable = view.stateObservable.map { state ->
+            when(state.inputState)
+            {
+                InputState.Create -> return@map isValidName(state.text)
+                InputState.Join -> return@map isValidMail(state.text)
+                else -> return@map false
+            }
+        }
 
         view.stateObservable.subscribe { currentState ->
             viewState = currentState
