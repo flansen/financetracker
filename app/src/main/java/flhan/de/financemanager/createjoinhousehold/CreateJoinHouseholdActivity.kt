@@ -58,6 +58,10 @@ class CreateJoinHouseholdActivity : AppCompatActivity(), CreateJoinHouseholdCont
         create_join_household_loading.visible(showLoading)
     }
 
+    override fun finish() {
+        //presenter.detach()
+    }
+
     private fun setupTextListeners() {
         nameObservable = create_join_household_create_name_text.textChangeEvents().map { it.text() }
         emailObservable = create_join_household_join_mail_text.textChangeEvents().map { it.text() }

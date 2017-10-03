@@ -26,7 +26,7 @@ class CreateHouseholdInteractorImpl @Inject constructor(
         val household = Household(name)
         return Observable.create<CreateHouseholdInteractor.Result> { emitter: ObservableEmitter<CreateHouseholdInteractor.Result> ->
             dataStore.createHousehold(household).subscribe({
-                emitter.onNext(CreateHouseholdInteractor.Result(InteractorStatus.Finished, it))
+                emitter.onNext(CreateHouseholdInteractor.Result(InteractorStatus.Success, it))
             }, {
                 emitter.onError(it)
             })

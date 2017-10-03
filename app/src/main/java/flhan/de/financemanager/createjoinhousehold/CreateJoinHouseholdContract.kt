@@ -12,6 +12,7 @@ interface CreateJoinHouseholdContract {
         var emailObservable: Observable<CharSequence>
         var stateObservable: Observable<ViewState>
         var loadingSubject: Subject<Boolean>
+        fun finish()
     }
 
     interface Presenter {

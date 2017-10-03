@@ -1,10 +1,13 @@
 package flhan.de.financemanager.di
 
+import android.preference.PreferenceManager
 import dagger.Module
 import dagger.Provides
 import flhan.de.financemanager.App
 import flhan.de.financemanager.common.FirebaseClient
 import flhan.de.financemanager.common.RemoteDataStore
+import flhan.de.financemanager.common.UserSettings
+import flhan.de.financemanager.common.UserSettingsImpl
 import flhan.de.financemanager.signin.AuthManager
 import flhan.de.financemanager.signin.AuthManagerImpl
 import javax.inject.Singleton
@@ -20,9 +23,14 @@ class AppModule(val app: App) {
 
     @Provides
     @Singleton
-    fun authManager(firebaseClient: FirebaseClient): AuthManager = AuthManagerImpl(firebaseClient)
+    fun authManager(remoteDataStore: RemoteDataStore): AuthManager = AuthManagerImpl(remoteDataStore)
 
     @Provides
     @Singleton
-    fun remoteDataStore(): RemoteDataStore = FirebaseClient()
+    fun userSettings(): UserSettings = UserSettingsImpl(PreferenceManager.getDefaultSharedPreferences(app.applicationContext))
+
+    @Provides
+    @Singleton
+    fun remoteDataStore(userSettings: UserSettings): RemoteDataStore = FirebaseClient(userSettings)
+
 }

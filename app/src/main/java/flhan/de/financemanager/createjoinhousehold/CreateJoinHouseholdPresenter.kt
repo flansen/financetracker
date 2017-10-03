@@ -13,10 +13,11 @@ import io.reactivex.schedulers.Schedulers
  * Created by Florian on 29.09.2017.
  */
 class CreateJoinHouseholdPresenter(
-        val view: CreateJoinHouseholdContract.View,
-        val nameValidator: NameValidator,
-        val emailValidator: EmailValidator,
-        val createHouseholdInteractor: CreateHouseholdInteractor
+        private val view: CreateJoinHouseholdContract.View,
+        private val nameValidator: NameValidator,
+        private val emailValidator: EmailValidator,
+        private val createHouseholdInteractor: CreateHouseholdInteractor,
+        private val joinHouseholdInteractor: JoinHouseholdInteractor
 ) : CreateJoinHouseholdContract.Presenter {
 
     override lateinit var canSubmitObservable: Observable<Boolean>
@@ -41,16 +42,18 @@ class CreateJoinHouseholdPresenter(
     override fun onDoneClick() {
         if (viewState!!.inputState == InputState.Create) {
             createHouseholdInteractor.execute(viewState!!.text)
+                    .filter { it.status == InteractorStatus.Success }
+                    .flatMap { createResult -> joinHouseholdInteractor.execute(createResult.result!!) }
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ result ->
                         view.loadingSubject.onNext(result.status == InteractorStatus.Loading)
-
+                        view.finish()
                     }, { error ->
-
+                        println(error)
                     }).addTo(disposables)
         } else {
-
+            //TODO: Implement
         }
     }
 

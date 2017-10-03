@@ -1,10 +1,11 @@
 package flhan.de.financemanager.common
 
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import flhan.de.financemanager.data.Household
+import flhan.de.financemanager.data.User
 import io.reactivex.Single
 import io.reactivex.SingleEmitter
-import javax.inject.Inject
 
 /**
  * Created by Florian on 14.09.2017.
@@ -12,9 +13,15 @@ import javax.inject.Inject
 interface RemoteDataStore {
     fun init()
     fun createHousehold(household: Household): Single<Household>
+    fun joinHousehold(household: Household): Single<Household>
+    fun getCurrentUser(): User
 }
 
-class FirebaseClient @Inject constructor() : RemoteDataStore {
+class FirebaseClient(
+        val userSettings: UserSettings
+) : RemoteDataStore {
+
+
     private val firebaseDatabase by lazy { FirebaseDatabase.getInstance() }
     private val rootReference by lazy { firebaseDatabase.getReference("households") }
 
@@ -33,6 +40,38 @@ class FirebaseClient @Inject constructor() : RemoteDataStore {
                 emitter.onError(ex)
             }
         }
+    }
+
+    override fun joinHousehold(household: Household): Single<Household> {
+        return Single.create<Household> { emitter: SingleEmitter<Household> ->
+            try {
+                val user = getCurrentUser()
+                val householdUserRef = rootReference.child("${household.id}/users/")
+                household.users.add(user)
+                val userId = householdUserRef.push().key
+                user.id = userId
+                householdUserRef.child(userId).setValue(user)
+                userSettings.setUserId(userId)
+                userSettings.setHouseholdId(household.id)
+                emitter.onSuccess(household)
+            } catch (ex: Exception) {
+                emitter.onError(ex)
+            }
+        }
+    }
+
+    override fun getCurrentUser(): User {
+        val user = User()
+        val currentAuthorizedUser = FirebaseAuth.getInstance().currentUser
+        if (currentAuthorizedUser != null) {
+            user.name = currentAuthorizedUser.displayName ?: ""
+            user.email = currentAuthorizedUser.email ?: ""
+        }
+        val userId = userSettings.getUserId()
+        if (!userId.isEmpty()) {
+            user.id = userId
+        }
+        return user
     }
 }
 

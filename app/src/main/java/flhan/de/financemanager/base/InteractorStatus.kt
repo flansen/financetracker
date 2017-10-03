@@ -6,5 +6,5 @@ package flhan.de.financemanager.base
 enum class InteractorStatus {
     Loading,
     Error,
-    Finished
+    Success
 }
