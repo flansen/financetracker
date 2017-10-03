@@ -21,10 +21,10 @@ import kotlinx.android.synthetic.main.activity_create_join_household.*
 import javax.inject.Inject
 
 class CreateJoinHouseholdActivity : AppCompatActivity(), CreateJoinHouseholdContract.View {
+    override lateinit var clickSubject: Subject<Unit>
     override lateinit var stateObservable: Observable<ViewState>
     override lateinit var nameObservable: Observable<CharSequence>
     override lateinit var emailObservable: Observable<CharSequence>
-    override lateinit var loadingSubject: Subject<Boolean>
 
     private var canSubmit = false
     private val disposables = CompositeDisposable()
@@ -44,9 +44,12 @@ class CreateJoinHouseholdActivity : AppCompatActivity(), CreateJoinHouseholdCont
 
         stateObservable = emailObservable.map { ViewState(it.toString(), InputState.Join) }
                 .mergeWith(nameObservable.map { ViewState(it.toString(), InputState.Create) })
+                .share()
+        stateObservable.subscribe { state ->
+            println(state)
+        }
 
-        loadingSubject = PublishSubject.create()
-        loadingSubject.subscribe { setLoading(it) }.addTo(disposables)
+        clickSubject = PublishSubject.create()
 
         presenter.attach()
 
@@ -54,6 +57,8 @@ class CreateJoinHouseholdActivity : AppCompatActivity(), CreateJoinHouseholdCont
             this.canSubmit = it
             invalidateOptionsMenu()
         }.addTo(disposables)
+
+        presenter.loadingObservable.subscribe { setLoading(it) }.addTo(disposables)
     }
 
     override fun dismiss() {
@@ -102,7 +107,7 @@ class CreateJoinHouseholdActivity : AppCompatActivity(), CreateJoinHouseholdCont
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         if (item?.itemId == R.id.create_join_household_action_done) {
-            presenter.onDoneClick()
+            clickSubject.onNext(Unit)
             return true
         }
         return super.onOptionsItemSelected(item)

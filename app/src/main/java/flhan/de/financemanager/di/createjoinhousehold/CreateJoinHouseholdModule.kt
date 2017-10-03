@@ -24,6 +24,5 @@ class CreateJoinHouseholdModule(
                           emailValidator: EmailValidator,
                           nameValidator: NameValidator,
                           createHouseholdInteractor: CreateHouseholdInteractorImpl,
-                          joinHouseholdInteractor: JoinHouseholdInteractorImpl,
-                          joinHouseholdByMailInteractor: JoinHouseholdByMailInteractorImpl): CreateJoinHouseholdContract.Presenter = CreateJoinHouseholdPresenter(view, nameValidator, emailValidator, createHouseholdInteractor, joinHouseholdInteractor, joinHouseholdByMailInteractor)
+                          joinHouseholdByMailInteractor: JoinHouseholdByMailInteractorImpl): CreateJoinHouseholdContract.Presenter = CreateJoinHouseholdPresenter(view, nameValidator, emailValidator, createHouseholdInteractor, joinHouseholdByMailInteractor)
 }

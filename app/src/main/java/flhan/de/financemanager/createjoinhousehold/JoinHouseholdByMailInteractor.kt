@@ -2,33 +2,26 @@ package flhan.de.financemanager.createjoinhousehold
 
 import flhan.de.financemanager.base.InteractorStatus
 import flhan.de.financemanager.common.RemoteDataStore
-import flhan.de.financemanager.data.Household
 import io.reactivex.Observable
-import io.reactivex.ObservableEmitter
 import javax.inject.Inject
 
 /**
  * Created by Florian on 03.10.2017.
  */
 interface JoinHouseholdByMailInteractor {
-    fun execute(email: String): Observable<JoinHouseholdByMailInteractor.Result>
-
-    data class Result(
-            val status: InteractorStatus,
-            val result: Household? = null
-    )
+    fun execute(email: String): Observable<CreateHouseholdInteractor.Result>
 }
 
 class JoinHouseholdByMailInteractorImpl @Inject constructor(
         private val dataStore: RemoteDataStore
 ) : JoinHouseholdByMailInteractor {
-    override fun execute(email: String): Observable<JoinHouseholdByMailInteractor.Result> {
-        return Observable.create<JoinHouseholdByMailInteractor.Result> { emitter: ObservableEmitter<JoinHouseholdByMailInteractor.Result> ->
-            dataStore.joinHouseholdByMail(email).subscribe({
-                emitter.onNext(JoinHouseholdByMailInteractor.Result(InteractorStatus.Success, it))
-            }, {
-                emitter.onError(it)
-            })
-        }.startWith(JoinHouseholdByMailInteractor.Result(InteractorStatus.Loading))
+    //TODO: Extract the Interactor Result Type
+    override fun execute(email: String): Observable<CreateHouseholdInteractor.Result> {
+        return dataStore.joinHouseholdByMail(email)
+                .map {
+                    CreateHouseholdInteractor.Result(InteractorStatus.Success, it)
+                }
+                .toObservable()
+                .startWith(CreateHouseholdInteractor.Result(InteractorStatus.Loading))
     }
 }
