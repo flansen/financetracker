@@ -9,7 +9,6 @@ import flhan.de.financemanager.data.Household
 import flhan.de.financemanager.data.User
 import io.reactivex.Single
 import io.reactivex.SingleEmitter
-import io.reactivex.SingleOnSubscribe
 
 /**
  * Created by Florian on 14.09.2017.
@@ -51,8 +50,8 @@ class FirebaseClient(
             try {
                 performJoin(household)
                 emitter.onSuccess(household)
-            } catch (ex: Exception) {
-                emitter.onError(ex)
+            } catch (exception: Exception) {
+                emitter.onError(exception)
             }
         }
     }
@@ -84,19 +83,20 @@ class FirebaseClient(
     }
 
     override fun joinHouseholdByMail(email: String): Single<Household> {
-        return Single.create(SingleOnSubscribe { e: SingleEmitter<Household> ->
+        //TODO: Handle "not found" case
+        return Single.create({ emitter: SingleEmitter<Household> ->
             rootReference.orderByChild("creator")
                     .equalTo(email)
                     .addListenerForSingleValueEvent(object : ValueEventListener {
-                        override fun onCancelled(p0: DatabaseError?) {
-                            e.onError(p0?.toException() ?: Exception("Could not fetch household for email $email"))
+                        override fun onCancelled(databaseError: DatabaseError?) {
+                            emitter.onError(databaseError?.toException() ?: Exception("Could not fetch household for email $email"))
                         }
 
-                        override fun onDataChange(p0: DataSnapshot?) {
-                            val first = p0?.children?.first()
+                        override fun onDataChange(dataSnapshot: DataSnapshot?) {
+                            val first = dataSnapshot?.children?.first()
                             val household = first?.getValue(Household::class.java)
                             performJoin(household!!)
-                            e.onSuccess(household)
+                            emitter.onSuccess(household)
                         }
                     })
         })
