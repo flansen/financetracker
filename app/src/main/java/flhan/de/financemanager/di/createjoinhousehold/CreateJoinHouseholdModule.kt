@@ -4,6 +4,7 @@ import dagger.Module
 import dagger.Provides
 import flhan.de.financemanager.common.validators.EmailValidator
 import flhan.de.financemanager.common.validators.NameValidator
+import flhan.de.financemanager.createjoinhousehold.CreateHouseholdInteractorImpl
 import flhan.de.financemanager.createjoinhousehold.CreateJoinHouseholdActivity
 import flhan.de.financemanager.createjoinhousehold.CreateJoinHouseholdContract
 import flhan.de.financemanager.createjoinhousehold.CreateJoinHouseholdPresenter
@@ -22,5 +23,6 @@ class CreateJoinHouseholdModule(val activity: CreateJoinHouseholdActivity) {
     @ActivityScope
     fun providesPresenter(view: CreateJoinHouseholdContract.View,
                           emailValidator: EmailValidator,
-                          nameValidator: NameValidator): CreateJoinHouseholdContract.Presenter = CreateJoinHouseholdPresenter(view, nameValidator, emailValidator)
+                          nameValidator: NameValidator,
+                          createHouseholdInteractor: CreateHouseholdInteractorImpl): CreateJoinHouseholdContract.Presenter = CreateJoinHouseholdPresenter(view, nameValidator, emailValidator, createHouseholdInteractor)
 }

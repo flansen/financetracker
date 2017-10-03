@@ -9,9 +9,12 @@ import com.jakewharton.rxbinding2.widget.textChangeEvents
 import flhan.de.financemanager.R
 import flhan.de.financemanager.base.app
 import flhan.de.financemanager.di.createjoinhousehold.CreateJoinHouseholdModule
+import flhan.de.financemanager.extensions.visible
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
+import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.activity_create_join_household.*
 import javax.inject.Inject
 
@@ -19,6 +22,7 @@ class CreateJoinHouseholdActivity : AppCompatActivity(), CreateJoinHouseholdCont
     override lateinit var stateObservable: Observable<ViewState>
     override lateinit var nameObservable: Observable<CharSequence>
     override lateinit var emailObservable: Observable<CharSequence>
+    override lateinit var loadingSubject: Subject<Boolean>
 
     private var canSubmit = false
     private val disposables = CompositeDisposable()
@@ -39,12 +43,19 @@ class CreateJoinHouseholdActivity : AppCompatActivity(), CreateJoinHouseholdCont
         stateObservable = emailObservable.map { ViewState(it.toString(), InputState.Join) }
                 .mergeWith(nameObservable.map { ViewState(it.toString(), InputState.Create) })
 
+        loadingSubject = PublishSubject.create()
+        loadingSubject.subscribe { setLoading(it) }.addTo(disposables)
+
         presenter.attach()
 
         presenter.canSubmitObservable.subscribe {
             this.canSubmit = it
             invalidateOptionsMenu()
         }.addTo(disposables)
+    }
+
+    private fun setLoading(showLoading: Boolean) {
+        create_join_household_loading.visible(showLoading)
     }
 
     private fun setupTextListeners() {

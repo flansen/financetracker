@@ -1,6 +1,9 @@
 package flhan.de.financemanager.common
 
 import com.google.firebase.database.FirebaseDatabase
+import flhan.de.financemanager.data.Household
+import io.reactivex.Single
+import io.reactivex.SingleEmitter
 import javax.inject.Inject
 
 /**
@@ -8,13 +11,28 @@ import javax.inject.Inject
  */
 interface RemoteDataStore {
     fun init()
+    fun createHousehold(household: Household): Single<Household>
 }
 
 class FirebaseClient @Inject constructor() : RemoteDataStore {
     private val firebaseDatabase by lazy { FirebaseDatabase.getInstance() }
+    private val rootReference by lazy { firebaseDatabase.getReference("households") }
 
     override fun init() {
         firebaseDatabase.setPersistenceEnabled(true)
+    }
+
+    override fun createHousehold(household: Household): Single<Household> {
+        return Single.create<Household> { emitter: SingleEmitter<Household> ->
+            try {
+                val key = rootReference.push().key
+                household.id = key
+                rootReference.child(key).setValue(household)
+                emitter.onSuccess(household)
+            } catch (ex: Exception) {
+                emitter.onError(ex)
+            }
+        }
     }
 }
 
