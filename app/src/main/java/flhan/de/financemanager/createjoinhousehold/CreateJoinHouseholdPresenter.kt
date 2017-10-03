@@ -17,7 +17,8 @@ class CreateJoinHouseholdPresenter(
         private val nameValidator: NameValidator,
         private val emailValidator: EmailValidator,
         private val createHouseholdInteractor: CreateHouseholdInteractor,
-        private val joinHouseholdInteractor: JoinHouseholdInteractor
+        private val joinHouseholdInteractor: JoinHouseholdInteractor,
+        private val joinHouseholdByMailInteractor: JoinHouseholdByMailInteractor
 ) : CreateJoinHouseholdContract.Presenter {
 
     override lateinit var canSubmitObservable: Observable<Boolean>
@@ -48,12 +49,23 @@ class CreateJoinHouseholdPresenter(
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ result ->
                         view.loadingSubject.onNext(result.status == InteractorStatus.Loading)
-                        view.finish()
+                        if (result.status == InteractorStatus.Success)
+                            view.dismiss()
                     }, { error ->
+                        //TODO: Proper error handling
                         println(error)
                     }).addTo(disposables)
         } else {
-            //TODO: Implement
+            joinHouseholdByMailInteractor.execute(viewState!!.text)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({ result ->
+                        view.loadingSubject.onNext(result.status == InteractorStatus.Loading)
+                        if (result.status == InteractorStatus.Success)
+                            view.dismiss()
+                    }, { error ->
+                        //TODO: Proper error handling
+                    }).addTo(disposables)
         }
     }
 

@@ -1,5 +1,6 @@
 package flhan.de.financemanager.createjoinhousehold
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
@@ -10,6 +11,7 @@ import flhan.de.financemanager.R
 import flhan.de.financemanager.base.app
 import flhan.de.financemanager.di.createjoinhousehold.CreateJoinHouseholdModule
 import flhan.de.financemanager.extensions.visible
+import flhan.de.financemanager.overview.OverviewActivity
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
@@ -54,12 +56,14 @@ class CreateJoinHouseholdActivity : AppCompatActivity(), CreateJoinHouseholdCont
         }.addTo(disposables)
     }
 
-    private fun setLoading(showLoading: Boolean) {
-        create_join_household_loading.visible(showLoading)
+    override fun dismiss() {
+        presenter.detach()
+        startActivity(Intent(this, OverviewActivity::class.java))
+        finish()
     }
 
-    override fun finish() {
-        //presenter.detach()
+    private fun setLoading(showLoading: Boolean) {
+        create_join_household_loading.visible(showLoading)
     }
 
     private fun setupTextListeners() {
@@ -87,7 +91,6 @@ class CreateJoinHouseholdActivity : AppCompatActivity(), CreateJoinHouseholdCont
 
     override fun onDestroy() {
         disposables.dispose()
-        presenter.detach()
         super.onDestroy()
     }
 

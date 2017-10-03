@@ -11,7 +11,9 @@ import flhan.de.financemanager.di.ActivityScope
  * Created by Florian on 29.09.2017.
  */
 @Module
-class CreateJoinHouseholdModule(val activity: CreateJoinHouseholdActivity) {
+class CreateJoinHouseholdModule(
+        private val activity: CreateJoinHouseholdActivity
+) {
     @Provides
     @ActivityScope
     fun createJoinView(): CreateJoinHouseholdContract.View = activity
@@ -22,5 +24,6 @@ class CreateJoinHouseholdModule(val activity: CreateJoinHouseholdActivity) {
                           emailValidator: EmailValidator,
                           nameValidator: NameValidator,
                           createHouseholdInteractor: CreateHouseholdInteractorImpl,
-                          joinHouseholdInteractor: JoinHouseholdInteractorImpl): CreateJoinHouseholdContract.Presenter = CreateJoinHouseholdPresenter(view, nameValidator, emailValidator, createHouseholdInteractor, joinHouseholdInteractor)
+                          joinHouseholdInteractor: JoinHouseholdInteractorImpl,
+                          joinHouseholdByMailInteractor: JoinHouseholdByMailInteractorImpl): CreateJoinHouseholdContract.Presenter = CreateJoinHouseholdPresenter(view, nameValidator, emailValidator, createHouseholdInteractor, joinHouseholdInteractor, joinHouseholdByMailInteractor)
 }
