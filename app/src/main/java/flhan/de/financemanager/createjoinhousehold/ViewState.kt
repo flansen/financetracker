@@ -11,5 +11,4 @@ enum class InputState {
 data class ViewState (
     var text: String = "",
     var inputState: InputState = InputState.Join
-
 )

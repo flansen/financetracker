@@ -1,5 +1,6 @@
 package flhan.de.financemanager.createjoinhousehold
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
@@ -9,14 +10,18 @@ import com.jakewharton.rxbinding2.widget.textChangeEvents
 import flhan.de.financemanager.R
 import flhan.de.financemanager.base.app
 import flhan.de.financemanager.di.createjoinhousehold.CreateJoinHouseholdModule
-import flhan.de.financemanager.extensions.toast
+import flhan.de.financemanager.extensions.visible
+import flhan.de.financemanager.overview.OverviewActivity
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
+import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.activity_create_join_household.*
 import javax.inject.Inject
 
 class CreateJoinHouseholdActivity : AppCompatActivity(), CreateJoinHouseholdContract.View {
+    override lateinit var clickSubject: Subject<Unit>
     override lateinit var stateObservable: Observable<ViewState>
     override lateinit var nameObservable: Observable<CharSequence>
     override lateinit var emailObservable: Observable<CharSequence>
@@ -37,20 +42,38 @@ class CreateJoinHouseholdActivity : AppCompatActivity(), CreateJoinHouseholdCont
         setupTextListeners()
         setupFocusListeners()
 
-        stateObservable = emailObservable.map { name -> ViewState(name.toString(), InputState.Join) }
-                .mergeWith(nameObservable.map { mail -> ViewState(mail.toString(), InputState.Create) })
+        stateObservable = emailObservable.map { ViewState(it.toString(), InputState.Join) }
+                .mergeWith(nameObservable.map { ViewState(it.toString(), InputState.Create) })
+                .share()
+        stateObservable.subscribe { state ->
+            println(state)
+        }
+
+        clickSubject = PublishSubject.create()
 
         presenter.attach()
 
-        presenter.canSubmitObservable.subscribe { canSubmit ->
-            this.canSubmit = canSubmit
+        presenter.canSubmitObservable.subscribe {
+            this.canSubmit = it
             invalidateOptionsMenu()
         }.addTo(disposables)
+
+        presenter.loadingObservable.subscribe { setLoading(it) }.addTo(disposables)
+    }
+
+    override fun dismiss() {
+        presenter.detach()
+        startActivity(Intent(this, OverviewActivity::class.java))
+        finish()
+    }
+
+    private fun setLoading(showLoading: Boolean) {
+        create_join_household_loading.visible(showLoading)
     }
 
     private fun setupTextListeners() {
-        nameObservable = create_join_household_create_name_text.textChangeEvents().map { ev -> ev.text() }
-        emailObservable = create_join_household_join_mail_text.textChangeEvents().map { ev -> ev.text() }
+        nameObservable = create_join_household_create_name_text.textChangeEvents().map { it.text() }
+        emailObservable = create_join_household_join_mail_text.textChangeEvents().map { it.text() }
     }
 
     private fun setupFocusListeners() {
@@ -73,7 +96,6 @@ class CreateJoinHouseholdActivity : AppCompatActivity(), CreateJoinHouseholdCont
 
     override fun onDestroy() {
         disposables.dispose()
-        presenter.detach()
         super.onDestroy()
     }
 
@@ -85,7 +107,7 @@ class CreateJoinHouseholdActivity : AppCompatActivity(), CreateJoinHouseholdCont
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         if (item?.itemId == R.id.create_join_household_action_done) {
-            presenter.onDoneClick()
+            clickSubject.onNext(Unit)
             return true
         }
         return super.onOptionsItemSelected(item)

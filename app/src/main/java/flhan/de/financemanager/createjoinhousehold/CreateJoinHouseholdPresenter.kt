@@ -1,43 +1,66 @@
 package flhan.de.financemanager.createjoinhousehold
 
+import flhan.de.financemanager.base.InteractorStatus
 import flhan.de.financemanager.common.validators.EmailValidator
 import flhan.de.financemanager.common.validators.NameValidator
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
 import io.reactivex.rxkotlin.addTo
+import io.reactivex.schedulers.Schedulers
 
 /**
  * Created by Florian on 29.09.2017.
  */
 class CreateJoinHouseholdPresenter(
-        val view: CreateJoinHouseholdContract.View,
-        val nameValidator: NameValidator,
-        val emailValidator: EmailValidator
+        private val view: CreateJoinHouseholdContract.View,
+        private val nameValidator: NameValidator,
+        private val emailValidator: EmailValidator,
+        private val createHouseholdInteractor: CreateHouseholdInteractor,
+        private val joinHouseholdByMailInteractor: JoinHouseholdByMailInteractor
 ) : CreateJoinHouseholdContract.Presenter {
 
     override lateinit var canSubmitObservable: Observable<Boolean>
+    override lateinit var loadingObservable: Observable<Boolean>
 
     private val disposables = CompositeDisposable()
-    private var viewState: ViewState? = null
 
     override fun attach() {
-        canSubmitObservable = view.stateObservable.map { state ->
-            when(state.inputState)
-            {
-                InputState.Create -> return@map isValidName(state.text)
-                InputState.Join -> return@map isValidMail(state.text)
+        canSubmitObservable = view.stateObservable.map {
+            when (it.inputState) {
+                InputState.Create -> return@map isValidName(it.text)
+                InputState.Join -> return@map isValidMail(it.text)
                 else -> return@map false
             }
         }
 
-        view.stateObservable.subscribe { currentState ->
-            viewState = currentState
-        }.addTo(disposables)
-    }
+        val interactorState = view.clickSubject
+                .withLatestFrom(view.stateObservable, BiFunction { _: Unit, state: ViewState -> state })
+                .flatMap { state ->
+                    if (state.inputState == InputState.Create) {
+                        createHouseholdInteractor.execute(state.text)
+                    } else {
+                        joinHouseholdByMailInteractor.execute(state.text)
+                    }
+                }
+                .share()
 
-    override fun onDoneClick() {
+        loadingObservable = interactorState
+                .map { state ->
+                    return@map state.status == InteractorStatus.Loading
+                }
 
+        interactorState
+                //TODO: Proper error handling
+                .filter { it.status == InteractorStatus.Success }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    view.dismiss()
+                }, { error ->
+                    println(error)
+                }).addTo(disposables)
     }
 
     override fun detach() {

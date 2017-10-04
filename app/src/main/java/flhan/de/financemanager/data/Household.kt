@@ -6,4 +6,5 @@ package flhan.de.financemanager.data
 data class Household(
         var name: String = "",
         var id: String = "",
-        var users: MutableList<User> = ArrayList<User>())
+        var creator: String = "",
+        var users: MutableMap<String, User> = mutableMapOf<String, User>())
