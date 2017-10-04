@@ -1,7 +1,9 @@
 package flhan.de.financemanager.createjoinhousehold
 
+import flhan.de.financemanager.base.InteractorResult
 import flhan.de.financemanager.base.InteractorStatus
 import flhan.de.financemanager.common.RemoteDataStore
+import flhan.de.financemanager.data.Household
 import io.reactivex.Observable
 import javax.inject.Inject
 
@@ -9,19 +11,23 @@ import javax.inject.Inject
  * Created by Florian on 03.10.2017.
  */
 interface JoinHouseholdByMailInteractor {
-    fun execute(email: String): Observable<CreateHouseholdInteractor.Result>
+    fun execute(email: String): Observable<InteractorResult<Household>>
 }
 
 class JoinHouseholdByMailInteractorImpl @Inject constructor(
         private val dataStore: RemoteDataStore
 ) : JoinHouseholdByMailInteractor {
-    //TODO: Extract the Interactor Result Type
-    override fun execute(email: String): Observable<CreateHouseholdInteractor.Result> {
+    override fun execute(email: String): Observable<InteractorResult<Household>> {
         return dataStore.joinHouseholdByMail(email)
                 .map {
-                    CreateHouseholdInteractor.Result(InteractorStatus.Success, it)
+                    if (it.exception == null) {
+                        InteractorResult(InteractorStatus.Success, it.result)
+                    }
+                    else {
+                        InteractorResult<Household>(InteractorStatus.Error, null, it.exception!!)
+                    }
                 }
                 .toObservable()
-                .startWith(CreateHouseholdInteractor.Result(InteractorStatus.Loading))
+                .startWith(InteractorResult(InteractorStatus.Loading))
     }
 }

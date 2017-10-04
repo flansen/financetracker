@@ -54,13 +54,15 @@ class CreateJoinHouseholdPresenter(
         interactorState
                 //TODO: Proper error handling
                 .filter { it.status == InteractorStatus.Success }
+                .retry()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     view.dismiss()
                 }, { error ->
                     println(error)
-                }).addTo(disposables)
+                })
+                .addTo(disposables)
     }
 
     override fun detach() {
