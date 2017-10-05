@@ -58,6 +58,7 @@ class CreateJoinHouseholdPresenter(
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
+                    //TODO: Handle result = null in case no household was found for the mail.
                     view.dismiss()
                 }, { error ->
                     println(error)

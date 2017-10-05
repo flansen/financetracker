@@ -87,10 +87,15 @@ class FirebaseClient(
                         }
 
                         override fun onDataChange(dataSnapshot: DataSnapshot?) {
-                            val first = dataSnapshot?.children?.first()
-                            val household = first?.getValue(Household::class.java)
-                            performJoin(household!!)
-                            emitter.onSuccess(RequestResult(household))
+                            //TODO: Handle multiple results
+                            if (dataSnapshot?.childrenCount?.toInt() != 0) {
+                                val first = dataSnapshot?.children?.first()
+                                val household = first?.getValue(Household::class.java)
+                                performJoin(household!!)
+                                emitter.onSuccess(RequestResult(household))
+                            } else {
+                                emitter.onSuccess(RequestResult())
+                            }
                         }
                     })
         }).onErrorReturn { RequestResult(null, it) }
