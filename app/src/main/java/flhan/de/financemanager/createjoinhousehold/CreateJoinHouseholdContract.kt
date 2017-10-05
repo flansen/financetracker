@@ -19,7 +19,7 @@ interface CreateJoinHouseholdContract {
     interface Presenter {
         var canSubmitObservable: Observable<Boolean>
         var loadingObservable: Observable<Boolean>
-
+        var errorObservable: Observable<CreateJoinErrorState>
         fun attach()
         fun detach()
     }

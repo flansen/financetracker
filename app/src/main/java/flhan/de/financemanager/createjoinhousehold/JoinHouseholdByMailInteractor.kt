@@ -22,9 +22,8 @@ class JoinHouseholdByMailInteractorImpl @Inject constructor(
                 .map {
                     if (it.exception == null) {
                         InteractorResult(InteractorStatus.Success, it.result)
-                    }
-                    else {
-                        InteractorResult<Household>(InteractorStatus.Error, null, it.exception!!)
+                    } else {
+                        InteractorResult<Household>(InteractorStatus.Error, null, it.exception)
                     }
                 }
                 .toObservable()

@@ -10,6 +10,8 @@ import com.jakewharton.rxbinding2.widget.textChangeEvents
 import flhan.de.financemanager.R
 import flhan.de.financemanager.base.app
 import flhan.de.financemanager.di.createjoinhousehold.CreateJoinHouseholdModule
+import flhan.de.financemanager.extensions.stringByName
+import flhan.de.financemanager.extensions.toast
 import flhan.de.financemanager.extensions.visible
 import flhan.de.financemanager.overview.OverviewActivity
 import io.reactivex.Observable
@@ -58,7 +60,19 @@ class CreateJoinHouseholdActivity : AppCompatActivity(), CreateJoinHouseholdCont
             invalidateOptionsMenu()
         }.addTo(disposables)
 
+        presenter.errorObservable.subscribe { error ->
+            when (error.type) {
+                ErrorType.NoSuchHousehold -> setEmailError(stringByName(error.message!!))
+                ErrorType.Unknown -> toast(stringByName(stringByName(error.message!!)))
+                ErrorType.None -> setEmailError(null)
+            }
+        }.addTo(disposables)
+
         presenter.loadingObservable.subscribe { setLoading(it) }.addTo(disposables)
+    }
+
+    private fun setEmailError(message: String?) {
+        create_join_household_join_mail_text.error = message
     }
 
     override fun dismiss() {

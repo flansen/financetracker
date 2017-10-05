@@ -6,6 +6,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import flhan.de.financemanager.base.RequestResult
+import flhan.de.financemanager.createjoinhousehold.NoSuchHouseholdThrowable
 import flhan.de.financemanager.data.Household
 import flhan.de.financemanager.data.User
 import io.reactivex.Single
@@ -94,7 +95,7 @@ class FirebaseClient(
                                 performJoin(household!!)
                                 emitter.onSuccess(RequestResult(household))
                             } else {
-                                emitter.onSuccess(RequestResult())
+                                emitter.onSuccess(RequestResult(null, NoSuchHouseholdThrowable()))
                             }
                         }
                     })

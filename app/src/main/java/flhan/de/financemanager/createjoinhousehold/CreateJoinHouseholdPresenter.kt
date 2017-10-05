@@ -1,6 +1,8 @@
 package flhan.de.financemanager.createjoinhousehold
 
 import flhan.de.financemanager.base.InteractorStatus
+import flhan.de.financemanager.common.GENERIC_ERROR_KEY
+import flhan.de.financemanager.common.NO_SUCH_HOUSEHOLD_KEY
 import flhan.de.financemanager.common.validators.EmailValidator
 import flhan.de.financemanager.common.validators.NameValidator
 import io.reactivex.Observable
@@ -23,6 +25,7 @@ class CreateJoinHouseholdPresenter(
 
     override lateinit var canSubmitObservable: Observable<Boolean>
     override lateinit var loadingObservable: Observable<Boolean>
+    override lateinit var errorObservable: Observable<CreateJoinErrorState>
 
     private val disposables = CompositeDisposable()
 
@@ -51,6 +54,16 @@ class CreateJoinHouseholdPresenter(
                     return@map state.status == InteractorStatus.Loading
                 }
 
+        errorObservable = interactorState
+                .filter { it.status == InteractorStatus.Error }
+                .map { state ->
+                    if (state.exception == null)
+                        return@map CreateJoinErrorState(ErrorType.Unknown, GENERIC_ERROR_KEY)
+                    else if (state.exception is NoSuchHouseholdThrowable)
+                        return@map CreateJoinErrorState(ErrorType.NoSuchHousehold, NO_SUCH_HOUSEHOLD_KEY)
+                    return@map CreateJoinErrorState(ErrorType.None)
+                }.mergeWith(view.clickSubject.map { CreateJoinErrorState(ErrorType.None) })
+
         interactorState
                 //TODO: Proper error handling
                 .filter { it.status == InteractorStatus.Success }
@@ -58,8 +71,8 @@ class CreateJoinHouseholdPresenter(
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    //TODO: Handle result = null in case no household was found for the mail.
-                    view.dismiss()
+                    if (it.result != null)
+                        view.dismiss()
                 }, { error ->
                     println(error)
                 })
