@@ -12,7 +12,7 @@ class LauncherPresenter(
 
     override fun attach() {
         shouldPresentLogin = interactor.execute()
-                .map { it.result != false }
+                .map { it.result == false }
     }
 
 }
