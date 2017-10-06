@@ -22,7 +22,6 @@ class CreateHouseholdInteractorImpl @Inject constructor(
         val household = Household(name)
 
         return dataStore.createHousehold(household)
-                //TODO: Properly handle errors.
                 .flatMap {
                     return@flatMap dataStore.joinHousehold(it.result!!)
                 }

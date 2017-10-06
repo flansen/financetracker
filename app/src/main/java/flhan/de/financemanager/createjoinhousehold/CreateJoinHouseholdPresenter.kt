@@ -57,17 +57,15 @@ class CreateJoinHouseholdPresenter(
         errorObservable = interactorState
                 .filter { it.status == InteractorStatus.Error }
                 .map { state ->
-                    if (state.exception == null)
-                        return@map CreateJoinErrorState(ErrorType.Unknown, GENERIC_ERROR_KEY)
-                    else if (state.exception is NoSuchHouseholdThrowable)
+                    if (state.exception is NoSuchHouseholdThrowable)
                         return@map CreateJoinErrorState(ErrorType.NoSuchHousehold, NO_SUCH_HOUSEHOLD_KEY)
-                    return@map CreateJoinErrorState(ErrorType.None)
-                }.mergeWith(view.clickSubject.map { CreateJoinErrorState(ErrorType.None) })
+                    return@map CreateJoinErrorState(ErrorType.Unknown, GENERIC_ERROR_KEY)
+                }
+                .mergeWith(view.clickSubject
+                        .map { CreateJoinErrorState(ErrorType.None) })
 
         interactorState
-                //TODO: Proper error handling
                 .filter { it.status == InteractorStatus.Success }
-                .retry()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({

@@ -77,18 +77,15 @@ class FirebaseClient(
     }
 
     override fun joinHouseholdByMail(email: String): Single<RequestResult<Household>> {
-        //TODO: Handle "not found" case
         return Single.create({ emitter: SingleEmitter<RequestResult<Household>> ->
             rootReference.orderByChild("creator")
                     .equalTo(email)
                     .addListenerForSingleValueEvent(object : ValueEventListener {
                         override fun onCancelled(databaseError: DatabaseError?) {
-                            //FIXME Is this the correct way?
                             emitter.onSuccess(RequestResult(null, databaseError?.toException() ?: Exception("Could not fetch household for email $email")))
                         }
 
                         override fun onDataChange(dataSnapshot: DataSnapshot?) {
-                            //TODO: Handle multiple results
                             if (dataSnapshot?.childrenCount?.toInt() != 0) {
                                 val first = dataSnapshot?.children?.first()
                                 val household = first?.getValue(Household::class.java)

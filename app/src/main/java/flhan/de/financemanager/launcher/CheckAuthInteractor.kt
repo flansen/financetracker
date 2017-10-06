@@ -11,7 +11,7 @@ import javax.inject.Inject
  * Created by fhansen on 06.10.17.
  */
 interface CheckAuthInteractor {
-    fun execute(): Observable<InteractorResult<Boolean>>
+    fun execute(): Observable<InteractorResult<LauncherState>>
 }
 
 class CheckAuthInteractorImpl @Inject constructor(
@@ -19,16 +19,16 @@ class CheckAuthInteractorImpl @Inject constructor(
         val userSettings: UserSettings
 ) : CheckAuthInteractor {
 
-    override fun execute(): Observable<InteractorResult<Boolean>> {
+    override fun execute(): Observable<InteractorResult<LauncherState>> {
         return authManager
                 .checkAuth()
                 .flatMap { result ->
                     if (result.result!!) {
                         userSettings.hasUserData().map { hasUserData ->
-                            InteractorResult(InteractorStatus.Success, hasUserData)
+                            InteractorResult(InteractorStatus.Success, LauncherState.Initialized)
                         }.toObservable()
                     } else {
-                        Observable.just(InteractorResult(InteractorStatus.Success, false))
+                        Observable.just(InteractorResult(InteractorStatus.Success, LauncherState.NotInitialized))
                     }
                 }
                 .startWith { InteractorResult<Boolean>(InteractorStatus.Loading) }
