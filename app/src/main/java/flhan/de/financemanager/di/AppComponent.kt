@@ -4,8 +4,8 @@ import dagger.Component
 import flhan.de.financemanager.App
 import flhan.de.financemanager.di.createjoinhousehold.CreateJoinHouseholdComponent
 import flhan.de.financemanager.di.createjoinhousehold.CreateJoinHouseholdModule
-import flhan.de.financemanager.di.overview.OverviewComponent
-import flhan.de.financemanager.di.overview.OverviewModule
+import flhan.de.financemanager.di.expenseoverview.ExpenseOverviewComponent
+import flhan.de.financemanager.di.expenseoverview.ExpenseOverviewModule
 import flhan.de.financemanager.di.signin.LoginComponent
 import flhan.de.financemanager.di.signin.LoginModule
 import javax.inject.Singleton
@@ -19,5 +19,5 @@ interface AppComponent {
     fun inject(app: App)
     fun plus(loginModule: LoginModule): LoginComponent
     fun plus(createJoinHouseholdModule: CreateJoinHouseholdModule): CreateJoinHouseholdComponent
-    fun plus(overviewModule: OverviewModule): OverviewComponent
+    fun plus(expenseOverviewModule: ExpenseOverviewModule): ExpenseOverviewComponent
 }

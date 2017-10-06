@@ -10,10 +10,10 @@ import com.jakewharton.rxbinding2.widget.textChangeEvents
 import flhan.de.financemanager.R
 import flhan.de.financemanager.base.app
 import flhan.de.financemanager.di.createjoinhousehold.CreateJoinHouseholdModule
+import flhan.de.financemanager.expenseoverview.ExpenseOverviewActivity
 import flhan.de.financemanager.extensions.stringByName
 import flhan.de.financemanager.extensions.toast
 import flhan.de.financemanager.extensions.visible
-import flhan.de.financemanager.overview.OverviewActivity
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
@@ -77,7 +77,7 @@ class CreateJoinHouseholdActivity : AppCompatActivity(), CreateJoinHouseholdCont
 
     override fun dismiss() {
         presenter.detach()
-        startActivity(Intent(this, OverviewActivity::class.java))
+        startActivity(Intent(this, ExpenseOverviewActivity::class.java))
         finish()
     }
 
