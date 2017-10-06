@@ -6,6 +6,8 @@ import flhan.de.financemanager.di.createjoinhousehold.CreateJoinHouseholdCompone
 import flhan.de.financemanager.di.createjoinhousehold.CreateJoinHouseholdModule
 import flhan.de.financemanager.di.expenseoverview.ExpenseOverviewComponent
 import flhan.de.financemanager.di.expenseoverview.ExpenseOverviewModule
+import flhan.de.financemanager.di.launcher.LauncherComponent
+import flhan.de.financemanager.di.launcher.LauncherModule
 import flhan.de.financemanager.di.signin.LoginComponent
 import flhan.de.financemanager.di.signin.LoginModule
 import javax.inject.Singleton
@@ -20,4 +22,6 @@ interface AppComponent {
     fun plus(loginModule: LoginModule): LoginComponent
     fun plus(createJoinHouseholdModule: CreateJoinHouseholdModule): CreateJoinHouseholdComponent
     fun plus(expenseOverviewModule: ExpenseOverviewModule): ExpenseOverviewComponent
+    fun plus(launcherModule: LauncherModule): LauncherComponent
+
 }
