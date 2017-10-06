@@ -1,6 +1,7 @@
 package flhan.de.financemanager.common
 
 import android.content.SharedPreferences
+import io.reactivex.Single
 
 /**
  * Created by Florian on 03.10.2017.
@@ -10,6 +11,7 @@ interface UserSettings {
     fun setUserId(id: String)
     fun setHouseholdId(id: String)
     fun getHouseholdId(): String
+    fun hasUserData(): Single<Boolean>
 }
 
 class UserSettingsImpl(
@@ -33,5 +35,11 @@ class UserSettingsImpl(
 
     override fun getUserId(): String {
         return sharedPreferences.getString(userIdKey, "")
+    }
+
+    override fun hasUserData(): Single<Boolean> {
+        return Single.create {
+            it.onSuccess(getUserId().isNotBlank() && getHouseholdId().isNotBlank())
+        }
     }
 }

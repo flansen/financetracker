@@ -12,6 +12,8 @@ import flhan.de.financemanager.R
 import flhan.de.financemanager.base.BaseActivity
 import flhan.de.financemanager.base.app
 import flhan.de.financemanager.di.signin.LoginModule
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_login.*
 import javax.inject.Inject
 
@@ -33,7 +35,7 @@ class LoginActivity : BaseActivity(), LoginContract.View, GoogleApiClient.OnConn
     }
 
     private val loginButton: SignInButton by lazy { login_with_google }
-
+    private val disposables: CompositeDisposable = CompositeDisposable()
     @Inject
     lateinit var presenter: LoginContract.Presenter
 
@@ -41,7 +43,7 @@ class LoginActivity : BaseActivity(), LoginContract.View, GoogleApiClient.OnConn
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         component.inject(this)
-        loginButton.clicks().subscribe { startGoogleAuth() }
+        loginButton.clicks().subscribe { startGoogleAuth() }.addTo(disposables)
     }
 
     override fun dismiss() {
@@ -75,5 +77,10 @@ class LoginActivity : BaseActivity(), LoginContract.View, GoogleApiClient.OnConn
 
     override fun presentError(error: String?) {
         showErrorDialog(error)
+    }
+
+    override fun onDestroy() {
+        disposables.dispose()
+        super.onDestroy()
     }
 }
