@@ -4,7 +4,7 @@ import android.content.Context
 import dagger.Module
 import dagger.Provides
 import flhan.de.financemanager.di.ActivityScope
-import flhan.de.financemanager.signin.*
+import flhan.de.financemanager.login.*
 
 /**
  * Created by Florian on 10.09.2017.

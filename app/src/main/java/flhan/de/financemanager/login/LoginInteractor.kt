@@ -1,4 +1,4 @@
-package flhan.de.financemanager.signin
+package flhan.de.financemanager.login
 
 import io.reactivex.Observable
 import javax.inject.Inject

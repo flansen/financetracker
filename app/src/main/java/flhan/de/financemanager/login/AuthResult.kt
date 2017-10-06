@@ -1,4 +1,4 @@
-package flhan.de.financemanager.signin
+package flhan.de.financemanager.login
 
 /**
  * Created by Florian on 09.09.2017.

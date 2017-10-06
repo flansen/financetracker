@@ -1,7 +1,8 @@
-package flhan.de.financemanager.signin
+package flhan.de.financemanager.login
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import flhan.de.financemanager.base.RequestResult
 import flhan.de.financemanager.common.RemoteDataStore
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
@@ -11,6 +12,7 @@ import io.reactivex.ObservableEmitter
  */
 interface AuthManager {
     fun auth(token: String): Observable<AuthResult>
+    fun checkAuth(): Observable<RequestResult<Boolean>>
 }
 
 class AuthManagerImpl(
@@ -27,6 +29,16 @@ class AuthManagerImpl(
                 e.onNext(AuthResult(task.exception.toString(), task.isSuccessful))
                 e.onComplete()
             }
+        }
+    }
+
+    override fun checkAuth(): Observable<RequestResult<Boolean>> {
+        return Observable.create { e: ObservableEmitter<RequestResult<Boolean>> ->
+            if (mAuth.currentUser == null) {
+                e.onNext(RequestResult(true))
+            }
+            e.onNext(RequestResult(false))
+            e.onComplete()
         }
     }
 }

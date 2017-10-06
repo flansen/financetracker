@@ -8,8 +8,8 @@ import flhan.de.financemanager.common.FirebaseClient
 import flhan.de.financemanager.common.RemoteDataStore
 import flhan.de.financemanager.common.UserSettings
 import flhan.de.financemanager.common.UserSettingsImpl
-import flhan.de.financemanager.signin.AuthManager
-import flhan.de.financemanager.signin.AuthManagerImpl
+import flhan.de.financemanager.login.AuthManager
+import flhan.de.financemanager.login.AuthManagerImpl
 import javax.inject.Singleton
 
 /**
