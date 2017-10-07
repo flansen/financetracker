@@ -10,14 +10,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".expenseoverview.ExpenseOverviewActivity" />
+        <activity android:name="flhan.de.financemanager.main.expenseoverview.ExpenseOverviewFragment">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".login.LoginActivity" />
         <activity
             android:name=".createjoinhousehold.CreateJoinHouseholdActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".launcher.LauncherActivity"
-            android:theme="@android:style/Theme.NoDisplay">
+            android:theme="@android:style/Theme.NoDisplay"></activity>
+        <activity android:name=".main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

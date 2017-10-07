@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import flhan.de.financemanager.base.app
 import flhan.de.financemanager.di.launcher.LauncherModule
-import flhan.de.financemanager.expenseoverview.ExpenseOverviewActivity
+import flhan.de.financemanager.main.expenseoverview.ExpenseOverviewFragment
 import flhan.de.financemanager.login.LoginActivity
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
@@ -29,7 +29,7 @@ class LauncherActivity : AppCompatActivity(), LauncherContract.View {
             if (shouldPresentLogin) {
                 startActivity(Intent(this, LoginActivity::class.java))
             } else {
-                startActivity(Intent(this, ExpenseOverviewActivity::class.java))
+                startActivity(Intent(this, ExpenseOverviewFragment::class.java))
             }
         }.addTo(disposables)
     }

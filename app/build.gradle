@@ -49,7 +49,8 @@ dependencies {
 
     compile "com.google.dagger:dagger:$rootProject.daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
-    compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
+    compile "com.amulyakhare:com.amulyakhare.textdrawable:$rootProject.textdrawableVersion"
+    compile "com.roughike:bottom-bar:$rootProject.roughikeVersion"
 }
 
 apply plugin: 'com.google.gms.google-services'

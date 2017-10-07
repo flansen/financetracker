@@ -1,8 +1,8 @@
-package flhan.de.financemanager.di.expenseoverview
+package flhan.de.financemanager.di.main.expenseoverview
 
 import dagger.Subcomponent
 import flhan.de.financemanager.di.ActivityScope
-import flhan.de.financemanager.expenseoverview.ExpenseOverviewActivity
+import flhan.de.financemanager.main.expenseoverview.ExpenseOverviewFragment
 
 /**
  * Created by Florian on 03.10.2017.
@@ -10,5 +10,5 @@ import flhan.de.financemanager.expenseoverview.ExpenseOverviewActivity
 @ActivityScope
 @Subcomponent(modules = arrayOf(ExpenseOverviewModule::class))
 interface ExpenseOverviewComponent {
-    fun inject(activityExpense: ExpenseOverviewActivity)
+    fun inject(fragment: ExpenseOverviewFragment)
 }

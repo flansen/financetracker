@@ -3,6 +3,10 @@ package flhan.de.financemanager.createjoinhousehold
 import flhan.de.financemanager.base.InteractorResult
 import flhan.de.financemanager.base.InteractorStatus
 import flhan.de.financemanager.common.RemoteDataStore
+import flhan.de.financemanager.common.events.Create
+import flhan.de.financemanager.common.events.Delete
+import flhan.de.financemanager.common.events.RepositoryEvent
+import flhan.de.financemanager.data.Expense
 import flhan.de.financemanager.data.Household
 import io.reactivex.Observable
 import javax.inject.Inject
@@ -18,6 +22,17 @@ class JoinHouseholdByMailInteractorImpl @Inject constructor(
         private val dataStore: RemoteDataStore
 ) : JoinHouseholdByMailInteractor {
     override fun execute(email: String): Observable<InteractorResult<Household>> {
+        dataStore.loadExpenses().subscribe { event ->
+            when (event) {
+                is Create -> {
+                    val o = event.obj
+                }
+                is Delete -> {
+                    event.id
+                }
+            }
+        }
+
         return dataStore.joinHouseholdByMail(email)
                 .map {
                     if (it.exception == null) {

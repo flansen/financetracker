@@ -1,4 +1,5 @@
 <resources>
+    <string name="tab_expenses_title">Expenses</string>
     <string name="app_name">financemanager</string>
     <string name="login_title">Financetracker</string>
     <string name="login_subtitle">Please sign in with your Google Account</string>

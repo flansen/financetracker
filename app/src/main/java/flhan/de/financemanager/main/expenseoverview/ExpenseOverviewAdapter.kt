@@ -1,4 +1,4 @@
-package flhan.de.financemanager.expenseoverview
+package flhan.de.financemanager.main.expenseoverview
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -22,8 +22,8 @@ class ExpenseOverviewAdapter() : RecyclerView.Adapter<ExpenseOverviewViewHolder>
         val generator = ColorGenerator.MATERIAL // or use DEFAULT
         val drawable = TextDrawable.builder()
                 .beginConfig()
-                .width(48.dpToPx())
-                .height(48.dpToPx())
+                    .width(48.dpToPx())
+                    .height(48.dpToPx())
                 .endConfig()
                 .buildRound("a", generator.getColor("a"))
         holder?.nameView?.setImageDrawable(drawable)

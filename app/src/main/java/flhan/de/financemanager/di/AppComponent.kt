@@ -4,8 +4,8 @@ import dagger.Component
 import flhan.de.financemanager.App
 import flhan.de.financemanager.di.createjoinhousehold.CreateJoinHouseholdComponent
 import flhan.de.financemanager.di.createjoinhousehold.CreateJoinHouseholdModule
-import flhan.de.financemanager.di.expenseoverview.ExpenseOverviewComponent
-import flhan.de.financemanager.di.expenseoverview.ExpenseOverviewModule
+import flhan.de.financemanager.di.main.expenseoverview.ExpenseOverviewComponent
+import flhan.de.financemanager.di.main.expenseoverview.ExpenseOverviewModule
 import flhan.de.financemanager.di.launcher.LauncherComponent
 import flhan.de.financemanager.di.launcher.LauncherModule
 import flhan.de.financemanager.di.signin.LoginComponent

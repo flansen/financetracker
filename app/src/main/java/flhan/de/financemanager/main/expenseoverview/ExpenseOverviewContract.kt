@@ -1,4 +1,4 @@
-package flhan.de.financemanager.expenseoverview
+package flhan.de.financemanager.main.expenseoverview
 
 /**
  * Created by Florian on 03.10.2017.

@@ -1,14 +1,17 @@
 package flhan.de.financemanager.common
 
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import flhan.de.financemanager.base.RequestResult
+import flhan.de.financemanager.common.events.Create
+import flhan.de.financemanager.common.events.Delete
+import flhan.de.financemanager.common.events.RepositoryEvent
+import flhan.de.financemanager.common.events.Update
 import flhan.de.financemanager.createjoinhousehold.NoSuchHouseholdThrowable
+import flhan.de.financemanager.data.Expense
 import flhan.de.financemanager.data.Household
 import flhan.de.financemanager.data.User
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.SingleEmitter
 
@@ -21,6 +24,7 @@ interface RemoteDataStore {
     fun joinHousehold(household: Household): Single<RequestResult<Household>>
     fun joinHouseholdByMail(email: String): Single<RequestResult<Household>>
     fun getCurrentUser(): User
+    fun loadExpenses(): Observable<RepositoryEvent<Expense>>
 }
 
 class FirebaseClient(
@@ -97,5 +101,50 @@ class FirebaseClient(
                         }
                     })
         }).onErrorReturn { RequestResult(null, it) }
+    }
+
+    override fun loadExpenses(): Observable<RepositoryEvent<Expense>> {
+        return Observable.create {
+            val listener = object : ChildEventListener {
+                override fun onCancelled(p0: DatabaseError?) {
+                    it.onError(p0?.toException()?.cause ?: Throwable("Listener.OnCancelled"))
+                }
+
+                override fun onChildMoved(p0: DataSnapshot?, p1: String?) {
+                }
+
+                override fun onChildChanged(p0: DataSnapshot?, p1: String?) {
+                    if (p0 != null) {
+                        val expense = p0.getValue(Expense::class.java)
+                        expense?.id = p0.key
+                        //TODO: Handle null
+                        val event = Update<Expense>(expense!!)
+                        it.onNext(event)
+                    }
+                }
+
+                override fun onChildAdded(p0: DataSnapshot?, p1: String?) {
+                    if (p0 != null) {
+                        val expense = p0.getValue(Expense::class.java)
+                        expense?.id = p0.key
+                        //TODO: Handle null
+                        val event = Create<Expense>(expense!!)
+                        it.onNext(event)
+                    }
+                }
+
+                override fun onChildRemoved(p0: DataSnapshot?) {
+                    if (p0 != null) {
+                        val key = p0.key
+                        //TODO: Handle null
+                        val event = Delete<Expense>(key)
+                        it.onNext(event)
+                    }
+                }
+            }
+            rootReference.child(userSettings.getHouseholdId()).addChildEventListener(listener)
+            it.setCancellable { rootReference.removeEventListener(listener) }
+        }
+
     }
 }
