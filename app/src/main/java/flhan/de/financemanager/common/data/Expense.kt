@@ -1,4 +1,4 @@
-package flhan.de.financemanager.data
+package flhan.de.financemanager.common.data
 
 import java.util.*
 

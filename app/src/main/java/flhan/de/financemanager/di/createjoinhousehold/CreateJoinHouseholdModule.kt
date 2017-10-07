@@ -4,8 +4,8 @@ import dagger.Module
 import dagger.Provides
 import flhan.de.financemanager.common.validators.EmailValidator
 import flhan.de.financemanager.common.validators.NameValidator
-import flhan.de.financemanager.createjoinhousehold.*
 import flhan.de.financemanager.di.ActivityScope
+import flhan.de.financemanager.login.createjoinhousehold.*
 
 /**
  * Created by Florian on 29.09.2017.

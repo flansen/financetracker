@@ -8,7 +8,7 @@ import android.widget.ImageView
 import com.amulyakhare.textdrawable.TextDrawable
 import com.amulyakhare.textdrawable.util.ColorGenerator
 import flhan.de.financemanager.R
-import flhan.de.financemanager.extensions.dpToPx
+import flhan.de.financemanager.common.extensions.dpToPx
 
 /**
  * Created by Florian on 06.10.2017.

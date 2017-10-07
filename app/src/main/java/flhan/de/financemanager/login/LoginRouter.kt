@@ -2,7 +2,7 @@ package flhan.de.financemanager.login
 
 import android.content.Context
 import android.content.Intent
-import flhan.de.financemanager.createjoinhousehold.CreateJoinHouseholdActivity
+import flhan.de.financemanager.login.createjoinhousehold.CreateJoinHouseholdActivity
 import javax.inject.Inject
 
 /**

@@ -1,4 +1,4 @@
-package flhan.de.financemanager.createjoinhousehold
+package flhan.de.financemanager.login.createjoinhousehold
 
 import flhan.de.financemanager.base.InteractorStatus
 import flhan.de.financemanager.common.GENERIC_ERROR_KEY

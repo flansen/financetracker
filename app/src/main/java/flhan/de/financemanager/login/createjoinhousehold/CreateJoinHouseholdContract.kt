@@ -1,4 +1,4 @@
-package flhan.de.financemanager.createjoinhousehold
+package flhan.de.financemanager.login.createjoinhousehold
 
 import io.reactivex.Observable
 import io.reactivex.subjects.Subject

@@ -1,13 +1,11 @@
-package flhan.de.financemanager.createjoinhousehold
+package flhan.de.financemanager.login.createjoinhousehold
 
 import flhan.de.financemanager.base.InteractorResult
 import flhan.de.financemanager.base.InteractorStatus
 import flhan.de.financemanager.common.RemoteDataStore
+import flhan.de.financemanager.common.data.Household
 import flhan.de.financemanager.common.events.Create
 import flhan.de.financemanager.common.events.Delete
-import flhan.de.financemanager.common.events.RepositoryEvent
-import flhan.de.financemanager.data.Expense
-import flhan.de.financemanager.data.Household
 import io.reactivex.Observable
 import javax.inject.Inject
 

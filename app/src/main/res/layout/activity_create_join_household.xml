@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="flhan.de.financemanager.createjoinhousehold.CreateJoinHouseholdActivity">
+    tools:context=".login.createjoinhousehold.CreateJoinHouseholdActivity">
 
     <include
         android:id="@+id/create_join_household_loading"

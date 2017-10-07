@@ -1,4 +1,4 @@
-package flhan.de.financemanager.extensions
+package flhan.de.financemanager.common.extensions
 
 import android.content.Context
 import android.widget.Toast

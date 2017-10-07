@@ -1,4 +1,4 @@
-package flhan.de.financemanager.createjoinhousehold
+package flhan.de.financemanager.login.createjoinhousehold
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,11 +9,11 @@ import com.jakewharton.rxbinding2.view.focusChanges
 import com.jakewharton.rxbinding2.widget.textChangeEvents
 import flhan.de.financemanager.R
 import flhan.de.financemanager.base.app
+import flhan.de.financemanager.common.extensions.stringByName
+import flhan.de.financemanager.common.extensions.toast
+import flhan.de.financemanager.common.extensions.visible
 import flhan.de.financemanager.di.createjoinhousehold.CreateJoinHouseholdModule
 import flhan.de.financemanager.main.expenseoverview.ExpenseOverviewFragment
-import flhan.de.financemanager.extensions.stringByName
-import flhan.de.financemanager.extensions.toast
-import flhan.de.financemanager.extensions.visible
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo

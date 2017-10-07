@@ -1,4 +1,4 @@
-package flhan.de.financemanager.createjoinhousehold
+package flhan.de.financemanager.login.createjoinhousehold
 
 /**
  * Created by fhansen on 02.10.17.

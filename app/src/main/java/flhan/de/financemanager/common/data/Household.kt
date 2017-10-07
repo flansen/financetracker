@@ -1,4 +1,4 @@
-package flhan.de.financemanager.data
+package flhan.de.financemanager.common.data
 
 /**
  * Created by Florian on 09.09.2017.
