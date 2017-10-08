@@ -114,7 +114,7 @@ class FirebaseClient(
 
     override fun loadExpenses(): Observable<RepositoryEvent<Expense>> {
         return usersObservable.flatMap { users ->
-            createExpenseObservable(users)
+            return@flatMap createExpenseObservable(users)
         }
     }
 
