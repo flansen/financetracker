@@ -142,7 +142,9 @@ class FirebaseClient(
                     }
                 }
             }
-            rootReference.child(userSettings.getHouseholdId()).addChildEventListener(listener)
+            //TODO: Remove hardcoded value
+//            rootReference.child("${userSettings.getHouseholdId()}/expenses").addChildEventListener(listener)
+            rootReference.child("-Kva_1jCpajfZiuLeqoD/expenses").addChildEventListener(listener)
             it.setCancellable { rootReference.removeEventListener(listener) }
         }
 

@@ -8,22 +8,52 @@ import android.widget.ImageView
 import com.amulyakhare.textdrawable.TextDrawable
 import com.amulyakhare.textdrawable.util.ColorGenerator
 import flhan.de.financemanager.R
+import flhan.de.financemanager.common.Insert
+import flhan.de.financemanager.common.ListEvent
+import flhan.de.financemanager.common.Remove
+import flhan.de.financemanager.common.Update
+import flhan.de.financemanager.common.data.Expense
 import flhan.de.financemanager.common.extensions.dpToPx
+import io.reactivex.Observable
 
 /**
  * Created by Florian on 06.10.2017.
  */
-class ExpenseOverviewAdapter() : RecyclerView.Adapter<ExpenseOverviewViewHolder>() {
+class ExpenseOverviewAdapter(expenses: Observable<ListEvent<Expense>>) : RecyclerView.Adapter<ExpenseOverviewViewHolder>() {
+    val items: MutableList<Expense>
+
+    init {
+        items = mutableListOf()
+        expenses.subscribe { listEvent ->
+            when (listEvent) {
+                is Insert -> {
+                    items.add(0, listEvent.obj)
+                    notifyItemInserted(0)
+                }
+                is Update -> {
+                    val itemIndex = items.indexOfFirst { item -> item.id == listEvent.obj.id }
+                    items[itemIndex] = listEvent.obj
+                    notifyItemChanged(itemIndex)
+                }
+                is Remove -> {
+                    val itemIndex = items.indexOfFirst { item -> item.id == listEvent.id }
+                    items.removeAt(itemIndex)
+                    notifyItemRemoved(itemIndex)
+                }
+            }
+        }
+    }
+
     override fun getItemCount(): Int {
-        return 5
+        return items.count()
     }
 
     override fun onBindViewHolder(holder: ExpenseOverviewViewHolder?, position: Int) {
         val generator = ColorGenerator.MATERIAL // or use DEFAULT
         val drawable = TextDrawable.builder()
                 .beginConfig()
-                    .width(48.dpToPx())
-                    .height(48.dpToPx())
+                .width(48.dpToPx())
+                .height(48.dpToPx())
                 .endConfig()
                 .buildRound("a", generator.getColor("a"))
         holder?.nameView?.setImageDrawable(drawable)

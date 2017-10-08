@@ -41,6 +41,7 @@ dependencies {
     compile "com.jakewharton.rxbinding2:rxbinding-support-v4-kotlin:$rootProject.rxbindingVersion"
     compile "com.jakewharton.rxbinding2:rxbinding-appcompat-v7-kotlin:$rootProject.rxbindingVersion"
     compile "com.jakewharton.rxbinding2:rxbinding-design-kotlin:$rootProject.rxbindingVersion"
+    compile "com.jakewharton.rxbinding2:rxbinding-recyclerview-v7-kotlin:$rootProject.rxbindingVersion"
 
     compile "com.google.firebase:firebase-auth:$rootProject.firebaseVersion"
     compile "com.google.firebase:firebase-core:$rootProject.firebaseVersion"
