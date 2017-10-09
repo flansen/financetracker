@@ -2,34 +2,32 @@ package flhan.de.financemanager.login.createjoinhousehold
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import com.jakewharton.rxbinding2.view.focusChanges
 import com.jakewharton.rxbinding2.widget.textChangeEvents
 import flhan.de.financemanager.R
-import flhan.de.financemanager.base.app
+import flhan.de.financemanager.base.BaseActivity
+import flhan.de.financemanager.common.extensions.app
 import flhan.de.financemanager.common.extensions.stringByName
 import flhan.de.financemanager.common.extensions.toast
 import flhan.de.financemanager.common.extensions.visible
 import flhan.de.financemanager.di.createjoinhousehold.CreateJoinHouseholdModule
 import flhan.de.financemanager.main.expenseoverview.ExpenseOverviewFragment
 import io.reactivex.Observable
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.activity_create_join_household.*
 import javax.inject.Inject
 
-class CreateJoinHouseholdActivity : AppCompatActivity(), CreateJoinHouseholdContract.View {
+class CreateJoinHouseholdActivity : BaseActivity(), CreateJoinHouseholdContract.View {
     override lateinit var clickSubject: Subject<Unit>
     override lateinit var stateObservable: Observable<ViewState>
     override lateinit var nameObservable: Observable<CharSequence>
     override lateinit var emailObservable: Observable<CharSequence>
 
     private var canSubmit = false
-    private val disposables = CompositeDisposable()
     private val component by lazy { app.appComponent.plus(CreateJoinHouseholdModule(this)) }
 
     @Inject
@@ -106,11 +104,6 @@ class CreateJoinHouseholdActivity : AppCompatActivity(), CreateJoinHouseholdCont
                         create_join_household_create_name_text.setText("")
                     }
                 }.addTo(disposables)
-    }
-
-    override fun onDestroy() {
-        disposables.dispose()
-        super.onDestroy()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

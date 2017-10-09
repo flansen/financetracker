@@ -15,15 +15,20 @@ import flhan.de.financemanager.common.Update
 import flhan.de.financemanager.common.data.Expense
 import flhan.de.financemanager.common.extensions.dpToPx
 import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
 
 /**
  * Created by Florian on 06.10.2017.
  */
+//TODO: Extract Reactive part and abstract it
+//TODO: Extract Disposable Interface
 class ExpenseOverviewAdapter(expenses: Observable<ListEvent<Expense>>) : RecyclerView.Adapter<ExpenseOverviewViewHolder>() {
-    val items: MutableList<Expense>
+    val items: MutableList<Expense> = mutableListOf()
+
+    private val disposable: CompositeDisposable = CompositeDisposable()
 
     init {
-        items = mutableListOf()
         expenses.subscribe { listEvent ->
             when (listEvent) {
                 is Insert -> {
@@ -41,7 +46,7 @@ class ExpenseOverviewAdapter(expenses: Observable<ListEvent<Expense>>) : Recycle
                     notifyItemRemoved(itemIndex)
                 }
             }
-        }
+        }.addTo(disposable)
     }
 
     override fun getItemCount(): Int {
@@ -62,6 +67,10 @@ class ExpenseOverviewAdapter(expenses: Observable<ListEvent<Expense>>) : Recycle
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ExpenseOverviewViewHolder {
         val view = LayoutInflater.from(parent!!.context).inflate(R.layout.expense_overview_item, parent, false)
         return ExpenseOverviewViewHolder(view)
+    }
+
+    fun dispose() {
+        disposable.dispose()
     }
 }
 

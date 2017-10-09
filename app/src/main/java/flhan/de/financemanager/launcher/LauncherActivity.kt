@@ -2,18 +2,16 @@ package flhan.de.financemanager.launcher
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import flhan.de.financemanager.base.app
+import flhan.de.financemanager.base.BaseActivity
+import flhan.de.financemanager.common.extensions.app
 import flhan.de.financemanager.di.launcher.LauncherModule
-import flhan.de.financemanager.main.expenseoverview.ExpenseOverviewFragment
 import flhan.de.financemanager.login.LoginActivity
-import io.reactivex.disposables.CompositeDisposable
+import flhan.de.financemanager.main.expenseoverview.ExpenseOverviewFragment
 import io.reactivex.rxkotlin.addTo
 import javax.inject.Inject
 
-class LauncherActivity : AppCompatActivity(), LauncherContract.View {
+class LauncherActivity : BaseActivity(), LauncherContract.View {
     private val component by lazy { app.appComponent.plus(LauncherModule(this)) }
-    private val disposables: CompositeDisposable = CompositeDisposable()
 
     @Inject
     lateinit var presenter: LauncherContract.Presenter
@@ -32,10 +30,5 @@ class LauncherActivity : AppCompatActivity(), LauncherContract.View {
                 startActivity(Intent(this, ExpenseOverviewFragment::class.java))
             }
         }.addTo(disposables)
-    }
-
-    override fun onDestroy() {
-        disposables.dispose()
-        super.onDestroy()
     }
 }
