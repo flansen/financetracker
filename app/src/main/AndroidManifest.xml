@@ -12,18 +12,17 @@
         android:theme="@style/AppTheme">
         <activity android:name=".login.LoginActivity" />
         <activity
-            android:name="flhan.de.financemanager.login.createjoinhousehold.CreateJoinHouseholdActivity"
+            android:name=".login.createjoinhousehold.CreateJoinHouseholdActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".launcher.LauncherActivity"
-            android:theme="@android:style/Theme.NoDisplay"></activity>
-        <activity android:name=".main.MainActivity">
+        <activity android:name=".launcher.LauncherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
+        <activity android:name=".main.MainActivity"></activity>
     </application>
 
 </manifest>

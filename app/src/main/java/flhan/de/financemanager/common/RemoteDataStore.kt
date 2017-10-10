@@ -34,16 +34,15 @@ class FirebaseClient(
 ) : RemoteDataStore {
     private val firebaseDatabase by lazy { FirebaseDatabase.getInstance() }
     private val rootReference by lazy { firebaseDatabase.getReference("households") }
-    private val usersObservable: Observable<MutableList<User>>
+    private lateinit var usersObservable: Observable<MutableList<User>>
 
     init {
-        usersObservable = loadUsers()
-                .replay(1)
-                .refCount()
+        initUsersObservable()
     }
 
     override fun init() {
         firebaseDatabase.setPersistenceEnabled(true)
+        initUsersObservable()
     }
 
     override fun createHousehold(household: Household): Single<RequestResult<Household>> {
@@ -125,7 +124,7 @@ class FirebaseClient(
 
             val listener = object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError?) {
-                    emitter.onError(p0?.toException()?.cause ?: Throwable("Listener.OnCancelled"))
+                    emitter.onError(p0?.toException() ?: Throwable("Listener.OnCancelled"))
                 }
 
                 override fun onDataChange(p0: DataSnapshot?) {
@@ -214,5 +213,11 @@ class FirebaseClient(
             rootReference.child("-Kva_1jCpajfZiuLeqoD/expenses").addChildEventListener(listener)
             it.setCancellable { rootReference.removeEventListener(listener) }
         }
+    }
+
+    private fun initUsersObservable() {
+        usersObservable = loadUsers()
+                .replay(1)
+                .refCount()
     }
 }

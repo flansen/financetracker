@@ -33,12 +33,8 @@ class AuthManagerImpl(
     }
 
     override fun checkAuth(): Observable<RequestResult<Boolean>> {
-        return Observable.create { e: ObservableEmitter<RequestResult<Boolean>> ->
-            if (mAuth.currentUser == null) {
-                e.onNext(RequestResult(true))
-            }
-            e.onNext(RequestResult(false))
-            e.onComplete()
+        return Observable.fromCallable {
+            return@fromCallable RequestResult(mAuth.currentUser != null)
         }
     }
 }

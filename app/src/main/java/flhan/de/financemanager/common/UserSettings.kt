@@ -38,8 +38,8 @@ class UserSettingsImpl(
     }
 
     override fun hasUserData(): Single<Boolean> {
-        return Single.create {
-            it.onSuccess(getUserId().isNotBlank() && getHouseholdId().isNotBlank())
+        return Single.fromCallable<Boolean> {
+            return@fromCallable getUserId().isNotBlank() && getHouseholdId().isNotBlank()
         }
     }
 }

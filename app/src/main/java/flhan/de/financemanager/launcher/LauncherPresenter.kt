@@ -13,6 +13,7 @@ class LauncherPresenter(
     override fun attach() {
         shouldPresentLogin = interactor.execute()
                 .map { it.result == LauncherState.NotInitialized }
+                .share()
     }
 
 }

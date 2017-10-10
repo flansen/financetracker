@@ -6,8 +6,9 @@ import flhan.de.financemanager.base.BaseActivity
 import flhan.de.financemanager.common.extensions.app
 import flhan.de.financemanager.di.launcher.LauncherModule
 import flhan.de.financemanager.login.LoginActivity
-import flhan.de.financemanager.main.expenseoverview.ExpenseOverviewFragment
-import io.reactivex.rxkotlin.addTo
+import flhan.de.financemanager.main.MainActivity
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class LauncherActivity : BaseActivity(), LauncherContract.View {
@@ -23,12 +24,15 @@ class LauncherActivity : BaseActivity(), LauncherContract.View {
 
         presenter.attach()
 
-        presenter.shouldPresentLogin.subscribe { shouldPresentLogin ->
-            if (shouldPresentLogin) {
-                startActivity(Intent(this, LoginActivity::class.java))
-            } else {
-                startActivity(Intent(this, ExpenseOverviewFragment::class.java))
-            }
-        }.addTo(disposables)
+        presenter.shouldPresentLogin
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { shouldPresentLogin ->
+                    if (shouldPresentLogin) {
+                        startActivity(Intent(this, LoginActivity::class.java))
+                    } else {
+                        startActivity(Intent(this, MainActivity::class.java))
+                    }
+                }
     }
 }

@@ -13,7 +13,7 @@ import flhan.de.financemanager.common.extensions.stringByName
 import flhan.de.financemanager.common.extensions.toast
 import flhan.de.financemanager.common.extensions.visible
 import flhan.de.financemanager.di.createjoinhousehold.CreateJoinHouseholdModule
-import flhan.de.financemanager.main.expenseoverview.ExpenseOverviewFragment
+import flhan.de.financemanager.main.MainActivity
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.PublishSubject
@@ -45,9 +45,6 @@ class CreateJoinHouseholdActivity : BaseActivity(), CreateJoinHouseholdContract.
         stateObservable = emailObservable.map { ViewState(it.toString(), InputState.Join) }
                 .mergeWith(nameObservable.map { ViewState(it.toString(), InputState.Create) })
                 .share()
-        stateObservable.subscribe { state ->
-            println(state)
-        }
 
         clickSubject = PublishSubject.create()
 
@@ -75,7 +72,7 @@ class CreateJoinHouseholdActivity : BaseActivity(), CreateJoinHouseholdContract.
 
     override fun dismiss() {
         presenter.detach()
-        startActivity(Intent(this, ExpenseOverviewFragment::class.java))
+        startActivity(Intent(this, MainActivity::class.java))
         finish()
     }
 

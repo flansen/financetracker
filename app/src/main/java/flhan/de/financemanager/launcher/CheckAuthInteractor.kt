@@ -2,6 +2,7 @@ package flhan.de.financemanager.launcher
 
 import flhan.de.financemanager.base.InteractorResult
 import flhan.de.financemanager.base.InteractorStatus
+import flhan.de.financemanager.base.RequestResult
 import flhan.de.financemanager.common.UserSettings
 import flhan.de.financemanager.login.AuthManager
 import io.reactivex.Observable
@@ -20,18 +21,21 @@ class CheckAuthInteractorImpl @Inject constructor(
 ) : CheckAuthInteractor {
 
     override fun execute(): Observable<InteractorResult<LauncherState>> {
-        return authManager
-                .checkAuth()
-                .flatMap { result ->
-                    if (result.result!!) {
-                        userSettings.hasUserData().map { hasUserData ->
-                            InteractorResult(InteractorStatus.Success, LauncherState.Initialized)
-                        }.toObservable()
+        return userSettings
+                .hasUserData()
+                .toObservable()
+                .flatMap { hasUserData ->
+                    if (hasUserData) {
+                        authManager.checkAuth()
                     } else {
-                        Observable.just(InteractorResult(InteractorStatus.Success, LauncherState.NotInitialized))
+                        Observable.just(RequestResult(false))
                     }
                 }
-                .startWith { InteractorResult<Boolean>(InteractorStatus.Loading) }
-                .share()
+                .map { authResult ->
+                    if (authResult.result == true)
+                        InteractorResult(InteractorStatus.Success, LauncherState.Initialized)
+                    else
+                        InteractorResult(InteractorStatus.Success, LauncherState.NotInitialized)
+                }
     }
 }
