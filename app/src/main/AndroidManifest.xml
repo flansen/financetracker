@@ -14,13 +14,14 @@
         <activity
             android:name=".login.createjoinhousehold.CreateJoinHouseholdActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".launcher.LauncherActivity">
+        <activity
+            android:name=".launcher.LauncherActivity"
+            android:theme="@style/NoUiAppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity android:name=".main.MainActivity"></activity>
     </application>

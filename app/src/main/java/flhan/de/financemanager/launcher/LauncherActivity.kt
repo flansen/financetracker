@@ -8,6 +8,7 @@ import flhan.de.financemanager.di.launcher.LauncherModule
 import flhan.de.financemanager.login.LoginActivity
 import flhan.de.financemanager.main.MainActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
@@ -33,6 +34,6 @@ class LauncherActivity : BaseActivity(), LauncherContract.View {
                     } else {
                         startActivity(Intent(this, MainActivity::class.java))
                     }
-                }
+                }.addTo(disposables)
     }
 }
