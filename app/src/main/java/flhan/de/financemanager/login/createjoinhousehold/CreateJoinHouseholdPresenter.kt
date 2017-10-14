@@ -40,22 +40,20 @@ class CreateJoinHouseholdPresenter(
 
         val interactorState =
                 view.clickSubject
-                .withLatestFrom(view.stateObservable, BiFunction { _: Unit, state: ViewState -> state })
-                        .distinctUntilChanged()
-                .flatMap { state ->
-                    //TODO: Called twice
-                    if (state.inputState == InputState.Create) {
-                        createHouseholdInteractor.execute(state.text)
-                    } else {
-                        joinHouseholdByMailInteractor.execute(state.text)
-                    }
-                }
+                        .withLatestFrom(view.stateObservable, BiFunction { _: Unit, state: ViewState -> state })
+                        .flatMap { state ->
+                            if (state.inputState == InputState.Create) {
+                                createHouseholdInteractor.execute(state.text)
+                            } else {
+                                joinHouseholdByMailInteractor.execute(state.text)
+                            }
+                        }
+                        .share()
 
         loadingObservable = interactorState
                 .map { state ->
                     return@map state.status == InteractorStatus.Loading
                 }
-                .share()
 
         errorObservable = interactorState
                 .filter { it.status == InteractorStatus.Error }
@@ -66,11 +64,9 @@ class CreateJoinHouseholdPresenter(
                 }
                 .mergeWith(view.clickSubject
                         .map { CreateJoinErrorState(ErrorType.None) })
-                .share()
 
         interactorState
                 .filter { it.status == InteractorStatus.Success }
-                .share()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({

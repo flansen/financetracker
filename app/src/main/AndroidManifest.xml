@@ -14,9 +14,7 @@
         <activity
             android:name=".login.createjoinhousehold.CreateJoinHouseholdActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".launcher.LauncherActivity"
-            android:theme="@style/NoUiAppTheme">
+        <activity android:name=".launcher.LauncherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

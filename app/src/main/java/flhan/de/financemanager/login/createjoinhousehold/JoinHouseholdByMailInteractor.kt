@@ -20,7 +20,6 @@ class JoinHouseholdByMailInteractorImpl @Inject constructor(
     override fun execute(email: String): Observable<InteractorResult<Household>> {
         return dataStore.joinHouseholdByMail(email)
                 .map {
-                    //TODO: got triggered 3 times
                     if (it.exception == null) {
                         InteractorResult(InteractorStatus.Success, it.result)
                     } else {
