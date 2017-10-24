@@ -4,6 +4,8 @@ import android.preference.PreferenceManager
 import dagger.Module
 import dagger.Provides
 import flhan.de.financemanager.App
+import flhan.de.financemanager.base.scheduler.SchedulerProvider
+import flhan.de.financemanager.base.scheduler.SchedulerProviderImpl
 import flhan.de.financemanager.common.FirebaseClient
 import flhan.de.financemanager.common.RemoteDataStore
 import flhan.de.financemanager.common.UserSettings
@@ -32,5 +34,9 @@ class AppModule(val app: App) {
     @Provides
     @Singleton
     fun remoteDataStore(userSettings: UserSettings): RemoteDataStore = FirebaseClient(userSettings)
+
+    @Provides
+    @Singleton
+    fun schedulerProvider(): SchedulerProvider = SchedulerProviderImpl()
 
 }

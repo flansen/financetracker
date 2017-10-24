@@ -3,6 +3,7 @@ package flhan.de.financemanager.di.signin
 import android.content.Context
 import dagger.Module
 import dagger.Provides
+import flhan.de.financemanager.base.scheduler.SchedulerProvider
 import flhan.de.financemanager.di.ActivityScope
 import flhan.de.financemanager.login.*
 
@@ -21,5 +22,6 @@ import flhan.de.financemanager.login.*
     @ActivityScope
     fun providesPresenter(loginView: LoginContract.View,
                           loginInteractor: LoginInteractorImpl,
-                          loginRouter: LoginRouterImpl): LoginContract.Presenter = LoginPresenter(loginView, loginInteractor, loginRouter)
+                          loginRouter: LoginRouterImpl,
+                          schedulerProvider: SchedulerProvider): LoginContract.Presenter = LoginPresenter(loginView, loginInteractor, loginRouter, schedulerProvider)
 }

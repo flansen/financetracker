@@ -2,6 +2,7 @@ package flhan.de.financemanager.di.main.expenseoverview
 
 import dagger.Module
 import dagger.Provides
+import flhan.de.financemanager.base.scheduler.SchedulerProvider
 import flhan.de.financemanager.di.ActivityScope
 import flhan.de.financemanager.main.expenseoverview.ExpenseOverviewContract
 import flhan.de.financemanager.main.expenseoverview.ExpenseOverviewFragment
@@ -21,5 +22,6 @@ class ExpenseOverviewModule(
 
     @Provides
     @ActivityScope
-    fun providesPresenter(fetchExpensesInteractor: FetchExpensesInteractorImpl): ExpenseOverviewContract.Presenter = ExpenseOverviewPresenter(activityExpense, fetchExpensesInteractor)
+    fun providesPresenter(fetchExpensesInteractor: FetchExpensesInteractorImpl, schedulerProvider: SchedulerProvider): ExpenseOverviewContract.Presenter
+            = ExpenseOverviewPresenter(activityExpense, fetchExpensesInteractor, schedulerProvider)
 }
