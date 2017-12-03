@@ -10,7 +10,7 @@ import flhan.de.financemanager.login.createjoinhousehold.CreateJoinHouseholdActi
 import flhan.de.financemanager.login.createjoinhousehold.CreateJoinHouseholdModule
 import flhan.de.financemanager.main.MainActivity
 import flhan.de.financemanager.main.MainActivityModule
-import flhan.de.financemanager.main.expenseoverview.ExpenseOverviewFragmentProvider
+import flhan.de.financemanager.main.expenseoverview.ExpenseOverviewFragmentBuilder
 
 @Module
 abstract class ActivityBuilder {
@@ -24,7 +24,7 @@ abstract class ActivityBuilder {
     @ContributesAndroidInjector(modules = arrayOf(CreateJoinHouseholdModule::class))
     abstract fun bindCreateJoinHouseholdActivity(): CreateJoinHouseholdActivity
 
-    @ContributesAndroidInjector(modules = arrayOf(MainActivityModule::class, ExpenseOverviewFragmentProvider::class))
+    @ContributesAndroidInjector(modules = arrayOf(MainActivityModule::class, ExpenseOverviewFragmentBuilder::class))
     abstract fun bindMainActivity(): MainActivity
 
 }
