@@ -9,7 +9,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0-rc1'
+        classpath 'com.android.tools.build:gradle:3.0.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "com.google.gms:google-services:$googleServicesVersion"
     }
@@ -35,7 +35,7 @@ ext {
     firebaseVersion = '11.2.2'
     rxbindingVersion = "2.0.0"
     rxkotlinVersion = "2.1.0"
-    daggerVersion = "2.11"
+    daggerVersion = "2.13"
     roughikeVersion = "2.3.1"
     textdrawableVersion = "1.0.1"
     compileSdk = 26

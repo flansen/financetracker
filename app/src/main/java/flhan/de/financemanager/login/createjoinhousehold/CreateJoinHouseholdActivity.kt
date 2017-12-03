@@ -8,11 +8,9 @@ import com.jakewharton.rxbinding2.view.focusChanges
 import com.jakewharton.rxbinding2.widget.textChangeEvents
 import flhan.de.financemanager.R
 import flhan.de.financemanager.base.BaseActivity
-import flhan.de.financemanager.common.extensions.app
 import flhan.de.financemanager.common.extensions.stringByName
 import flhan.de.financemanager.common.extensions.toast
 import flhan.de.financemanager.common.extensions.visible
-import flhan.de.financemanager.di.createjoinhousehold.CreateJoinHouseholdModule
 import flhan.de.financemanager.main.MainActivity
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.addTo
@@ -28,7 +26,6 @@ class CreateJoinHouseholdActivity : BaseActivity(), CreateJoinHouseholdContract.
     override lateinit var emailObservable: Observable<CharSequence>
 
     private var canSubmit = false
-    private val component by lazy { app.appComponent.plus(CreateJoinHouseholdModule(this)) }
 
     @Inject
     lateinit var presenter: CreateJoinHouseholdContract.Presenter
@@ -37,7 +34,6 @@ class CreateJoinHouseholdActivity : BaseActivity(), CreateJoinHouseholdContract.
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_join_household)
         setSupportActionBar(toolbar)
-        component.inject(this)
 
         setupTextListeners()
         setupFocusListeners()

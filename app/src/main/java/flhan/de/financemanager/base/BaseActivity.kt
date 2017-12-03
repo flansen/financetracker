@@ -1,7 +1,9 @@
 package flhan.de.financemanager.base
 
+import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import dagger.android.AndroidInjection
 import flhan.de.financemanager.R
 import io.reactivex.disposables.CompositeDisposable
 
@@ -10,6 +12,11 @@ import io.reactivex.disposables.CompositeDisposable
  */
 abstract class BaseActivity : AppCompatActivity() {
     protected val disposables: CompositeDisposable = CompositeDisposable()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        AndroidInjection.inject(this)
+    }
 
     fun showErrorDialog(message: String? = null, title: String? = null) {
         val builder = AlertDialog.Builder(this)

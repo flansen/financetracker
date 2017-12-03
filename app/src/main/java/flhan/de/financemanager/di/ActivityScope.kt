@@ -1,6 +1,5 @@
 package flhan.de.financemanager.di
 
-import java.lang.annotation.RetentionPolicy
 import javax.inject.Scope
 
 /**

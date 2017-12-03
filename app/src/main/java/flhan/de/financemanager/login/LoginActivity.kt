@@ -10,8 +10,6 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.jakewharton.rxbinding2.view.clicks
 import flhan.de.financemanager.R
 import flhan.de.financemanager.base.BaseActivity
-import flhan.de.financemanager.common.extensions.app
-import flhan.de.financemanager.di.signin.LoginModule
 import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.activity_login.*
 import javax.inject.Inject
@@ -19,7 +17,6 @@ import javax.inject.Inject
 //TODO: This should not be the start of the application. Instead, FirebaseAuth.AuthstateListener -> see if user is not null.
 class LoginActivity : BaseActivity(), LoginContract.View, GoogleApiClient.OnConnectionFailedListener {
     private val SIGN_IN_ID: Int = 12515
-    private val component by lazy { app.appComponent.plus(LoginModule(this)) }
     private val mGoogleApiClient: GoogleApiClient by lazy {
         GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
@@ -40,7 +37,6 @@ class LoginActivity : BaseActivity(), LoginContract.View, GoogleApiClient.OnConn
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        component.inject(this)
         loginButton.clicks().subscribe { startGoogleAuth() }.addTo(disposables)
     }
 

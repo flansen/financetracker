@@ -1,21 +1,20 @@
 package flhan.de.financemanager.main.expenseoverview
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import dagger.android.support.AndroidSupportInjection
 import flhan.de.financemanager.R
-import flhan.de.financemanager.common.extensions.app
-import flhan.de.financemanager.di.main.expenseoverview.ExpenseOverviewModule
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_overview.*
 import javax.inject.Inject
 
 //TODO: Implement Base-Class and add CompositeDisposable to it
 class ExpenseOverviewFragment : Fragment(), ExpenseOverviewContract.View {
-    private val component by lazy { activity.app.appComponent.plus(ExpenseOverviewModule(this)) }
     private val disposable: CompositeDisposable = CompositeDisposable()
     private var adapter: ExpenseOverviewAdapter? = null
 
@@ -32,11 +31,10 @@ class ExpenseOverviewFragment : Fragment(), ExpenseOverviewContract.View {
         return view
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        component.inject(this)
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        AndroidSupportInjection.inject(this)
     }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         expense_overview_recycler.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)

@@ -1,9 +1,10 @@
 package flhan.de.financemanager.di
 
+import android.app.Application
+import android.content.Context
 import android.preference.PreferenceManager
 import dagger.Module
 import dagger.Provides
-import flhan.de.financemanager.App
 import flhan.de.financemanager.common.FirebaseClient
 import flhan.de.financemanager.common.RemoteDataStore
 import flhan.de.financemanager.common.UserSettings
@@ -12,14 +13,18 @@ import flhan.de.financemanager.login.AuthManager
 import flhan.de.financemanager.login.AuthManagerImpl
 import javax.inject.Singleton
 
+
 /**
  * Created by Florian on 10.09.2017.
  */
 @Module
-class AppModule(val app: App) {
+class AppModule {
+
     @Provides
     @Singleton
-    fun app() = app
+    fun provideContext(application: Application): Context {
+        return application
+    }
 
     @Provides
     @Singleton
@@ -27,7 +32,7 @@ class AppModule(val app: App) {
 
     @Provides
     @Singleton
-    fun userSettings(): UserSettings = UserSettingsImpl(PreferenceManager.getDefaultSharedPreferences(app.applicationContext))
+    fun userSettings(context: Context): UserSettings = UserSettingsImpl(PreferenceManager.getDefaultSharedPreferences(context))
 
     @Provides
     @Singleton
