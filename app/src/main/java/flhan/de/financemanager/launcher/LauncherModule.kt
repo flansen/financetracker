@@ -2,6 +2,7 @@ package flhan.de.financemanager.launcher
 
 import dagger.Module
 import dagger.Provides
+import flhan.de.financemanager.base.scheduler.SchedulerProvider
 
 /**
  * Created by fhansen on 06.10.17.
@@ -10,6 +11,7 @@ import dagger.Provides
 class LauncherModule {
 
     @Provides
-    fun presenter(checkAuthInteractor: CheckAuthInteractorImpl): LauncherContract.Presenter = LauncherPresenter(checkAuthInteractor)
+    fun presenter(checkAuthInteractor: CheckAuthInteractorImpl,
+                  schedulerProvider: SchedulerProvider): LauncherContract.Presenter = LauncherPresenter(checkAuthInteractor, schedulerProvider)
 
 }
