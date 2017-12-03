@@ -5,6 +5,9 @@ import android.content.Context
 import android.preference.PreferenceManager
 import dagger.Module
 import dagger.Provides
+import flhan.de.financemanager.App
+import flhan.de.financemanager.base.scheduler.SchedulerProvider
+import flhan.de.financemanager.base.scheduler.SchedulerProviderImpl
 import flhan.de.financemanager.common.FirebaseClient
 import flhan.de.financemanager.common.RemoteDataStore
 import flhan.de.financemanager.common.UserSettings
@@ -12,7 +15,6 @@ import flhan.de.financemanager.common.UserSettingsImpl
 import flhan.de.financemanager.login.AuthManager
 import flhan.de.financemanager.login.AuthManagerImpl
 import javax.inject.Singleton
-
 
 /**
  * Created by Florian on 10.09.2017.
@@ -37,5 +39,9 @@ class AppModule {
     @Provides
     @Singleton
     fun remoteDataStore(userSettings: UserSettings): RemoteDataStore = FirebaseClient(userSettings)
+
+    @Provides
+    @Singleton
+    fun schedulerProvider(): SchedulerProvider = SchedulerProviderImpl()
 
 }

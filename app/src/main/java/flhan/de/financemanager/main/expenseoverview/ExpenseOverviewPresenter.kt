@@ -1,6 +1,8 @@
 package flhan.de.financemanager.main.expenseoverview
 
+import flhan.de.financemanager.base.BasePresenter
 import flhan.de.financemanager.base.InteractorStatus
+import flhan.de.financemanager.base.scheduler.SchedulerProvider
 import flhan.de.financemanager.common.Insert
 import flhan.de.financemanager.common.ListEvent
 import flhan.de.financemanager.common.Remove
@@ -15,8 +17,9 @@ import io.reactivex.Observable
  */
 class ExpenseOverviewPresenter(
         private val view: ExpenseOverviewContract.View,
-        private val fetchExpensesInteractor: FetchExpensesInteractor
-) : ExpenseOverviewContract.Presenter {
+        private val fetchExpensesInteractor: FetchExpensesInteractor,
+        schedulerProvider: SchedulerProvider
+) : BasePresenter(schedulerProvider), ExpenseOverviewContract.Presenter {
     override val expenses: Observable<ListEvent<Expense>>
 
     init {

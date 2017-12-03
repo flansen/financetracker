@@ -1,16 +1,15 @@
 package flhan.de.financemanager.login.createjoinhousehold
 
+import flhan.de.financemanager.base.BasePresenter
 import flhan.de.financemanager.base.InteractorStatus
+import flhan.de.financemanager.base.scheduler.SchedulerProvider
 import flhan.de.financemanager.common.GENERIC_ERROR_KEY
 import flhan.de.financemanager.common.NO_SUCH_HOUSEHOLD_KEY
 import flhan.de.financemanager.common.validators.EmailValidator
 import flhan.de.financemanager.common.validators.NameValidator
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
 import io.reactivex.rxkotlin.addTo
-import io.reactivex.schedulers.Schedulers
 
 /**
  * Created by Florian on 29.09.2017.
@@ -20,14 +19,13 @@ class CreateJoinHouseholdPresenter(
         private val nameValidator: NameValidator,
         private val emailValidator: EmailValidator,
         private val createHouseholdInteractor: CreateHouseholdInteractor,
-        private val joinHouseholdByMailInteractor: JoinHouseholdByMailInteractor
-) : CreateJoinHouseholdContract.Presenter {
+        private val joinHouseholdByMailInteractor: JoinHouseholdByMailInteractor,
+        schedulerProvider: SchedulerProvider
+) : BasePresenter(schedulerProvider), CreateJoinHouseholdContract.Presenter {
 
     override lateinit var canSubmitObservable: Observable<Boolean>
     override lateinit var loadingObservable: Observable<Boolean>
     override lateinit var errorObservable: Observable<CreateJoinErrorState>
-
-    private val disposables = CompositeDisposable()
 
     override fun attach() {
         canSubmitObservable = view.stateObservable.map {
@@ -67,8 +65,8 @@ class CreateJoinHouseholdPresenter(
 
         interactorState
                 .filter { it.status == InteractorStatus.Success }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(scheduler.io())
+                .observeOn(scheduler.main())
                 .subscribe({
                     if (it.result != null)
                         view.dismiss()
