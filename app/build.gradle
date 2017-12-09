@@ -33,29 +33,35 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlinVersion"
-    compile "io.reactivex.rxjava2:rxandroid:$rootProject.rxAndroidVersion"
-    compile "io.reactivex.rxjava2:rxkotlin:$rootProject.rxkotlinVersion"
+    implementation "io.reactivex.rxjava2:rxandroid:$rootProject.rxAndroidVersion"
+    implementation "io.reactivex.rxjava2:rxkotlin:$rootProject.rxkotlinVersion"
 
-    compile "com.jakewharton.rxbinding2:rxbinding-kotlin:$rootProject.rxbindingVersion"
-    compile "com.jakewharton.rxbinding2:rxbinding-support-v4-kotlin:$rootProject.rxbindingVersion"
-    compile "com.jakewharton.rxbinding2:rxbinding-appcompat-v7-kotlin:$rootProject.rxbindingVersion"
-    compile "com.jakewharton.rxbinding2:rxbinding-design-kotlin:$rootProject.rxbindingVersion"
-    compile "com.jakewharton.rxbinding2:rxbinding-recyclerview-v7-kotlin:$rootProject.rxbindingVersion"
+    implementation "com.jakewharton.rxbinding2:rxbinding-kotlin:$rootProject.rxbindingVersion"
+    implementation "com.jakewharton.rxbinding2:rxbinding-support-v4-kotlin:$rootProject.rxbindingVersion"
+    implementation "com.jakewharton.rxbinding2:rxbinding-appcompat-v7-kotlin:$rootProject.rxbindingVersion"
+    implementation "com.jakewharton.rxbinding2:rxbinding-design-kotlin:$rootProject.rxbindingVersion"
+    implementation "com.jakewharton.rxbinding2:rxbinding-recyclerview-v7-kotlin:$rootProject.rxbindingVersion"
 
-    compile "com.google.firebase:firebase-auth:$rootProject.firebaseVersion"
-    compile "com.google.firebase:firebase-core:$rootProject.firebaseVersion"
-    compile "com.google.firebase:firebase-database:$rootProject.firebaseVersion"
-    compile "com.google.android.gms:play-services-auth:$rootProject.firebaseVersion"
+    implementation "com.google.firebase:firebase-auth:$rootProject.firebaseVersion"
+    implementation "com.google.firebase:firebase-core:$rootProject.firebaseVersion"
+    implementation "com.google.firebase:firebase-database:$rootProject.firebaseVersion"
+    implementation "com.google.android.gms:play-services-auth:$rootProject.firebaseVersion"
 
     // Dagger
-    compile "com.google.dagger:dagger:$rootProject.daggerVersion"
+    implementation "com.google.dagger:dagger:$rootProject.daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
     kapt "com.google.dagger:dagger-android-processor:$rootProject.daggerVersion"
-    compile "com.google.dagger:dagger-android-support:$rootProject.daggerVersion"
+    implementation "com.google.dagger:dagger-android-support:$rootProject.daggerVersion"
 
+    //For LiveData, and ViewModel, add
+    implementation "android.arch.lifecycle:extensions:$rootProject.archComponentsVersion"
+    //For controlling LiveData background threads in your tests, add:
+    testImplementation "android.arch.core:core-testing:$rootProject.archComponentsVersion"
+    //To use LiveData with ReactiveStreams API, add:
+    implementation "android.arch.lifecycle:reactivestreams:$rootProject.archComponentsVersion"
 
-    compile "com.amulyakhare:com.amulyakhare.textdrawable:$rootProject.textdrawableVersion"
-    compile "com.roughike:bottom-bar:$rootProject.roughikeVersion"
+    implementation "com.amulyakhare:com.amulyakhare.textdrawable:$rootProject.textdrawableVersion"
+    implementation "com.roughike:bottom-bar:$rootProject.roughikeVersion"
 }
 
 apply plugin: 'com.google.gms.google-services'
