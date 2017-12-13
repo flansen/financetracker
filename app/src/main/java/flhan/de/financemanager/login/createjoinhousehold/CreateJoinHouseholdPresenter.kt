@@ -7,9 +7,10 @@ import flhan.de.financemanager.common.GENERIC_ERROR_KEY
 import flhan.de.financemanager.common.NO_SUCH_HOUSEHOLD_KEY
 import flhan.de.financemanager.common.validators.EmailValidator
 import flhan.de.financemanager.common.validators.NameValidator
+import flhan.de.financemanager.login.createjoinhousehold.InputState.*
 import io.reactivex.Observable
-import io.reactivex.functions.BiFunction
 import io.reactivex.rxkotlin.addTo
+import io.reactivex.rxkotlin.withLatestFrom
 
 /**
  * Created by Florian on 29.09.2017.
@@ -30,17 +31,17 @@ class CreateJoinHouseholdPresenter(
     override fun attach() {
         canSubmitObservable = view.stateObservable.map {
             when (it.inputState) {
-                InputState.Create -> return@map isValidName(it.text)
-                InputState.Join -> return@map isValidMail(it.text)
+                Create -> return@map isValidName(it.text)
+                Join -> return@map isValidMail(it.text)
                 else -> return@map false
             }
         }
 
         val interactorState =
                 view.clickSubject
-                        .withLatestFrom(view.stateObservable, BiFunction { _: Unit, state: ViewState -> state })
+                        .withLatestFrom(view.stateObservable, { _, viewState -> viewState })
                         .flatMap { state ->
-                            if (state.inputState == InputState.Create) {
+                            if (state.inputState == Create) {
                                 createHouseholdInteractor.execute(state.text)
                             } else {
                                 joinHouseholdByMailInteractor.execute(state.text)

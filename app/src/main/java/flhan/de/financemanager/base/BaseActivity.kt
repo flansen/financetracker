@@ -1,5 +1,6 @@
 package flhan.de.financemanager.base
 
+import android.arch.lifecycle.LifecycleActivity
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity

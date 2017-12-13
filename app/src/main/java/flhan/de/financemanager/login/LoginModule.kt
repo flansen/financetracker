@@ -1,5 +1,6 @@
 package flhan.de.financemanager.login
 
+import android.content.Context
 import dagger.Module
 import dagger.Provides
 import flhan.de.financemanager.base.scheduler.SchedulerProvider
@@ -11,8 +12,8 @@ import flhan.de.financemanager.base.scheduler.SchedulerProvider
 class LoginModule {
 
     @Provides
-    fun providesPresenter(loginView: LoginActivity,
-                          loginInteractor: LoginInteractorImpl,
-                          loginRouter: LoginRouterImpl,
-                          schedulerProvider: SchedulerProvider): LoginContract.Presenter = LoginPresenter(loginView, loginInteractor, loginRouter, schedulerProvider)
+    fun router(context: Context): LoginRouter = LoginRouterImpl(context)
+
+    @Provides
+    fun interactor(authManager: AuthManager): LoginInteractor = LoginInteractorImpl(authManager)
 }
