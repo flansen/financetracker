@@ -19,11 +19,13 @@ class UserSettingsImpl @Inject constructor(private val sharedPreferences: Shared
 
     companion object {
         private const val USER_ID_KEY = "userId"
+        private const val USER_ID_FALLBACK = ""
         private const val HOUSEHOLD_ID_KEY = "householdId"
+        private const val HOUSEHOLD_ID_FALLBACK = ""
     }
 
     override fun getHouseholdId(): String {
-        return sharedPreferences.getString(HOUSEHOLD_ID_KEY, "")
+        return sharedPreferences.getString(HOUSEHOLD_ID_KEY, HOUSEHOLD_ID_FALLBACK)
     }
 
     override fun setHouseholdId(id: String) {
@@ -35,7 +37,7 @@ class UserSettingsImpl @Inject constructor(private val sharedPreferences: Shared
     }
 
     override fun getUserId(): String {
-        return sharedPreferences.getString(USER_ID_KEY, "")
+        return sharedPreferences.getString(USER_ID_KEY, USER_ID_FALLBACK)
     }
 
     override fun hasUserData(): Single<Boolean> {

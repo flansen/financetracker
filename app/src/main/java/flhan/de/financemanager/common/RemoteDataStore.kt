@@ -77,7 +77,7 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
     override fun getCurrentUser(): User {
         val user = User()
         val currentAuthorizedUser = FirebaseAuth.getInstance().currentUser
-        if (currentAuthorizedUser != null) {
+        currentAuthorizedUser?.apply {
             user.name = currentAuthorizedUser.displayName ?: ""
             user.email = currentAuthorizedUser.email ?: ""
         }
@@ -93,6 +93,7 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
             rootReference.orderByChild("creator")
                     .equalTo(email)
                     .addListenerForSingleValueEvent(object : ValueEventListener {
+
                         override fun onCancelled(databaseError: DatabaseError?) {
                             emitter.onSuccess(RequestResult(null, databaseError?.toException() ?: Exception("Could not fetch household for email $email")))
                         }
@@ -123,31 +124,34 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
             var isInitialLoadingDone = false
 
             val listener = object : ValueEventListener {
-                override fun onCancelled(p0: DatabaseError?) {
-                    emitter.onError(p0?.toException() ?: Throwable("Listener.OnCancelled"))
+                override fun onCancelled(databaseError: DatabaseError?) {
+                    emitter.onError(databaseError?.toException() ?: Throwable("Listener.OnCancelled"))
                 }
 
-                override fun onDataChange(p0: DataSnapshot?) {
+                override fun onDataChange(dataSnapshot: DataSnapshot?) {
                     isInitialLoadingDone = true
                     emitter.onNext(users)
                 }
             }
             val childListener = object : ChildEventListener {
-                override fun onCancelled(p0: DatabaseError?) {
+                override fun onCancelled(databaseError: DatabaseError?) {
                 }
 
-                override fun onChildMoved(p0: DataSnapshot?, p1: String?) {
+                override fun onChildMoved(dataSnapshot: DataSnapshot?, p1: String?) {
                 }
 
-                override fun onChildChanged(p0: DataSnapshot?, p1: String?) {
+                override fun onChildChanged(dataSnapshot: DataSnapshot?, p1: String?) {
                 }
 
-                override fun onChildAdded(p0: DataSnapshot?, p1: String?) {
-                    if (p0 != null) {
-                        val user = p0.getValue(User::class.java)
-                        user?.id = p0.key
-                        if (user != null)
+                // All childs are added before onDataChange is getting called.
+                // Before emitting, we wait for all childs to be emitted.
+                override fun onChildAdded(dataSnapshot: DataSnapshot?, p1: String?) {
+                    dataSnapshot?.let {
+                        val user = dataSnapshot.getValue(User::class.java)
+                        user?.let {
+                            user.id = dataSnapshot.key
                             users.add(user)
+                        }
                     }
                     if (isInitialLoadingDone)
                         emitter.onNext(users)
@@ -158,60 +162,61 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
 
             }
 
-            //TODO: Remove hardcoded value
+            /*//TODO: Remove hardcoded value
             val ref = rootReference.child("-Kva_1jCpajfZiuLeqoD/users")
             ref.addListenerForSingleValueEvent(listener)
             ref.addChildEventListener(childListener)
             emitter.setCancellable {
                 ref.removeEventListener(listener)
                 ref.removeEventListener(childListener)
-            }
+            }*/
         }
     }
 
 
     private fun createExpenseObservable(users: List<User>): Observable<RepositoryEvent<Expense>> {
-        return Observable.create {
+        return Observable.create { emitter ->
             val listener = object : ChildEventListener {
-                override fun onCancelled(p0: DatabaseError?) {
-                    it.onError(p0?.toException()?.cause ?: Throwable("Listener.OnCancelled"))
+                override fun onCancelled(databaseError: DatabaseError?) {
+                    emitter.onError(databaseError?.toException()?.cause ?: Throwable("Listener.OnCancelled"))
                 }
 
-                override fun onChildMoved(p0: DataSnapshot?, p1: String?) {
+                override fun onChildMoved(dataSnapshot: DataSnapshot?, p1: String?) {
                 }
 
-                override fun onChildChanged(p0: DataSnapshot?, p1: String?) {
-                    if (p0 != null) {
-                        val expense = p0.getValue(Expense::class.java)
-                        expense?.id = p0.key
+                override fun onChildChanged(dataSnapshot: DataSnapshot?, p1: String?) {
+                    dataSnapshot?.let {
+                        val expense = dataSnapshot.getValue(Expense::class.java)
+                        expense?.id = dataSnapshot.key
                         expense?.user = users.first { expense?.creator == it.id }
                         val event = Update<Expense>(expense!!)
-                        it.onNext(event)
+                        emitter.onNext(event)
                     }
                 }
 
-                override fun onChildAdded(p0: DataSnapshot?, p1: String?) {
-                    if (p0 != null) {
-                        val expense = p0.getValue(Expense::class.java)
-                        expense?.id = p0.key
+
+                override fun onChildAdded(dataSnapshot: DataSnapshot?, p1: String?) {
+                    dataSnapshot?.let {
+                        val expense = dataSnapshot.getValue(Expense::class.java)
+                        expense?.id = dataSnapshot.key
                         expense?.user = users.first { expense?.creator == it.id }
                         val event = Create<Expense>(expense!!)
-                        it.onNext(event)
+                        emitter.onNext(event)
                     }
                 }
 
-                override fun onChildRemoved(p0: DataSnapshot?) {
-                    if (p0 != null) {
-                        val key = p0.key
+                override fun onChildRemoved(dataSnapshot: DataSnapshot?) {
+                    dataSnapshot?.let {
+                        val key = dataSnapshot.key
                         val event = Delete<Expense>(key)
-                        it.onNext(event)
+                        emitter.onNext(event)
                     }
                 }
             }
             //TODO: Remove hardcoded value
             //            rootReference.child("${userSettings.getHouseholdId()}/expenses").addChildEventListener(listener)
-            rootReference.child("-Kva_1jCpajfZiuLeqoD/expenses").addChildEventListener(listener)
-            it.setCancellable { rootReference.removeEventListener(listener) }
+            //rootReference.child("-Kva_1jCpajfZiuLeqoD/expenses").addChildEventListener(listener)
+            emitter.setCancellable { rootReference.removeEventListener(listener) }
         }
     }
 
