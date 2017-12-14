@@ -5,14 +5,11 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import dagger.android.AndroidInjection
 import flhan.de.financemanager.R
-import io.reactivex.disposables.CompositeDisposable
 
 /**
  * Created by Florian on 09.09.2017.
  */
 abstract class BaseActivity : AppCompatActivity() {
-    protected val disposables: CompositeDisposable = CompositeDisposable()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidInjection.inject(this)
@@ -29,10 +26,5 @@ abstract class BaseActivity : AppCompatActivity() {
 
     fun showErrorDialog(messageId: Int, titleId: Int) {
         showErrorDialog(getString(messageId), getString(titleId))
-    }
-
-    override fun onDestroy() {
-        disposables.dispose()
-        super.onDestroy()
     }
 }

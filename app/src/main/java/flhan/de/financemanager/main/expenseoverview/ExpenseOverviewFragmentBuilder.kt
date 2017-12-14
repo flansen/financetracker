@@ -7,7 +7,7 @@ import dagger.android.ContributesAndroidInjector
 @Module
 abstract class ExpenseOverviewFragmentBuilder {
 
-    @ContributesAndroidInjector(modules = arrayOf(ExpenseOverviewModule::class))
+    @ContributesAndroidInjector(modules = [ExpenseOverviewModule::class])
     abstract fun provideExpenseOverviewFragmentFactory(): ExpenseOverviewFragment
 
 }
