@@ -45,6 +45,7 @@ class LoginActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
         setContentView(R.layout.activity_login)
         ButterKnife.bind(this)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(LoginViewModel::class.java)
+
         viewModel.error.observe(this, Observer { error ->
             error?.let { showErrorDialog(it) }
         })

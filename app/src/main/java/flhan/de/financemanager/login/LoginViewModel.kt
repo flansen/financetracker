@@ -4,8 +4,10 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import flhan.de.financemanager.base.scheduler.SchedulerProvider
 
-class LoginViewModel(private val loginInteractor: LoginInteractor,
-                     private val schedulerProvider: SchedulerProvider) : ViewModel() {
+class LoginViewModel(
+        private val loginInteractor: LoginInteractor,
+        private val schedulerProvider: SchedulerProvider)
+    : ViewModel() {
 
     val error = MutableLiveData<String>()
 

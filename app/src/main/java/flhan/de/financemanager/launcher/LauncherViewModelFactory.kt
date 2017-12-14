@@ -1,19 +1,19 @@
-package flhan.de.financemanager.login
+package flhan.de.financemanager.launcher
 
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import flhan.de.financemanager.base.scheduler.SchedulerProvider
 import javax.inject.Inject
 
-class LoginViewModelFactory @Inject constructor(
-        private val loginInteractor: LoginInteractor,
+class LauncherViewModelFactory @Inject constructor(
+        private val interactor: CheckAuthInteractor,
         private val schedulerProvider: SchedulerProvider)
     : ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
-            return LoginViewModel(
-                    loginInteractor,
+        if (modelClass.isAssignableFrom(LauncherViewModel::class.java)) {
+            return LauncherViewModel(
+                    interactor,
                     schedulerProvider) as T
         }
         throw IllegalArgumentException("Unknown ViewModel")

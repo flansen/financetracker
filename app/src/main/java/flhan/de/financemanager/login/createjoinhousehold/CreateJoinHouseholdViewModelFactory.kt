@@ -12,8 +12,8 @@ class CreateJoinHouseholdViewModelFactory @Inject constructor(
         private val joinHouseholdByMailInteractor: JoinHouseholdByMailInteractor,
         private val schedulerProvider: SchedulerProvider,
         private val nameValidator: NameValidator,
-        private val emailValidator: EmailValidator
-) : ViewModelProvider.Factory {
+        private val emailValidator: EmailValidator)
+    : ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(CreateJoinHouseholdViewModel::class.java)) {
