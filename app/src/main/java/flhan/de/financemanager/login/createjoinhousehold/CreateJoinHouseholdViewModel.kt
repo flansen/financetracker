@@ -10,10 +10,12 @@ import flhan.de.financemanager.common.NO_SUCH_HOUSEHOLD_KEY
 import flhan.de.financemanager.common.data.Household
 import flhan.de.financemanager.common.validators.EmailValidator
 import flhan.de.financemanager.common.validators.NameValidator
-import flhan.de.financemanager.login.createjoinhousehold.CreateJoinHouseholdViewModel.CreateJoinFocusTarget.Create
-import flhan.de.financemanager.login.createjoinhousehold.CreateJoinHouseholdViewModel.CreateJoinFocusTarget.Join
+import flhan.de.financemanager.login.createjoinhousehold.CreateJoinHouseholdViewModel.CreateJoinFocusTarget.Email
+import flhan.de.financemanager.login.createjoinhousehold.CreateJoinHouseholdViewModel.CreateJoinFocusTarget.Name
 import flhan.de.financemanager.login.createjoinhousehold.ErrorType.NoSuchHousehold
 import flhan.de.financemanager.login.createjoinhousehold.ErrorType.Unknown
+import flhan.de.financemanager.login.createjoinhousehold.InputState.Create
+import flhan.de.financemanager.login.createjoinhousehold.InputState.Join
 
 class CreateJoinHouseholdViewModel(
         private val nameValidator: NameValidator,
@@ -36,15 +38,15 @@ class CreateJoinHouseholdViewModel(
         isLoading.value = false
         errorState.value = CreateJoinErrorState(ErrorType.None)
 
-        inputStateMediator = MediatorLiveData<InputState>()
-        inputStateMediator.addSource(name, { inputStateMediator.value = InputState.Create })
-        inputStateMediator.addSource(mail, { inputStateMediator.value = InputState.Join })
+        inputStateMediator = MediatorLiveData()
+        inputStateMediator.addSource(name, { inputStateMediator.value = Create })
+        inputStateMediator.addSource(mail, { inputStateMediator.value = Join })
 
         canSubmit.addSource(inputStateMediator, { inputState ->
-            var isValid: Boolean = false
+            var isValid = false
             when (inputState) {
-                InputState.Create -> isValid = nameValidator.validate(name.value ?: "")
-                InputState.Join -> isValid = emailValidator.validate(mail.value ?: "")
+                Create -> isValid = nameValidator.validate(name.value ?: "")
+                Join -> isValid = emailValidator.validate(mail.value ?: "")
             }
             canSubmit.value = isValid
         })
@@ -52,15 +54,15 @@ class CreateJoinHouseholdViewModel(
 
     fun focusChanged(target: CreateJoinFocusTarget) {
         when (target) {
-            Create -> mail.value = ""
-            Join -> name.value = ""
+            Name -> mail.value = ""
+            Email -> name.value = ""
         }
     }
 
     fun submit(success: () -> Unit) {
         when (inputStateMediator.value) {
-            InputState.Join -> joinHousehold(success)
-            InputState.Create -> createHousehold(success)
+            Join -> joinHousehold(success)
+            Create -> createHousehold(success)
             null -> TODO()
         }
     }
@@ -105,6 +107,6 @@ class CreateJoinHouseholdViewModel(
     }
 
     enum class CreateJoinFocusTarget {
-        Create, Join
+        Name, Email
     }
 }

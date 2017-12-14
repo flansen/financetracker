@@ -17,8 +17,8 @@ import flhan.de.financemanager.base.BaseActivity
 import flhan.de.financemanager.common.extensions.stringByName
 import flhan.de.financemanager.common.extensions.toast
 import flhan.de.financemanager.common.extensions.visible
-import flhan.de.financemanager.login.createjoinhousehold.CreateJoinHouseholdViewModel.CreateJoinFocusTarget.Create
-import flhan.de.financemanager.login.createjoinhousehold.CreateJoinHouseholdViewModel.CreateJoinFocusTarget.Join
+import flhan.de.financemanager.login.createjoinhousehold.CreateJoinHouseholdViewModel.CreateJoinFocusTarget.Email
+import flhan.de.financemanager.login.createjoinhousehold.CreateJoinHouseholdViewModel.CreateJoinFocusTarget.Name
 import flhan.de.financemanager.login.createjoinhousehold.ErrorType.*
 import flhan.de.financemanager.main.MainActivity
 import kotlinx.android.synthetic.main.activity_create_join_household.*
@@ -37,26 +37,6 @@ class CreateJoinHouseholdActivity : BaseActivity() {
         ButterKnife.bind(this)
         viewModel = ViewModelProviders.of(this, factory).get(CreateJoinHouseholdViewModel::class.java)
         setupView()
-    }
-
-    private fun setupView() {
-        setSupportActionBar(toolbar)
-
-        viewModel.canSubmit.observe(this, Observer { invalidateOptionsMenu() })
-        viewModel.errorState.observe(this, Observer { handleError(it) })
-        viewModel.isLoading.observe(this, Observer { createJoinLoadingView.visible(it ?: false) })
-        viewModel.name.observe(this, Observer {
-            val text = nameText.text
-            if (text.toString() != it) {
-                nameText.setText(it)
-            }
-        })
-        viewModel.mail.observe(this, Observer {
-            val text = mailText.text
-            if (text.toString() != it) {
-                mailText.setText(it)
-            }
-        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -87,10 +67,30 @@ class CreateJoinHouseholdActivity : BaseActivity() {
     fun onFocusChanged(view: View, hasFocus: Boolean) {
         if (hasFocus) {
             when (view.id) {
-                R.id.mailText -> viewModel.focusChanged(Join)
-                R.id.nameText -> viewModel.focusChanged(Create)
+                R.id.mailText -> viewModel.focusChanged(Email)
+                R.id.nameText -> viewModel.focusChanged(Name)
             }
         }
+    }
+
+    private fun setupView() {
+        setSupportActionBar(toolbar)
+
+        viewModel.canSubmit.observe(this, Observer { invalidateOptionsMenu() })
+        viewModel.errorState.observe(this, Observer { handleError(it) })
+        viewModel.isLoading.observe(this, Observer { createJoinLoadingView.visible(it ?: false) })
+        viewModel.name.observe(this, Observer {
+            val text = nameText.text
+            if (text.toString() != it) {
+                nameText.setText(it)
+            }
+        })
+        viewModel.mail.observe(this, Observer {
+            val text = mailText.text
+            if (text.toString() != it) {
+                mailText.setText(it)
+            }
+        })
     }
 
     private fun handleError(errorState: CreateJoinErrorState?) {
