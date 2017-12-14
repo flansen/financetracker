@@ -7,9 +7,9 @@ import android.content.res.Resources
  * Created by Florian on 06.10.2017.
  */
 fun Int.dpToPx(): Int {
-    return (this * Resources.getSystem().getDisplayMetrics().density).toInt()
+    return (this * Resources.getSystem().displayMetrics.density).toInt()
 }
 
 fun Int.pxToDp(): Int {
-    return (this / Resources.getSystem().getDisplayMetrics().density).toInt()
+    return (this / Resources.getSystem().displayMetrics.density).toInt()
 }
