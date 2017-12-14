@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import butterknife.BindView
+import butterknife.ButterKnife
 import com.amulyakhare.textdrawable.TextDrawable
 import com.amulyakhare.textdrawable.util.ColorGenerator
 import flhan.de.financemanager.R
@@ -24,8 +26,8 @@ import io.reactivex.rxkotlin.addTo
 //TODO: Extract Reactive part and abstract it
 //TODO: Extract Disposable Interface
 class ExpenseOverviewAdapter(expenses: Observable<ListEvent<Expense>>) : RecyclerView.Adapter<ExpenseOverviewViewHolder>() {
-    val items: MutableList<Expense> = mutableListOf()
 
+    private val items: MutableList<Expense> = mutableListOf()
     private val disposable: CompositeDisposable = CompositeDisposable()
 
     init {
@@ -49,8 +51,9 @@ class ExpenseOverviewAdapter(expenses: Observable<ListEvent<Expense>>) : Recycle
         }.addTo(disposable)
     }
 
-    override fun getItemCount(): Int {
-        return items.count()
+    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ExpenseOverviewViewHolder {
+        val view = LayoutInflater.from(parent!!.context).inflate(R.layout.expense_overview_item, parent, false)
+        return ExpenseOverviewViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ExpenseOverviewViewHolder?, position: Int) {
@@ -64,9 +67,8 @@ class ExpenseOverviewAdapter(expenses: Observable<ListEvent<Expense>>) : Recycle
         holder?.nameView?.setImageDrawable(drawable)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ExpenseOverviewViewHolder {
-        val view = LayoutInflater.from(parent!!.context).inflate(R.layout.expense_overview_item, parent, false)
-        return ExpenseOverviewViewHolder(view)
+    override fun getItemCount(): Int {
+        return items.count()
     }
 
     fun dispose() {
@@ -74,6 +76,12 @@ class ExpenseOverviewAdapter(expenses: Observable<ListEvent<Expense>>) : Recycle
     }
 }
 
-class ExpenseOverviewViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-    val nameView: ImageView by lazy { view.findViewById<ImageView>(R.id.expense_overview_item_name_view) }
+class ExpenseOverviewViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+
+    @BindView(R.id.expense_overview_item_name_view)
+    lateinit var nameView: ImageView
+
+    init {
+        ButterKnife.bind(this, view)
+    }
 }
