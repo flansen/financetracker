@@ -10,7 +10,7 @@ interface LoginInteractor {
     fun login(token: String): Observable<AuthResult>
 }
 
-class LoginInteractorImpl (
+class LoginInteractorImpl @Inject constructor(
         private val authManager: AuthManager
 ) : LoginInteractor {
 

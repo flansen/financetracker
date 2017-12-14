@@ -4,15 +4,16 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
+import butterknife.ButterKnife
+import butterknife.OnClick
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.GoogleApiClient
-import com.jakewharton.rxbinding2.view.clicks
 import flhan.de.financemanager.R
 import flhan.de.financemanager.base.BaseActivity
-import io.reactivex.rxkotlin.addTo
+import flhan.de.financemanager.login.createjoinhousehold.CreateJoinHouseholdActivity
 import kotlinx.android.synthetic.main.activity_login.*
 import javax.inject.Inject
 
@@ -44,27 +45,12 @@ class LoginActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(LoginViewModel::class.java)
         setContentView(R.layout.activity_login)
-        loginButton.clicks().subscribe { startGoogleAuth() }.addTo(disposables)
-        viewModel.loginSuccess.observe(this, Observer { success ->
-            if (success == true) {
-                dismiss()
-            }
-        })
-
+        ButterKnife.bind(this)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(LoginViewModel::class.java)
         viewModel.error.observe(this, Observer { error ->
             error?.let { showErrorDialog(it) }
         })
-    }
-
-    fun dismiss() {
-        finish()
-    }
-
-    private fun startGoogleAuth() {
-        val signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient)
-        startActivityForResult(signInIntent, SIGN_IN_ID)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -73,7 +59,7 @@ class LoginActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
             val result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
             if (result.isSuccess) {
                 result.signInAccount?.idToken?.let {
-                    viewModel.startAuth(it)
+                    viewModel.startAuth(it, { startOverview() })
                 }
             } else {
                 showErrorDialog()
@@ -84,4 +70,21 @@ class LoginActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
     override fun onConnectionFailed(p0: ConnectionResult) {
         showErrorDialog(R.string.error_connection_body, R.string.error_connection_title)
     }
+
+
+    @OnClick(R.id.login_with_google)
+    fun onLoginClicked() {
+        startGoogleAuth()
+    }
+
+    private fun startOverview() {
+        startActivity(Intent(this, CreateJoinHouseholdActivity::class.java))
+    }
+
+    private fun startGoogleAuth() {
+        val signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient)
+        startActivityForResult(signInIntent, SIGN_IN_ID)
+    }
+
+
 }
