@@ -4,7 +4,7 @@ import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import flhan.de.financemanager.base.InteractorResult
-import flhan.de.financemanager.base.InteractorStatus
+import flhan.de.financemanager.base.InteractorStatus.*
 import flhan.de.financemanager.base.scheduler.SchedulerProvider
 import flhan.de.financemanager.common.NO_SUCH_HOUSEHOLD_KEY
 import flhan.de.financemanager.common.data.Household
@@ -85,12 +85,12 @@ class CreateJoinHouseholdViewModel(
 
     private fun handleInteractorResult(interactorResult: InteractorResult<Household>, success: () -> Unit) {
         when (interactorResult.status) {
-            InteractorStatus.Loading -> isLoading.value = true
-            InteractorStatus.Error -> {
+            Loading -> isLoading.value = true
+            Error -> {
                 isLoading.value = false
                 onInteractorError(interactorResult.exception)
             }
-            InteractorStatus.Success -> {
+            Success -> {
                 isLoading.value = false
                 success()
             }
