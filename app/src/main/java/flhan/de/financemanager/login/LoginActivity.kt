@@ -19,7 +19,7 @@ import javax.inject.Inject
 class LoginActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener {
 
     companion object {
-        const val SIGN_IN_ID: Int = 12515
+        private const val SIGN_IN_ID: Int = 12515
     }
 
     private val mGoogleApiClient: GoogleApiClient by lazy {

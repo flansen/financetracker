@@ -18,8 +18,8 @@ interface UserSettings {
 class UserSettingsImpl @Inject constructor(private val sharedPreferences: SharedPreferences) : UserSettings {
 
     companion object {
-        const val USER_ID_KEY = "userId"
-        const val HOUSEHOLD_ID_KEY = "householdId"
+        private const val USER_ID_KEY = "userId"
+        private const val HOUSEHOLD_ID_KEY = "householdId"
     }
 
     override fun getHouseholdId(): String {
