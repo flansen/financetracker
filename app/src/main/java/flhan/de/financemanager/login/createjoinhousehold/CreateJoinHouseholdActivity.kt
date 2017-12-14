@@ -17,7 +17,6 @@ import flhan.de.financemanager.base.BaseActivity
 import flhan.de.financemanager.common.extensions.stringByName
 import flhan.de.financemanager.common.extensions.toast
 import flhan.de.financemanager.common.extensions.visible
-import flhan.de.financemanager.login.LoginViewModelFactory
 import flhan.de.financemanager.login.createjoinhousehold.CreateJoinHouseholdViewModel.CreateJoinFocusTarget.Create
 import flhan.de.financemanager.login.createjoinhousehold.CreateJoinHouseholdViewModel.CreateJoinFocusTarget.Join
 import flhan.de.financemanager.login.createjoinhousehold.ErrorType.*
@@ -28,10 +27,9 @@ import javax.inject.Inject
 class CreateJoinHouseholdActivity : BaseActivity() {
 
     @Inject
-    lateinit var factory: LoginViewModelFactory
-    lateinit var viewModel: CreateJoinHouseholdViewModel
+    lateinit var factory: CreateJoinHouseholdViewModelFactory
 
-    private var canSubmit = false
+    private lateinit var viewModel: CreateJoinHouseholdViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

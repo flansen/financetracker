@@ -5,7 +5,6 @@ import android.content.Context
 import android.preference.PreferenceManager
 import dagger.Module
 import dagger.Provides
-import flhan.de.financemanager.App
 import flhan.de.financemanager.base.scheduler.SchedulerProvider
 import flhan.de.financemanager.base.scheduler.SchedulerProviderImpl
 import flhan.de.financemanager.common.FirebaseClient
@@ -24,21 +23,23 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideContext(application: Application): Context {
-        return application
-    }
+    fun provideContext(application: Application): Context = application
 
     @Provides
     @Singleton
-    fun authManager(remoteDataStore: RemoteDataStore): AuthManager = AuthManagerImpl(remoteDataStore)
+    fun authManager(authManager: AuthManagerImpl): AuthManager = authManager
 
     @Provides
     @Singleton
-    fun userSettings(context: Context): UserSettings = UserSettingsImpl(PreferenceManager.getDefaultSharedPreferences(context))
+    fun userSettings(userSettings: UserSettingsImpl): UserSettings = userSettings
 
     @Provides
     @Singleton
-    fun remoteDataStore(userSettings: UserSettings): RemoteDataStore = FirebaseClient(userSettings)
+    fun remoteDataStore(firebaseClient: FirebaseClient): RemoteDataStore = firebaseClient
+
+    @Provides
+    @Singleton
+    fun sharedPrefs(application: Application) = PreferenceManager.getDefaultSharedPreferences(application)
 
     @Provides
     @Singleton

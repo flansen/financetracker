@@ -81,6 +81,4 @@ class LoginActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
         val signInIntent = GoogleSignInApi.getSignInIntent(mGoogleApiClient)
         startActivityForResult(signInIntent, SIGN_IN_ID)
     }
-
-
 }

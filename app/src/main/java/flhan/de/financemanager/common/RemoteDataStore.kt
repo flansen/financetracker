@@ -15,6 +15,7 @@ import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
 import io.reactivex.Single
 import io.reactivex.SingleEmitter
+import javax.inject.Inject
 
 /**
  * Created by Florian on 14.09.2017.
@@ -29,9 +30,8 @@ interface RemoteDataStore {
     fun loadUsers(): Observable<MutableList<User>>
 }
 
-class FirebaseClient(
-        val userSettings: UserSettings
-) : RemoteDataStore {
+class FirebaseClient @Inject constructor(private val userSettings: UserSettings) : RemoteDataStore {
+
     private val firebaseDatabase by lazy { FirebaseDatabase.getInstance() }
     private val rootReference by lazy { firebaseDatabase.getReference("households") }
     private lateinit var usersObservable: Observable<MutableList<User>>
