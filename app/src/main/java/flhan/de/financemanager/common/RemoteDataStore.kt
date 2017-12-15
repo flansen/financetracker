@@ -36,10 +36,10 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
 
     init {
         initUsersObservable()
+        firebaseDatabase.setPersistenceEnabled(true)
     }
 
     override fun init() {
-        firebaseDatabase.setPersistenceEnabled(true)
         initUsersObservable()
     }
 
@@ -136,7 +136,6 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
 
                 override fun onDataChange(dataSnapshot: DataSnapshot?) {
                     isInitialLoadingDone = true
-                    emitter.onNext(users)
                 }
             }
 
