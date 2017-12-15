@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/create_join_household_action_done"
+        android:id="@+id/createJoinDone"
         android:icon="@drawable/ic_check_black"
         android:title="@string/done"
         app:showAsAction="always" />

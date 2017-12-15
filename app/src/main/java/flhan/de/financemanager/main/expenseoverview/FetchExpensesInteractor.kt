@@ -1,7 +1,7 @@
 package flhan.de.financemanager.main.expenseoverview
 
 import flhan.de.financemanager.base.InteractorResult
-import flhan.de.financemanager.base.InteractorStatus
+import flhan.de.financemanager.base.InteractorStatus.Success
 import flhan.de.financemanager.common.RemoteDataStore
 import flhan.de.financemanager.common.data.Expense
 import flhan.de.financemanager.common.events.RepositoryEvent
@@ -15,14 +15,12 @@ interface FetchExpensesInteractor {
     fun fetchAll(): Observable<InteractorResult<RepositoryEvent<Expense>>>
 }
 
-class FetchExpensesInteractorImpl @Inject constructor(
-        val dataStore: RemoteDataStore
-) : FetchExpensesInteractor {
+class FetchExpensesInteractorImpl @Inject constructor(private val dataStore: RemoteDataStore)
+    : FetchExpensesInteractor {
 
     override fun fetchAll(): Observable<InteractorResult<RepositoryEvent<Expense>>> {
         return dataStore.loadExpenses().map { event ->
-            InteractorResult(InteractorStatus.Success, event)
+            InteractorResult(Success, event)
         }
     }
-
 }

@@ -5,52 +5,28 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import butterknife.BindView
+import butterknife.ButterKnife
 import com.amulyakhare.textdrawable.TextDrawable
 import com.amulyakhare.textdrawable.util.ColorGenerator
 import flhan.de.financemanager.R
-import flhan.de.financemanager.common.Insert
-import flhan.de.financemanager.common.ListEvent
-import flhan.de.financemanager.common.Remove
-import flhan.de.financemanager.common.Update
 import flhan.de.financemanager.common.data.Expense
 import flhan.de.financemanager.common.extensions.dpToPx
-import io.reactivex.Observable
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.addTo
 
 /**
  * Created by Florian on 06.10.2017.
  */
-//TODO: Extract Reactive part and abstract it
-//TODO: Extract Disposable Interface
-class ExpenseOverviewAdapter(expenses: Observable<ListEvent<Expense>>) : RecyclerView.Adapter<ExpenseOverviewViewHolder>() {
-    val items: MutableList<Expense> = mutableListOf()
+class ExpenseOverviewAdapter : RecyclerView.Adapter<ExpenseOverviewViewHolder>() {
 
-    private val disposable: CompositeDisposable = CompositeDisposable()
+    var items: List<Expense> = mutableListOf()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
-    init {
-        expenses.subscribe { listEvent ->
-            when (listEvent) {
-                is Insert -> {
-                    items.add(0, listEvent.obj)
-                    notifyItemInserted(0)
-                }
-                is Update -> {
-                    val itemIndex = items.indexOfFirst { item -> item.id == listEvent.obj.id }
-                    items[itemIndex] = listEvent.obj
-                    notifyItemChanged(itemIndex)
-                }
-                is Remove -> {
-                    val itemIndex = items.indexOfFirst { item -> item.id == listEvent.id }
-                    items.removeAt(itemIndex)
-                    notifyItemRemoved(itemIndex)
-                }
-            }
-        }.addTo(disposable)
-    }
-
-    override fun getItemCount(): Int {
-        return items.count()
+    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ExpenseOverviewViewHolder {
+        val view = LayoutInflater.from(parent!!.context).inflate(R.layout.expense_overview_item, parent, false)
+        return ExpenseOverviewViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ExpenseOverviewViewHolder?, position: Int) {
@@ -64,16 +40,17 @@ class ExpenseOverviewAdapter(expenses: Observable<ListEvent<Expense>>) : Recycle
         holder?.nameView?.setImageDrawable(drawable)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ExpenseOverviewViewHolder {
-        val view = LayoutInflater.from(parent!!.context).inflate(R.layout.expense_overview_item, parent, false)
-        return ExpenseOverviewViewHolder(view)
-    }
-
-    fun dispose() {
-        disposable.dispose()
+    override fun getItemCount(): Int {
+        return items.count()
     }
 }
 
-class ExpenseOverviewViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-    val nameView: ImageView by lazy { view.findViewById<ImageView>(R.id.expense_overview_item_name_view) }
+class ExpenseOverviewViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+
+    @BindView(R.id.expense_overview_item_name_view)
+    lateinit var nameView: ImageView
+
+    init {
+        ButterKnife.bind(this, view)
+    }
 }

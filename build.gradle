@@ -1,6 +1,6 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    ext.kotlinVersion = '1.1.51'
+    ext.kotlinVersion = '1.2.10'
     ext.googleServicesVersion = "3.1.0"
 
     repositories {
@@ -14,6 +14,8 @@ buildscript {
         classpath "com.google.gms:google-services:$googleServicesVersion"
     }
 }
+
+
 
 allprojects {
     repositories {
@@ -31,8 +33,8 @@ task clean(type: Delete) {
 
 ext {
     rxAndroidVersion = '2.0.1'
-    supportVersion = '26.0.2'
-    firebaseVersion = '11.2.2'
+    supportVersion = '26.1.0'
+    firebaseVersion = '11.6.2'
     rxbindingVersion = "2.0.0"
     rxkotlinVersion = "2.1.0"
     daggerVersion = "2.13"
@@ -40,4 +42,6 @@ ext {
     textdrawableVersion = "1.0.1"
     compileSdk = 26
     minSdk = 21
+    archComponentsVersion = "1.0.0"
+    butterknifeVersion = "8.8.1"
 }

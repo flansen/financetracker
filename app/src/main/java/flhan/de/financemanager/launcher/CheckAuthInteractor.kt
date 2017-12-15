@@ -1,9 +1,11 @@
 package flhan.de.financemanager.launcher
 
 import flhan.de.financemanager.base.InteractorResult
-import flhan.de.financemanager.base.InteractorStatus
+import flhan.de.financemanager.base.InteractorStatus.Success
 import flhan.de.financemanager.base.RequestResult
 import flhan.de.financemanager.common.UserSettings
+import flhan.de.financemanager.launcher.LauncherState.Initialized
+import flhan.de.financemanager.launcher.LauncherState.NotInitialized
 import flhan.de.financemanager.login.AuthManager
 import io.reactivex.Observable
 import javax.inject.Inject
@@ -16,9 +18,9 @@ interface CheckAuthInteractor {
 }
 
 class CheckAuthInteractorImpl @Inject constructor(
-        val authManager: AuthManager,
-        val userSettings: UserSettings
-) : CheckAuthInteractor {
+        private val authManager: AuthManager,
+        private val userSettings: UserSettings)
+    : CheckAuthInteractor {
 
     override fun execute(): Observable<InteractorResult<LauncherState>> {
         return userSettings
@@ -33,9 +35,9 @@ class CheckAuthInteractorImpl @Inject constructor(
                 }
                 .map { authResult ->
                     if (authResult.result == true)
-                        InteractorResult(InteractorStatus.Success, LauncherState.Initialized)
+                        InteractorResult(Success, Initialized)
                     else
-                        InteractorResult(InteractorStatus.Success, LauncherState.NotInitialized)
+                        InteractorResult(Success, NotInitialized)
                 }
     }
 }

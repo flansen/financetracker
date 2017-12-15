@@ -15,20 +15,16 @@ import flhan.de.financemanager.main.expenseoverview.ExpenseOverviewFragmentBuild
 @Module
 abstract class ActivityBuilder {
 
-    @ActivityScope
-    @ContributesAndroidInjector(modules = arrayOf(LoginModule::class))
+    @ContributesAndroidInjector(modules = [LoginModule::class])
     abstract fun bindLoginActivity(): LoginActivity
 
-    @ActivityScope
-    @ContributesAndroidInjector(modules = arrayOf(LauncherModule::class))
+    @ContributesAndroidInjector(modules = [LauncherModule::class])
     abstract fun bindLauncherActivity(): LauncherActivity
 
-    @ActivityScope
-    @ContributesAndroidInjector(modules = arrayOf(CreateJoinHouseholdModule::class))
+    @ContributesAndroidInjector(modules = [CreateJoinHouseholdModule::class])
     abstract fun bindCreateJoinHouseholdActivity(): CreateJoinHouseholdActivity
 
-    @ActivityScope
-    @ContributesAndroidInjector(modules = arrayOf(MainActivityModule::class, ExpenseOverviewFragmentBuilder::class))
+    @ContributesAndroidInjector(modules = [MainActivityModule::class, ExpenseOverviewFragmentBuilder::class])
     abstract fun bindMainActivity(): MainActivity
 
 }

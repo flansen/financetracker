@@ -2,7 +2,6 @@ package flhan.de.financemanager.login
 
 import dagger.Module
 import dagger.Provides
-import flhan.de.financemanager.base.scheduler.SchedulerProvider
 
 /**
  * Created by Florian on 10.09.2017.
@@ -11,8 +10,6 @@ import flhan.de.financemanager.base.scheduler.SchedulerProvider
 class LoginModule {
 
     @Provides
-    fun providesPresenter(loginView: LoginActivity,
-                          loginInteractor: LoginInteractorImpl,
-                          loginRouter: LoginRouterImpl,
-                          schedulerProvider: SchedulerProvider): LoginContract.Presenter = LoginPresenter(loginView, loginInteractor, loginRouter, schedulerProvider)
+    fun interactor(interactor: LoginInteractorImpl): LoginInteractor = interactor
+
 }

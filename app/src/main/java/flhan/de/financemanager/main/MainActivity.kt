@@ -20,7 +20,7 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        main_bottombar.setOnTabSelectListener { selectedTabId ->
+        mainBottombar.setOnTabSelectListener { selectedTabId ->
             when(selectedTabId) {
                 R.id.tab_expenses -> {
                     showTab(ExpenseOverviewFragment.newInstance())
@@ -38,8 +38,7 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector {
 
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
-
-        main_bottombar.onSaveInstanceState()
+        mainBottombar.onSaveInstanceState()
     }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> = fragmentDispatchingAndroidInjector

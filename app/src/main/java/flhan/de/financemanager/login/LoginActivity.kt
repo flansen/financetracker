@@ -1,26 +1,31 @@
 package flhan.de.financemanager.login
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
-import com.google.android.gms.auth.api.Auth
+import butterknife.ButterKnife
+import butterknife.OnClick
+import com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API
+import com.google.android.gms.auth.api.Auth.GoogleSignInApi
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.GoogleApiClient
-import com.jakewharton.rxbinding2.view.clicks
 import flhan.de.financemanager.R
 import flhan.de.financemanager.base.BaseActivity
-import io.reactivex.rxkotlin.addTo
-import kotlinx.android.synthetic.main.activity_login.*
+import flhan.de.financemanager.login.createjoinhousehold.CreateJoinHouseholdActivity
 import javax.inject.Inject
 
-//TODO: This should not be the start of the application. Instead, FirebaseAuth.AuthstateListener -> see if user is not null.
-class LoginActivity : BaseActivity(), LoginContract.View, GoogleApiClient.OnConnectionFailedListener {
-    private val SIGN_IN_ID: Int = 12515
+class LoginActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener {
+
+    companion object {
+        private const val SIGN_IN_ID: Int = 12515
+    }
+
     private val mGoogleApiClient: GoogleApiClient by lazy {
         GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, mGoogleSignInOptions)
+                .addApi(GOOGLE_SIGN_IN_API, mGoogleSignInOptions)
                 .build()
     }
     private val mGoogleSignInOptions: GoogleSignInOptions by lazy {
@@ -30,34 +35,29 @@ class LoginActivity : BaseActivity(), LoginContract.View, GoogleApiClient.OnConn
                 .build()
     }
 
-    private val loginButton: SignInButton by lazy { login_with_google }
     @Inject
-    lateinit var presenter: LoginContract.Presenter
+    lateinit var viewModelFactory: LoginViewModelFactory
+
+    private lateinit var viewModel: LoginViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        loginButton.clicks().subscribe { startGoogleAuth() }.addTo(disposables)
-    }
+        ButterKnife.bind(this)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(LoginViewModel::class.java)
 
-    override fun dismiss() {
-        finish()
-    }
-
-    private fun startGoogleAuth() {
-        val signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient)
-        startActivityForResult(signInIntent, SIGN_IN_ID)
+        viewModel.error.observe(this, Observer { error ->
+            error?.let { showErrorDialog(it) }
+        })
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == SIGN_IN_ID) {
-            val result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
+            val result = GoogleSignInApi.getSignInResultFromIntent(data)
             if (result.isSuccess) {
-                val acct = result.signInAccount
-                if (acct != null) {
-                    val token = acct.idToken!!
-                    presenter.startAuth(token)
+                result.signInAccount?.idToken?.let {
+                    viewModel.startAuth(it, { startOverview() })
                 }
             } else {
                 showErrorDialog()
@@ -65,11 +65,21 @@ class LoginActivity : BaseActivity(), LoginContract.View, GoogleApiClient.OnConn
         }
     }
 
-    override fun onConnectionFailed(p0: ConnectionResult) {
+    override fun onConnectionFailed(connectionResult: ConnectionResult) {
         showErrorDialog(R.string.error_connection_body, R.string.error_connection_title)
     }
 
-    override fun presentError(error: String?) {
-        showErrorDialog(error)
+    @OnClick(R.id.login_with_google)
+    fun onLoginClicked() {
+        startGoogleAuth()
+    }
+
+    private fun startOverview() {
+        startActivity(Intent(this, CreateJoinHouseholdActivity::class.java))
+    }
+
+    private fun startGoogleAuth() {
+        val signInIntent = GoogleSignInApi.getSignInIntent(mGoogleApiClient)
+        startActivityForResult(signInIntent, SIGN_IN_ID)
     }
 }
