@@ -1,48 +1,48 @@
 package flhan.de.financemanager.main.expenseoverview
 
-import flhan.de.financemanager.base.BasePresenter
+import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.ViewModel
 import flhan.de.financemanager.base.InteractorStatus
 import flhan.de.financemanager.base.scheduler.SchedulerProvider
-import flhan.de.financemanager.common.Insert
-import flhan.de.financemanager.common.ListEvent
-import flhan.de.financemanager.common.Remove
 import flhan.de.financemanager.common.data.Expense
 import flhan.de.financemanager.common.events.Create
 import flhan.de.financemanager.common.events.Delete
 import flhan.de.financemanager.common.events.Update
-import io.reactivex.Observable
 
-/**
- * Created by Florian on 03.10.2017.
- */
-class ExpenseOverviewPresenter(
-        private val view: ExpenseOverviewContract.View,
-        private val fetchExpensesInteractor: FetchExpensesInteractor,
-        schedulerProvider: SchedulerProvider
-) : BasePresenter(schedulerProvider), ExpenseOverviewContract.Presenter {
-    override val expenses: Observable<ListEvent<Expense>>
+class ExpenseOverviewViewModel(
+        fetchExpensesInteractor: FetchExpensesInteractor,
+        schedulerProvider: SchedulerProvider) : ViewModel() {
+
+    val listItems = MutableLiveData<List<Expense>>()
+
+    private val expenses = mutableListOf<Expense>()
 
     init {
-        expenses = fetchExpensesInteractor.fetchAll()
+        fetchExpensesInteractor.fetchAll()
                 .filter { result -> result.status == InteractorStatus.Success }
-                .map { event ->
+                .doOnNext { event ->
                     when (event.result) {
                         is Create -> {
                             val createEvent = event.result as Create<Expense>
-                            return@map Insert<Expense>(createEvent.obj)
+                            expenses.add(0, createEvent.obj)
                         }
                         is Update -> {
                             val updateEvent = event.result as Update<Expense>
-                            return@map flhan.de.financemanager.common.Update<Expense>(updateEvent.obj)
+                            val itemIndex = expenses.indexOfFirst { item -> item.id == updateEvent.obj.id }
+                            expenses[itemIndex] = updateEvent.obj
                         }
                         is Delete -> {
                             val deleteEvent = event.result as Delete<Expense>
-                            return@map Remove<Expense>(deleteEvent.id)
+                            val itemIndex = expenses.indexOfFirst { item -> item.id == deleteEvent.id }
+                            expenses.removeAt(itemIndex)
                         }
                         else -> {
                             throw IllegalArgumentException("Result Type $event not supported.")
                         }
                     }
                 }
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.main())
+                .subscribe { listItems.value = expenses }
     }
 }

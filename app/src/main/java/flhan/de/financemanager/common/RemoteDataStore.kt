@@ -202,7 +202,6 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
                     }
                 }
 
-
                 override fun onChildAdded(dataSnapshot: DataSnapshot?, p1: String?) {
                     dataSnapshot?.let {
                         val expense = dataSnapshot.getValue(Expense::class.java)
