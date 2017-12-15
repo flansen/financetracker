@@ -15,9 +15,9 @@ interface CreateHouseholdInteractor {
 
 }
 
-class CreateHouseholdInteractorImpl @Inject constructor(
-        val dataStore: RemoteDataStore
-) : CreateHouseholdInteractor {
+class CreateHouseholdInteractorImpl @Inject constructor(private val dataStore: RemoteDataStore)
+    : CreateHouseholdInteractor {
+
     override fun execute(name: String): Observable<InteractorResult<Household>> {
         val household = Household(name)
 
@@ -26,7 +26,7 @@ class CreateHouseholdInteractorImpl @Inject constructor(
                     return@flatMap dataStore.joinHousehold(it.result!!)
                 }
                 .map {
-                    InteractorResult<Household>(InteractorStatus.Success, it.result!!)
+                    InteractorResult(InteractorStatus.Success, it.result!!)
                 }
                 .toObservable()
                 .startWith(InteractorResult(InteractorStatus.Loading))

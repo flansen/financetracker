@@ -23,5 +23,4 @@ class FetchExpensesInteractorImpl @Inject constructor(private val dataStore: Rem
             InteractorResult(Success, event)
         }
     }
-
 }

@@ -11,10 +11,7 @@ import flhan.de.financemanager.common.events.Delete
 import flhan.de.financemanager.common.events.RepositoryEvent
 import flhan.de.financemanager.common.events.Update
 import flhan.de.financemanager.login.createjoinhousehold.NoSuchHouseholdThrowable
-import io.reactivex.Observable
-import io.reactivex.ObservableEmitter
-import io.reactivex.Single
-import io.reactivex.SingleEmitter
+import io.reactivex.*
 import javax.inject.Inject
 
 /**
@@ -28,6 +25,7 @@ interface RemoteDataStore {
     fun getCurrentUser(): User
     fun loadExpenses(): Observable<RepositoryEvent<Expense>>
     fun loadUsers(): Observable<MutableList<User>>
+    fun saveExpense(expense: Expense): Completable
 }
 
 class FirebaseClient @Inject constructor(private val userSettings: UserSettings) : RemoteDataStore {
@@ -43,6 +41,14 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
     override fun init() {
         firebaseDatabase.setPersistenceEnabled(true)
         initUsersObservable()
+    }
+
+    override fun saveExpense(expense: Expense): Completable {
+        return Completable.fromAction {
+            expense.creator = getCurrentUser().id
+            val ref = rootReference.child("${userSettings.getHouseholdId()}/expenses/").push()
+            ref.setValue(expense)
+        }
     }
 
     override fun createHousehold(household: Household): Single<RequestResult<Household>> {
@@ -77,7 +83,7 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
     override fun getCurrentUser(): User {
         val user = User()
         val currentAuthorizedUser = FirebaseAuth.getInstance().currentUser
-        currentAuthorizedUser?.apply {
+        currentAuthorizedUser?.let {
             user.name = currentAuthorizedUser.displayName ?: ""
             user.email = currentAuthorizedUser.email ?: ""
         }
@@ -123,7 +129,7 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
             val users = mutableListOf<User>()
             var isInitialLoadingDone = false
 
-            val listener = object : ValueEventListener {
+            val valueListener = object : ValueEventListener {
                 override fun onCancelled(databaseError: DatabaseError?) {
                     emitter.onError(databaseError?.toException() ?: Throwable("Listener.OnCancelled"))
                 }
@@ -133,6 +139,7 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
                     emitter.onNext(users)
                 }
             }
+
             val childListener = object : ChildEventListener {
                 override fun onCancelled(databaseError: DatabaseError?) {
                 }
@@ -144,7 +151,7 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
                 }
 
                 // All childs are added before onDataChange is getting called.
-                // Before emitting, we wait for all childs to be emitted.
+                // Before emitting, we wait for all childs to be added.
                 override fun onChildAdded(dataSnapshot: DataSnapshot?, p1: String?) {
                     dataSnapshot?.let {
                         val user = dataSnapshot.getValue(User::class.java)
@@ -162,14 +169,13 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
 
             }
 
-            /*//TODO: Remove hardcoded value
-            val ref = rootReference.child("-Kva_1jCpajfZiuLeqoD/users")
-            ref.addListenerForSingleValueEvent(listener)
+            val ref = rootReference.child("${userSettings.getHouseholdId()}/users")
+            ref.addListenerForSingleValueEvent(valueListener)
             ref.addChildEventListener(childListener)
             emitter.setCancellable {
-                ref.removeEventListener(listener)
+                ref.removeEventListener(valueListener)
                 ref.removeEventListener(childListener)
-            }*/
+            }
         }
     }
 
@@ -187,9 +193,11 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
                 override fun onChildChanged(dataSnapshot: DataSnapshot?, p1: String?) {
                     dataSnapshot?.let {
                         val expense = dataSnapshot.getValue(Expense::class.java)
-                        expense?.id = dataSnapshot.key
-                        expense?.user = users.first { expense?.creator == it.id }
-                        val event = Update<Expense>(expense!!)
+                        expense?.apply {
+                            id = dataSnapshot.key
+                            user = users.firstOrNull { creator == it.id }
+                        }
+                        val event = Update(expense!!)
                         emitter.onNext(event)
                     }
                 }
@@ -198,9 +206,11 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
                 override fun onChildAdded(dataSnapshot: DataSnapshot?, p1: String?) {
                     dataSnapshot?.let {
                         val expense = dataSnapshot.getValue(Expense::class.java)
-                        expense?.id = dataSnapshot.key
-                        expense?.user = users.first { expense?.creator == it.id }
-                        val event = Create<Expense>(expense!!)
+                        expense?.apply {
+                            id = dataSnapshot.key
+                            user = users.firstOrNull { creator == it.id }
+                        }
+                        val event = Create(expense!!)
                         emitter.onNext(event)
                     }
                 }
@@ -213,9 +223,7 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
                     }
                 }
             }
-            //TODO: Remove hardcoded value
-            //            rootReference.child("${userSettings.getHouseholdId()}/expenses").addChildEventListener(listener)
-            //rootReference.child("-Kva_1jCpajfZiuLeqoD/expenses").addChildEventListener(listener)
+            rootReference.child("${userSettings.getHouseholdId()}/expenses").addChildEventListener(listener)
             emitter.setCancellable { rootReference.removeEventListener(listener) }
         }
     }
