@@ -2,7 +2,7 @@ package flhan.de.financemanager.main.expenseoverview
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import flhan.de.financemanager.base.InteractorStatus
+import flhan.de.financemanager.base.InteractorStatus.Success
 import flhan.de.financemanager.base.scheduler.SchedulerProvider
 import flhan.de.financemanager.common.data.Expense
 import flhan.de.financemanager.common.events.Create
@@ -19,7 +19,7 @@ class ExpenseOverviewViewModel(
 
     init {
         fetchExpensesInteractor.fetchAll()
-                .filter { result -> result.status == InteractorStatus.Success }
+                .filter { result -> result.status == Success }
                 .doOnNext { event ->
                     when (event.result) {
                         is Create -> {
