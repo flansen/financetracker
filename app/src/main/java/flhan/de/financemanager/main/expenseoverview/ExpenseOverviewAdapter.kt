@@ -8,17 +8,15 @@ import android.widget.ImageView
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.amulyakhare.textdrawable.TextDrawable
-import com.amulyakhare.textdrawable.util.ColorGenerator
+import com.amulyakhare.textdrawable.util.ColorGenerator.MATERIAL
 import flhan.de.financemanager.R
-import flhan.de.financemanager.common.data.Expense
-import flhan.de.financemanager.common.extensions.dpToPx
 
 /**
  * Created by Florian on 06.10.2017.
  */
 class ExpenseOverviewAdapter : RecyclerView.Adapter<ExpenseOverviewViewHolder>() {
 
-    var items: List<Expense> = mutableListOf()
+    var items: List<ExpenseOverviewItem> = mutableListOf()
         set(value) {
             field = value
             notifyDataSetChanged()
@@ -30,13 +28,15 @@ class ExpenseOverviewAdapter : RecyclerView.Adapter<ExpenseOverviewViewHolder>()
     }
 
     override fun onBindViewHolder(holder: ExpenseOverviewViewHolder?, position: Int) {
-        val generator = ColorGenerator.MATERIAL // or use DEFAULT
+        val item = items[position]
+        val bubbleSize = holder?.nameView?.context?.resources?.getDimension(R.dimen.bubble_size)?.toInt() ?: 0
+        val generator = MATERIAL
         val drawable = TextDrawable.builder()
                 .beginConfig()
-                .width(48.dpToPx())
-                .height(48.dpToPx())
+                .width(bubbleSize)
+                .height(bubbleSize)
                 .endConfig()
-                .buildRound("a", generator.getColor("a"))
+                .buildRound(item.creator, generator.getColor(item.creator))
         holder?.nameView?.setImageDrawable(drawable)
     }
 

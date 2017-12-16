@@ -24,6 +24,8 @@ import flhan.de.financemanager.main.MainActivity
 import kotlinx.android.synthetic.main.activity_create_join_household.*
 import javax.inject.Inject
 
+//TODO: Split join and create views
+//TODO: Implement join "secreet"
 class CreateJoinHouseholdActivity : BaseActivity() {
 
     @Inject

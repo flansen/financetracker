@@ -8,14 +8,15 @@ import flhan.de.financemanager.common.data.Expense
 import flhan.de.financemanager.common.events.Create
 import flhan.de.financemanager.common.events.Delete
 import flhan.de.financemanager.common.events.Update
+import flhan.de.financemanager.common.extensions.toOverviewItem
 
 class ExpenseOverviewViewModel(
         fetchExpensesInteractor: FetchExpensesInteractor,
         schedulerProvider: SchedulerProvider) : ViewModel() {
 
-    val listItems = MutableLiveData<List<Expense>>()
+    val listItems = MutableLiveData<List<ExpenseOverviewItem>>()
 
-    private val expenses = mutableListOf<Expense>()
+    private val expenses = mutableListOf<ExpenseOverviewItem>()
 
     init {
         fetchExpensesInteractor.fetchAll()
@@ -24,12 +25,12 @@ class ExpenseOverviewViewModel(
                     when (event.result) {
                         is Create -> {
                             val createEvent = event.result as Create<Expense>
-                            expenses.add(0, createEvent.obj)
+                            expenses.add(0, createEvent.obj.toOverviewItem())
                         }
                         is Update -> {
                             val updateEvent = event.result as Update<Expense>
                             val itemIndex = expenses.indexOfFirst { item -> item.id == updateEvent.obj.id }
-                            expenses[itemIndex] = updateEvent.obj
+                            expenses[itemIndex] = updateEvent.obj.toOverviewItem()
                         }
                         is Delete -> {
                             val deleteEvent = event.result as Delete<Expense>
@@ -46,3 +47,4 @@ class ExpenseOverviewViewModel(
                 .subscribe { listItems.value = expenses }
     }
 }
+

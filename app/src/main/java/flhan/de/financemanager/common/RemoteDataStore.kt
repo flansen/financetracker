@@ -51,6 +51,7 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
         }
     }
 
+    //TODO: Check name existency before creation
     override fun createHousehold(household: Household): Single<RequestResult<Household>> {
         return Single.create { emitter: SingleEmitter<RequestResult<Household>> ->
             household.creator = getCurrentUser().email
@@ -127,7 +128,6 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
     override fun loadUsers(): Observable<MutableList<User>> {
         return Observable.create { emitter: ObservableEmitter<MutableList<User>> ->
             val users = mutableListOf<User>()
-            var isInitialLoadingDone = false
 
             val valueListener = object : ValueEventListener {
                 override fun onCancelled(databaseError: DatabaseError?) {
@@ -135,49 +135,26 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
                 }
 
                 override fun onDataChange(dataSnapshot: DataSnapshot?) {
-                    isInitialLoadingDone = true
-                }
-            }
-
-            val childListener = object : ChildEventListener {
-                override fun onCancelled(databaseError: DatabaseError?) {
-                }
-
-                override fun onChildMoved(dataSnapshot: DataSnapshot?, p1: String?) {
-                }
-
-                override fun onChildChanged(dataSnapshot: DataSnapshot?, p1: String?) {
-                }
-
-                // All childs are added before onDataChange is getting called.
-                // Before emitting, we wait for all childs to be added.
-                override fun onChildAdded(dataSnapshot: DataSnapshot?, p1: String?) {
                     dataSnapshot?.let {
-                        val user = dataSnapshot.getValue(User::class.java)
-                        user?.let {
-                            user.id = dataSnapshot.key
-                            users.add(user)
+                        for (snapshot in dataSnapshot.children) {
+                            val user = snapshot.getValue(User::class.java)
+                            user?.let {
+                                user.id = snapshot.key
+                                users.add(user)
+                            }
                         }
                     }
-                    if (isInitialLoadingDone)
-                        emitter.onNext(users)
+                    emitter.onNext(users)
                 }
-
-                override fun onChildRemoved(p0: DataSnapshot?) {
-                }
-
             }
 
             val ref = rootReference.child("${userSettings.getHouseholdId()}/users")
             ref.addListenerForSingleValueEvent(valueListener)
-            ref.addChildEventListener(childListener)
             emitter.setCancellable {
                 ref.removeEventListener(valueListener)
-                ref.removeEventListener(childListener)
             }
         }
     }
-
 
     private fun createExpenseObservable(users: List<User>): Observable<RepositoryEvent<Expense>> {
         return Observable.create { emitter ->
