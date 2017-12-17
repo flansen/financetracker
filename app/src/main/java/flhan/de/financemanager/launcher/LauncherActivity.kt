@@ -25,8 +25,10 @@ class LauncherActivity : BaseActivity() {
             presentLogin?.apply {
                 if (presentLogin) {
                     startActivity(Intent(this@LauncherActivity, LoginActivity::class.java))
+                    finish()
                 } else {
                     startActivity(Intent(this@LauncherActivity, MainActivity::class.java))
+                    finish()
                 }
             }
         })

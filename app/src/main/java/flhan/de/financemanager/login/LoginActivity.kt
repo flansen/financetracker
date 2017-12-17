@@ -57,7 +57,7 @@ class LoginActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
             val result = GoogleSignInApi.getSignInResultFromIntent(data)
             if (result.isSuccess) {
                 result.signInAccount?.idToken?.let {
-                    viewModel.startAuth(it, { startOverview() })
+                    viewModel.startAuth(it, { startCreateJoin() })
                 }
             } else {
                 showErrorDialog()
@@ -74,8 +74,9 @@ class LoginActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
         startGoogleAuth()
     }
 
-    private fun startOverview() {
+    private fun startCreateJoin() {
         startActivity(Intent(this, CreateJoinHouseholdActivity::class.java))
+        finish()
     }
 
     private fun startGoogleAuth() {
