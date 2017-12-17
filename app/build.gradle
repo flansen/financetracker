@@ -7,7 +7,7 @@ android {
     signingConfigs {
     }
     compileSdkVersion rootProject.ext.compileSdk
-    buildToolsVersion '26.0.2'
+    buildToolsVersion '27.0.2'
     defaultConfig {
         applicationId "flhan.de.financemanager"
         minSdkVersion rootProject.ext.minSdk
@@ -26,16 +26,17 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    // Support Libs
     implementation "com.android.support:appcompat-v7:$rootProject.supportVersion"
     implementation "com.android.support:design:$rootProject.supportVersion"
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.1', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlinVersion"
+
+    // RX
     implementation "io.reactivex.rxjava2:rxandroid:$rootProject.rxAndroidVersion"
     implementation "io.reactivex.rxjava2:rxkotlin:$rootProject.rxkotlinVersion"
 
+    // Firebase
     implementation "com.google.firebase:firebase-auth:$rootProject.firebaseVersion"
     implementation "com.google.firebase:firebase-core:$rootProject.firebaseVersion"
     implementation "com.google.firebase:firebase-database:$rootProject.firebaseVersion"
@@ -47,19 +48,24 @@ dependencies {
     kapt "com.google.dagger:dagger-android-processor:$rootProject.daggerVersion"
     implementation "com.google.dagger:dagger-android-support:$rootProject.daggerVersion"
 
-    //For LiveData, and ViewModel, add
+    // Architecture Components
     implementation "android.arch.lifecycle:extensions:$rootProject.archComponentsVersion"
-    //For controlling LiveData background threads in your tests, add:
     testImplementation "android.arch.core:core-testing:$rootProject.archComponentsVersion"
-    //To use LiveData with ReactiveStreams API, add:
     implementation "android.arch.lifecycle:reactivestreams:$rootProject.archComponentsVersion"
 
+    // UI
     implementation "com.amulyakhare:com.amulyakhare.textdrawable:$rootProject.textdrawableVersion"
     implementation "com.roughike:bottom-bar:$rootProject.roughikeVersion"
 
-    implementation "com.jakewharton:butterknife:8.8.1"
-    kapt "com.jakewharton:butterknife-compiler:8.8.1"
+    // Butterknife
+    implementation "com.jakewharton:butterknife:$rootProject.butterknifeVersion"
+    kapt "com.jakewharton:butterknife-compiler:$rootProject.butterknifeVersion"
 
+    // Test
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.1', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
 }
 
 apply plugin: 'com.google.gms.google-services'
