@@ -27,17 +27,20 @@ class ExpenseOverviewAdapter : RecyclerView.Adapter<ExpenseOverviewViewHolder>()
         return ExpenseOverviewViewHolder(view)
     }
 
+
     override fun onBindViewHolder(holder: ExpenseOverviewViewHolder?, position: Int) {
-        val item = items[position]
-        val bubbleSize = holder?.nameView?.context?.resources?.getDimension(R.dimen.bubble_size)?.toInt() ?: 0
-        val generator = MATERIAL
-        val drawable = TextDrawable.builder()
-                .beginConfig()
-                .width(bubbleSize)
-                .height(bubbleSize)
-                .endConfig()
-                .buildRound(item.creator, generator.getColor(item.creator))
-        holder?.nameView?.setImageDrawable(drawable)
+        holder?.let {
+            val item = items[position]
+            val bubbleSize = holder.nameView.context.resources.getDimension(R.dimen.bubble_size).toInt()
+            val generator = MATERIAL
+            val drawable = TextDrawable.builder()
+                    .beginConfig()
+                    .width(bubbleSize)
+                    .height(bubbleSize)
+                    .endConfig()
+                    .buildRound(item.creator, generator.getColor(item.creator))
+            holder.nameView.setImageDrawable(drawable)
+        }
     }
 
     override fun getItemCount(): Int {

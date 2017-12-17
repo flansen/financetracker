@@ -25,18 +25,18 @@ class ExpenseOverviewFragment : Fragment() {
         fun newInstance(): ExpenseOverviewFragment = ExpenseOverviewFragment()
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         AndroidSupportInjection.inject(this)
         viewModel = ViewModelProviders.of(this, factory).get(ExpenseOverviewViewModel::class.java)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater?.inflate(R.layout.activity_overview, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = inflater.inflate(R.layout.activity_overview, container, false)
         return view
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         expense_overview_recycler.layoutManager = LinearLayoutManager(context, VERTICAL, false)
     }
