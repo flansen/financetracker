@@ -16,5 +16,6 @@
     <string name="create_join_household_create_groupheader">or Create your own</string>
     <string name="create_join_household_join_name_hint">Give it a name</string>
     <string name="done">Done</string>
+    <string name="expense_overview_title">Expenses</string>
 
 </resources>

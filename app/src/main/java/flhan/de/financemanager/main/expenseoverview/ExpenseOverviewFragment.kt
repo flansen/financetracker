@@ -5,11 +5,14 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.LinearLayoutManager.VERTICAL
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import butterknife.BindString
+import butterknife.ButterKnife
 import dagger.android.support.AndroidSupportInjection
 import flhan.de.financemanager.R
 import flhan.de.financemanager.common.LineListDivider
@@ -20,6 +23,10 @@ class ExpenseOverviewFragment : Fragment() {
 
     @Inject
     lateinit var factory: OverviewViewModelFactory
+
+    @BindString(R.string.expense_overview_title)
+    lateinit var title: String
+
     private lateinit var viewModel: ExpenseOverviewViewModel
 
     companion object {
@@ -34,6 +41,8 @@ class ExpenseOverviewFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.activity_overview, container, false)
+        ButterKnife.bind(this, view)
+        (activity as AppCompatActivity).supportActionBar?.title = title
         return view
     }
 

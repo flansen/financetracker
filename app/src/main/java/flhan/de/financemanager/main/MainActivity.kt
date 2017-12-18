@@ -19,7 +19,7 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        setSupportActionBar(toolbar)
         mainBottombar.setOnTabSelectListener { selectedTabId ->
             when(selectedTabId) {
                 R.id.tab_expenses -> {
