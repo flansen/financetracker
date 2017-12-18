@@ -6,6 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".login.createjoinhousehold.CreateJoinHouseholdActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        app:layout_scrollFlags="scroll|enterAlways"
+        app:title="@string/create_join_household_title" />
+
     <include
         android:id="@+id/createJoinLoadingView"
         layout="@layout/progress_bar"
@@ -17,6 +26,7 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -24,15 +34,6 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?attr/colorPrimary"
-                android:minHeight="?attr/actionBarSize"
-                app:layout_scrollFlags="scroll|enterAlways"
-                app:title="@string/create_join_household_title" />
 
             <TextView
                 android:layout_width="match_parent"
