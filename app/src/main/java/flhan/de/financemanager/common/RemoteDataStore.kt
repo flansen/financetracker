@@ -35,8 +35,8 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
     private lateinit var usersObservable: Observable<MutableList<User>>
 
     init {
-        initUsersObservable()
         firebaseDatabase.setPersistenceEnabled(true)
+        initUsersObservable()
     }
 
     override fun init() {
@@ -47,6 +47,7 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
         return Completable.fromAction {
             expense.creator = getCurrentUser().id
             val ref = rootReference.child("${userSettings.getHouseholdId()}/expenses/").push()
+            expense.id = ref.key
             ref.setValue(expense)
         }
     }
@@ -149,6 +150,7 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
             }
 
             val ref = rootReference.child("${userSettings.getHouseholdId()}/users")
+            ref.keepSynced(true)
             ref.addListenerForSingleValueEvent(valueListener)
             emitter.setCancellable {
                 ref.removeEventListener(valueListener)

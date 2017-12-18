@@ -22,6 +22,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".main.MainActivity" />
+        <activity android:name=".main.expenses.createedit.CreateEditExpenseActivity" />
     </application>
 
 </manifest>

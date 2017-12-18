@@ -1,4 +1,4 @@
-package flhan.de.financemanager.main.expenseoverview
+package flhan.de.financemanager.main.expenses.overview
 
 import flhan.de.financemanager.base.InteractorResult
 import flhan.de.financemanager.base.InteractorStatus.Success

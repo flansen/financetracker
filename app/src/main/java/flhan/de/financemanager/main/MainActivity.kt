@@ -7,7 +7,7 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import flhan.de.financemanager.R
 import flhan.de.financemanager.base.BaseActivity
-import flhan.de.financemanager.main.expenseoverview.ExpenseOverviewFragment
+import flhan.de.financemanager.main.expenses.overview.ExpenseOverviewFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 

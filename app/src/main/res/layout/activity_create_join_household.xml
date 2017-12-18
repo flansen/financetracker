@@ -12,7 +12,6 @@
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
-        app:layout_scrollFlags="scroll|enterAlways"
         app:title="@string/create_join_household_title" />
 
     <include

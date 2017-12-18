@@ -1,4 +1,4 @@
-package flhan.de.financemanager.main.expenseoverview
+package flhan.de.financemanager.main.expenses.overview
 
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider

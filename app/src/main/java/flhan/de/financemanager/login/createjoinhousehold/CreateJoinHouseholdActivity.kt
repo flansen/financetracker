@@ -42,7 +42,7 @@ class CreateJoinHouseholdActivity : BaseActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.create_join_household_menu, menu)
+        menuInflater.inflate(R.menu.create_join_household, menu)
         menu?.findItem(R.id.createJoinDone)?.isVisible = viewModel.canSubmit.value ?: false
         return true
     }

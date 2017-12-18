@@ -1,4 +1,4 @@
-package flhan.de.financemanager.main.expenseoverview
+package flhan.de.financemanager.main.expenses.overview
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater

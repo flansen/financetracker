@@ -1,4 +1,4 @@
-package flhan.de.financemanager.main.expenseoverview
+package flhan.de.financemanager.main.expenses.overview
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
@@ -16,7 +16,7 @@ import butterknife.ButterKnife
 import dagger.android.support.AndroidSupportInjection
 import flhan.de.financemanager.R
 import flhan.de.financemanager.common.LineListDivider
-import kotlinx.android.synthetic.main.activity_overview.*
+import kotlinx.android.synthetic.main.fragment_expense_overview.*
 import javax.inject.Inject
 
 class ExpenseOverviewFragment : Fragment() {
@@ -40,7 +40,7 @@ class ExpenseOverviewFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.activity_overview, container, false)
+        val view = inflater.inflate(R.layout.fragment_expense_overview, container, false)
         ButterKnife.bind(this, view)
         (activity as AppCompatActivity).supportActionBar?.title = title
         return view
