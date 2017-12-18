@@ -43,4 +43,5 @@ ext {
     minSdk = 21
     archComponentsVersion = "1.0.0"
     butterknifeVersion = "8.8.1"
+    constraintVersion = "1.0.2"
 }

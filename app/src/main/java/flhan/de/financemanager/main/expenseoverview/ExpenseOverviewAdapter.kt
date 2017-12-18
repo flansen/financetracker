@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.amulyakhare.textdrawable.TextDrawable
@@ -14,7 +15,7 @@ import flhan.de.financemanager.R
 /**
  * Created by Florian on 06.10.2017.
  */
-class ExpenseOverviewAdapter : RecyclerView.Adapter<ExpenseOverviewViewHolder>() {
+class ExpenseOverviewAdapter : RecyclerView.Adapter<ExpenseOverviewAdapter.ExpenseOverviewViewHolder>() {
 
     var items: List<ExpenseOverviewItem> = mutableListOf()
         set(value) {
@@ -31,7 +32,7 @@ class ExpenseOverviewAdapter : RecyclerView.Adapter<ExpenseOverviewViewHolder>()
     override fun onBindViewHolder(holder: ExpenseOverviewViewHolder?, position: Int) {
         holder?.let {
             val item = items[position]
-            val bubbleSize = holder.nameView.context.resources.getDimension(R.dimen.bubble_size).toInt()
+            val bubbleSize = holder.name.context.resources.getDimension(R.dimen.bubble_size).toInt()
             val generator = MATERIAL
             val drawable = TextDrawable.builder()
                     .beginConfig()
@@ -39,21 +40,34 @@ class ExpenseOverviewAdapter : RecyclerView.Adapter<ExpenseOverviewViewHolder>()
                     .height(bubbleSize)
                     .endConfig()
                     .buildRound(item.creator, generator.getColor(item.creator))
-            holder.nameView.setImageDrawable(drawable)
+            holder.name.setImageDrawable(drawable)
+            holder.amount.text = item.amount
+            holder.cause.text = item.cause
+            holder.date.text = item.date
         }
     }
 
     override fun getItemCount(): Int {
         return items.count()
     }
-}
 
-class ExpenseOverviewViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-    @BindView(R.id.expense_overview_item_name_view)
-    lateinit var nameView: ImageView
+    inner class ExpenseOverviewViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-    init {
-        ButterKnife.bind(this, view)
+        @BindView(R.id.overview_item_name)
+        lateinit var name: ImageView
+
+        @BindView(R.id.overview_item_amount)
+        lateinit var amount: TextView
+
+        @BindView(R.id.overview_item_cause)
+        lateinit var cause: TextView
+
+        @BindView(R.id.overview_item_date)
+        lateinit var date: TextView
+
+        init {
+            ButterKnife.bind(this, view)
+        }
     }
 }

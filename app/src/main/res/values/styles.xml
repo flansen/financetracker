@@ -17,4 +17,11 @@
         <item name="android:windowNoDisplay">true</item>
     </style>
 
+    <style name="item_cause_style">
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 </resources>

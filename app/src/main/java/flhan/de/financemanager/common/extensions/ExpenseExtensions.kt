@@ -7,5 +7,5 @@ import flhan.de.financemanager.main.expenseoverview.ExpenseOverviewItem
 fun Expense.toOverviewItem(): ExpenseOverviewItem {
     var nameString = ""
     user?.name?.split(' ')?.forEach { nameString += it[0] }
-    return ExpenseOverviewItem(id, nameString, amount.toString(), createdAt.toString())
+    return ExpenseOverviewItem(id, nameString, amount.toString(), cause, createdAt.toString())
 }
