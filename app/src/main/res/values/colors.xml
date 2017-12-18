@@ -8,4 +8,5 @@
     <color name="colorAccentDark">#c6a700</color>
     <color name="greyText">#aaa</color>
     <color name="lightGrey">#eee</color>
+    <color name="line_divider">#ddd</color>
 </resources>

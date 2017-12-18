@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.AndroidSupportInjection
 import flhan.de.financemanager.R
+import flhan.de.financemanager.common.LineListDivider
 import kotlinx.android.synthetic.main.activity_overview.*
 import javax.inject.Inject
 
@@ -19,7 +20,7 @@ class ExpenseOverviewFragment : Fragment() {
 
     @Inject
     lateinit var factory: OverviewViewModelFactory
-    lateinit var viewModel: ExpenseOverviewViewModel
+    private lateinit var viewModel: ExpenseOverviewViewModel
 
     companion object {
         fun newInstance(): ExpenseOverviewFragment = ExpenseOverviewFragment()
@@ -39,6 +40,7 @@ class ExpenseOverviewFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         expense_overview_recycler.layoutManager = LinearLayoutManager(context, VERTICAL, false)
+        expense_overview_recycler.addItemDecoration(LineListDivider(context!!))
     }
 
     override fun onStart() {

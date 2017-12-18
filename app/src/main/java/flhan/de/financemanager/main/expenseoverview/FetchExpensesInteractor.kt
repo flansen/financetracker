@@ -19,8 +19,10 @@ class FetchExpensesInteractorImpl @Inject constructor(private val dataStore: Rem
     : FetchExpensesInteractor {
 
     override fun fetchAll(): Observable<InteractorResult<RepositoryEvent<Expense>>> {
-        return dataStore.loadExpenses().map { event ->
-            InteractorResult(Success, event)
-        }
+        return dataStore
+                .loadExpenses()
+                .map { event ->
+                    InteractorResult(Success, event)
+                }
     }
 }
