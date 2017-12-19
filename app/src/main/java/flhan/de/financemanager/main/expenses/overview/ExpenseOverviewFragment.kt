@@ -16,6 +16,7 @@ import butterknife.ButterKnife
 import dagger.android.support.AndroidSupportInjection
 import flhan.de.financemanager.R
 import flhan.de.financemanager.common.LineListDivider
+import flhan.de.financemanager.main.expenses.createedit.CreateEditExpenseActivity
 import kotlinx.android.synthetic.main.fragment_expense_overview.*
 import javax.inject.Inject
 
@@ -54,10 +55,15 @@ class ExpenseOverviewFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        val adapter = ExpenseOverviewAdapter()
+        val adapter = ExpenseOverviewAdapter({ id -> presentCreateEdit(id) })
         expense_overview_recycler.adapter = adapter
         viewModel.listItems.observe(this, Observer { listItems ->
             adapter.items = listItems ?: mutableListOf()
         })
+    }
+
+    private fun presentCreateEdit(id: String) {
+        val intent = CreateEditExpenseActivity.createIntent(context!!, id)
+        startActivity(intent)
     }
 }

@@ -22,16 +22,20 @@ class CreateEditExpenseActivity : BaseActivity() {
         ButterKnife.bind(this)
 
         viewModel = ViewModelProviders.of(this, factory).get(CreateEditExpenseViewModel::class.java)
-        viewModel.initialize(intent.getStringExtra(ID_KEY))
     }
 
     companion object {
         private const val ID_KEY = "id"
 
-        fun createIntent(context: Context, id: String): Intent {
+        fun createIntent(context: Context, id: String = ""): Intent {
             val intent = Intent(context, CreateEditExpenseActivity::class.java)
-            intent.extras.putString(ID_KEY, id)
+            intent.putExtra(ID_KEY, id)
             return intent
         }
+    }
+
+    @CreateEditExpenseModule.ExpenseId
+    fun retrieveExpenseId(): String {
+        return intent.getStringExtra(ID_KEY)
     }
 }

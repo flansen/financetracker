@@ -42,8 +42,6 @@ class ExpenseOverviewViewModel(
                         }
                     }
                 }
-                .subscribeOn(schedulerProvider.io())
-                .observeOn(schedulerProvider.main())
                 .subscribe { listItems.value = expenses }
     }
 }

@@ -11,6 +11,7 @@ import flhan.de.financemanager.common.events.Delete
 import flhan.de.financemanager.common.events.RepositoryEvent
 import flhan.de.financemanager.common.events.Update
 import flhan.de.financemanager.login.createjoinhousehold.NoSuchHouseholdThrowable
+import flhan.de.financemanager.main.expenses.createedit.NoExpenseFoundThrowable
 import io.reactivex.*
 import javax.inject.Inject
 
@@ -24,6 +25,7 @@ interface RemoteDataStore {
     fun joinHouseholdByMail(email: String): Single<RequestResult<Household>>
     fun getCurrentUser(): User
     fun loadExpenses(): Observable<RepositoryEvent<Expense>>
+    fun findExpenseBy(id: String): Observable<RequestResult<Expense>>
     fun loadUsers(): Observable<MutableList<User>>
     fun saveExpense(expense: Expense): Completable
 }
@@ -41,6 +43,34 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
 
     override fun init() {
         initUsersObservable()
+    }
+
+    override fun findExpenseBy(id: String): Observable<RequestResult<Expense>> {
+        return usersObservable.flatMap { users ->
+            Observable.create { emitter: ObservableEmitter<RequestResult<Expense>> ->
+                val ref = rootReference.child("${userSettings.getHouseholdId()}/expenses/$id")
+                val listener = object : ValueEventListener {
+                    override fun onCancelled(databaseError: DatabaseError?) {
+                        emitter.onNext(RequestResult(null, NoExpenseFoundThrowable("Could not find Expense for id $id")))
+                    }
+
+                    override fun onDataChange(dataSnapshot: DataSnapshot?) {
+                        dataSnapshot?.let {
+                            val expense = dataSnapshot.getValue(Expense::class.java)
+                            if (expense != null) {
+                                expense.user = users.firstOrNull { expense.creator == it.id }
+                                emitter.onNext(RequestResult(expense))
+                            } else {
+                                emitter.onNext(RequestResult(null, NoExpenseFoundThrowable("Could not find Expense for id $id")))
+                            }
+                        }
+                        emitter.onComplete()
+                    }
+                }
+                ref.addListenerForSingleValueEvent(listener)
+                emitter.setCancellable { ref.removeEventListener(listener) }
+            }
+        }.onErrorReturn { RequestResult(null, NoExpenseFoundThrowable("Could not find Expense for id $id")) }
     }
 
     override fun saveExpense(expense: Expense): Completable {

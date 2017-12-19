@@ -2,7 +2,6 @@ package flhan.de.financemanager.main.expenses.overview
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
@@ -15,7 +14,7 @@ import flhan.de.financemanager.R
 /**
  * Created by Florian on 06.10.2017.
  */
-class ExpenseOverviewAdapter : RecyclerView.Adapter<ExpenseOverviewAdapter.ExpenseOverviewViewHolder>() {
+class ExpenseOverviewAdapter(private val clickListener: (String) -> Unit) : RecyclerView.Adapter<ExpenseOverviewAdapter.ExpenseOverviewViewHolder>() {
 
     var items: List<ExpenseOverviewItem> = mutableListOf()
         set(value) {
@@ -23,11 +22,7 @@ class ExpenseOverviewAdapter : RecyclerView.Adapter<ExpenseOverviewAdapter.Expen
             notifyDataSetChanged()
         }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ExpenseOverviewViewHolder {
-        val view = LayoutInflater.from(parent!!.context).inflate(R.layout.expense_overview_item, parent, false)
-        return ExpenseOverviewViewHolder(view)
-    }
-
+    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int) = ExpenseOverviewViewHolder(parent!!)
 
     override fun onBindViewHolder(holder: ExpenseOverviewViewHolder?, position: Int) {
         holder?.let {
@@ -40,19 +35,19 @@ class ExpenseOverviewAdapter : RecyclerView.Adapter<ExpenseOverviewAdapter.Expen
                     .height(bubbleSize)
                     .endConfig()
                     .buildRound(item.creator, generator.getColor(item.creator))
-            holder.name.setImageDrawable(drawable)
-            holder.amount.text = item.amount
-            holder.cause.text = item.cause
-            holder.date.text = item.date
+            holder.apply {
+                name.setImageDrawable(drawable)
+                amount.text = item.amount
+                cause.text = item.cause
+                date.text = item.date
+                root.setOnClickListener { clickListener(item.id) }
+            }
         }
     }
 
-    override fun getItemCount(): Int {
-        return items.count()
-    }
+    override fun getItemCount() = items.count()
 
-
-    inner class ExpenseOverviewViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class ExpenseOverviewViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.expense_overview_item, parent, false)) {
 
         @BindView(R.id.overview_item_name)
         lateinit var name: ImageView
@@ -66,8 +61,11 @@ class ExpenseOverviewAdapter : RecyclerView.Adapter<ExpenseOverviewAdapter.Expen
         @BindView(R.id.overview_item_date)
         lateinit var date: TextView
 
+        @BindView(R.id.overview_item_root)
+        lateinit var root: ViewGroup
+
         init {
-            ButterKnife.bind(this, view)
+            ButterKnife.bind(this, itemView)
         }
     }
 }
