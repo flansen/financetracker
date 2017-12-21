@@ -75,6 +75,7 @@ class LoginActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
     }
 
     private fun startCreateJoin() {
+        viewModel.dispose()
         startActivity(Intent(this, CreateJoinHouseholdActivity::class.java))
         finish()
     }

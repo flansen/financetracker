@@ -29,7 +29,6 @@ class CreateEditExpenseActivity : BaseActivity() {
 
     private lateinit var viewModel: CreateEditExpenseViewModel
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_expense_create_edit)
@@ -40,7 +39,6 @@ class CreateEditExpenseActivity : BaseActivity() {
 
         viewModel = ViewModelProviders.of(this, factory).get(CreateEditExpenseViewModel::class.java)
         viewModel.mode.observe(this, Observer { mode -> setTitleForMode(mode) })
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
