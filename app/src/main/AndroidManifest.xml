@@ -10,19 +10,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".login.LoginActivity" />
+        <activity android:name="flhan.de.financemanager.ui.login.LoginActivity" />
         <activity
-            android:name=".login.createjoinhousehold.CreateJoinHouseholdActivity"
+            android:name="flhan.de.financemanager.ui.login.createjoinhousehold.CreateJoinHouseholdActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".launcher.LauncherActivity">
+        <activity android:name="flhan.de.financemanager.ui.launcher.LauncherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".main.MainActivity" />
-        <activity android:name=".main.expenses.createedit.CreateEditExpenseActivity" />
+        <activity android:name="flhan.de.financemanager.ui.main.MainActivity" />
+        <activity android:name="flhan.de.financemanager.ui.main.expenses.createedit.CreateEditExpenseActivity" />
     </application>
 
 </manifest>

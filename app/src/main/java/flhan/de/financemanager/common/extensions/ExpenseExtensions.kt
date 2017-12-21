@@ -2,7 +2,7 @@ package flhan.de.financemanager.common.extensions
 
 import flhan.de.financemanager.common.LONG_DATE_FORMAT
 import flhan.de.financemanager.common.data.Expense
-import flhan.de.financemanager.main.expenses.overview.ExpenseOverviewItem
+import flhan.de.financemanager.ui.main.expenses.overview.ExpenseOverviewItem
 import java.text.SimpleDateFormat
 
 //TODO: Formatting

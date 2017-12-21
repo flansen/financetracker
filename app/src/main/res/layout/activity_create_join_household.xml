@@ -4,14 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".login.createjoinhousehold.CreateJoinHouseholdActivity">
+    tools:context=".ui.login.createjoinhousehold.CreateJoinHouseholdActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
+        style="@style/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
         app:title="@string/create_join_household_title" />
 
     <include

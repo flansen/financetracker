@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context="flhan.de.financemanager.login.LoginActivity">
+    tools:context=".ui.login.LoginActivity">
 
         <TextView
             android:id="@+id/textView"

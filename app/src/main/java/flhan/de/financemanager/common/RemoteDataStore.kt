@@ -10,8 +10,8 @@ import flhan.de.financemanager.common.events.Create
 import flhan.de.financemanager.common.events.Delete
 import flhan.de.financemanager.common.events.RepositoryEvent
 import flhan.de.financemanager.common.events.Update
-import flhan.de.financemanager.login.createjoinhousehold.NoSuchHouseholdThrowable
-import flhan.de.financemanager.main.expenses.createedit.NoExpenseFoundThrowable
+import flhan.de.financemanager.ui.login.createjoinhousehold.NoSuchHouseholdThrowable
+import flhan.de.financemanager.ui.main.expenses.createedit.NoExpenseFoundThrowable
 import io.reactivex.*
 import javax.inject.Inject
 
