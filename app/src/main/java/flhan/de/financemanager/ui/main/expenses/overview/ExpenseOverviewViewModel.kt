@@ -23,11 +23,6 @@ class ExpenseOverviewViewModel(fetchExpensesInteractor: FetchExpensesInteractor)
                         is Create -> {
                             val createEvent = event.result as Create<Expense>
                             expenses.add(0, createEvent.obj.toOverviewItem())
-                            expenses.add(0, createEvent.obj.toOverviewItem())
-                            expenses.add(0, createEvent.obj.toOverviewItem())
-                            expenses.add(0, createEvent.obj.toOverviewItem())
-                            expenses.add(0, createEvent.obj.toOverviewItem())
-                            expenses.add(0, createEvent.obj.toOverviewItem())
                         }
                         is Update -> {
                             val updateEvent = event.result as Update<Expense>
