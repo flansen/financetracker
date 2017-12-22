@@ -12,11 +12,9 @@ import javax.inject.Inject
  */
 interface CreateHouseholdInteractor {
     fun execute(name: String): Observable<InteractorResult<Household>>
-
 }
 
-class CreateHouseholdInteractorImpl @Inject constructor(private val dataStore: RemoteDataStore)
-    : CreateHouseholdInteractor {
+class CreateHouseholdInteractorImpl @Inject constructor(private val dataStore: RemoteDataStore) : CreateHouseholdInteractor {
 
     override fun execute(name: String): Observable<InteractorResult<Household>> {
         val household = Household(name)

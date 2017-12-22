@@ -36,7 +36,8 @@ ext {
     minSdk = 21
     rxAndroidVersion = '2.0.1'
     supportVersion = '27.0.2'
-    firebaseVersion = '11.6.2'
+    firebaseVersion = '11.8.0'
+    leakCanaryVersion = "1.5.4"
     rxkotlinVersion = "2.1.0"
     daggerVersion = "2.13"
     roughikeVersion = "2.3.1"

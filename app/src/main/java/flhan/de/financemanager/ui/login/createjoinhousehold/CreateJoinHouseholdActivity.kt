@@ -5,10 +5,10 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import butterknife.ButterKnife
+import butterknife.OnClick
 import butterknife.OnFocusChange
 import butterknife.OnTextChanged
 import butterknife.OnTextChanged.Callback.AFTER_TEXT_CHANGED
@@ -17,12 +17,13 @@ import flhan.de.financemanager.base.BaseActivity
 import flhan.de.financemanager.common.extensions.stringByName
 import flhan.de.financemanager.common.extensions.toast
 import flhan.de.financemanager.common.extensions.visible
-import flhan.de.financemanager.ui.login.createjoinhousehold.CreateJoinHouseholdViewModel.CreateJoinFocusTarget.Email
-import flhan.de.financemanager.ui.login.createjoinhousehold.CreateJoinHouseholdViewModel.CreateJoinFocusTarget.Name
+import flhan.de.financemanager.ui.login.createjoinhousehold.CreateJoinFocusTarget.Email
+import flhan.de.financemanager.ui.login.createjoinhousehold.CreateJoinFocusTarget.Name
 import flhan.de.financemanager.ui.login.createjoinhousehold.ErrorType.*
 import flhan.de.financemanager.ui.main.MainActivity
 import kotlinx.android.synthetic.main.activity_create_join_household.*
 import javax.inject.Inject
+
 
 //TODO: Split join and create views
 //TODO: Implement join "secreet"
@@ -41,18 +42,14 @@ class CreateJoinHouseholdActivity : BaseActivity() {
         setupView()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.create_join_household, menu)
-        menu?.findItem(R.id.createJoinDone)?.isVisible = viewModel.canSubmit.value ?: false
-        return true
+    @OnClick(R.id.joinHousehold)
+    fun onJoinClicked(view: View) {
+        viewModel.submit { startOverview() }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item?.itemId == R.id.createJoinDone) {
-            viewModel.submit { startOverview() }
-            return true
-        }
-        return super.onOptionsItemSelected(item)
+    @OnClick(R.id.createHousehold)
+    fun onCreateClicked(view: View) {
+        viewModel.submit { startOverview() }
     }
 
     @OnTextChanged(R.id.nameText, callback = AFTER_TEXT_CHANGED)
@@ -77,8 +74,14 @@ class CreateJoinHouseholdActivity : BaseActivity() {
 
     private fun setupView() {
         setSupportActionBar(toolbar)
-
-        viewModel.canSubmit.observe(this, Observer { invalidateOptionsMenu() })
+        viewModel.joinEnabled.observe(this, Observer {
+            val isEnabled = it ?: false
+            joinHousehold.isEnabled = isEnabled
+        })
+        viewModel.createEnabled.observe(this, Observer {
+            val isEnabled = it ?: false
+            createHousehold.isEnabled = isEnabled
+        })
         viewModel.errorState.observe(this, Observer { handleError(it) })
         viewModel.isLoading.observe(this, Observer { createJoinLoadingView.visible(it ?: false) })
         viewModel.name.observe(this, Observer {
@@ -110,7 +113,11 @@ class CreateJoinHouseholdActivity : BaseActivity() {
     }
 
     private fun startOverview() {
-        startActivity(Intent(this, MainActivity::class.java))
+        currentFocus.let {
+            val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(it.windowToken, 0)
+        }
         finish()
+        startActivity(Intent(this, MainActivity::class.java))
     }
 }

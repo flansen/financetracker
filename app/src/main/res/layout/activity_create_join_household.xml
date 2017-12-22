@@ -81,11 +81,19 @@
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/mailText"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:hint="@string/create_join_household_join_mail_hint"
                     android:inputType="textEmailAddress"
                     android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:id="@+id/joinHousehold"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/join_household" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -126,11 +134,19 @@
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/nameText"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:hint="@string/create_join_household_join_name_hint"
                     android:inputType="textCapWords"
                     android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:id="@+id/createHousehold"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/create_household" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>

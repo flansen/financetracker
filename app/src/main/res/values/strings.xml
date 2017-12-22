@@ -19,5 +19,7 @@
     <string name="expense_overview_title">Expenses</string>
     <string name="edit_expense_title">Ausgabe bearbeiten</string>
     <string name="create_expense_title">Ausgabe erstellen</string>
+    <string name="join_household">Join</string>
+    <string name="create_household">create</string>
 
 </resources>

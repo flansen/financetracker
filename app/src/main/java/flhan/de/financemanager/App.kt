@@ -23,6 +23,11 @@ class App : Application(), HasActivityInjector {
                 .application(this)
                 .build()
                 .inject(this)
+
+        /*if (LeakCanary.isInAnalyzerProcess(this)) {
+            return
+        }
+        LeakCanary.install(this)*/
     }
 
     override fun activityInjector(): AndroidInjector<Activity> {
