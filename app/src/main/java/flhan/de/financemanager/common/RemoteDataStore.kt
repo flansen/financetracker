@@ -19,7 +19,6 @@ import javax.inject.Inject
  * Created by Florian on 14.09.2017.
  */
 interface RemoteDataStore {
-    fun init()
     fun createHousehold(household: Household): Single<RequestResult<Household>>
     fun joinHousehold(household: Household): Single<RequestResult<Household>>
     fun joinHouseholdByMail(email: String): Single<RequestResult<Household>>
@@ -33,22 +32,21 @@ interface RemoteDataStore {
 class FirebaseClient @Inject constructor(private val userSettings: UserSettings) : RemoteDataStore {
 
     private val firebaseDatabase by lazy { FirebaseDatabase.getInstance() }
-    private val rootReference by lazy { firebaseDatabase.getReference("households") }
-    private lateinit var usersObservable: Observable<MutableList<User>>
+    private val rootReference by lazy { firebaseDatabase.getReference(HOUSEHOLD) }
+    private val usersObservable by lazy {
+        createUserObservable()
+                .replay(1)
+                .refCount()
+    }
 
     init {
         firebaseDatabase.setPersistenceEnabled(true)
-        initUsersObservable()
-    }
-
-    override fun init() {
-        initUsersObservable()
     }
 
     override fun findExpenseBy(id: String): Observable<RequestResult<Expense>> {
         return usersObservable.flatMap { users ->
             Observable.create { emitter: ObservableEmitter<RequestResult<Expense>> ->
-                val ref = rootReference.child("${userSettings.getHouseholdId()}/expenses/$id")
+                val ref = rootReference.child("${userSettings.getHouseholdId()}/$EXPENSES/$id")
                 val listener = object : ValueEventListener {
                     override fun onCancelled(databaseError: DatabaseError?) {
                         emitter.onNext(RequestResult(null, NoExpenseFoundThrowable("Could not find Expense for id $id")))
@@ -76,7 +74,7 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
     override fun saveExpense(expense: Expense): Completable {
         return Completable.fromAction {
             expense.creator = getCurrentUser().id
-            val ref = rootReference.child("${userSettings.getHouseholdId()}/expenses/").push()
+            val ref = rootReference.child("${userSettings.getHouseholdId()}/$EXPENSES/").push()
             expense.id = ref.key
             ref.setValue(expense)
         }
@@ -103,7 +101,7 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
     private fun performJoin(household: Household) {
         val user = getCurrentUser()
 
-        val householdUserRef = rootReference.child("${household.id}/users/")
+        val householdUserRef = rootReference.child("${household.id}/$USERS/")
         val userId = householdUserRef.push().key
         user.id = userId
         household.users.put(user.id, user)
@@ -128,7 +126,7 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
 
     override fun joinHouseholdByMail(email: String): Single<RequestResult<Household>> {
         return Single.create({ emitter: SingleEmitter<RequestResult<Household>> ->
-            rootReference.orderByChild("creator")
+            rootReference.orderByChild(CREATOR)
                     .equalTo(email)
                     .addListenerForSingleValueEvent(object : ValueEventListener {
 
@@ -157,6 +155,10 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
     }
 
     override fun loadUsers(): Observable<MutableList<User>> {
+        return usersObservable
+    }
+
+    private fun createUserObservable(): Observable<MutableList<User>> {
         return Observable.create { emitter: ObservableEmitter<MutableList<User>> ->
             val users = mutableListOf<User>()
 
@@ -179,7 +181,7 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
                 }
             }
 
-            val ref = rootReference.child("${userSettings.getHouseholdId()}/users")
+            val ref = rootReference.child("${userSettings.getHouseholdId()}/$USERS")
             ref.keepSynced(true)
             ref.addListenerForSingleValueEvent(valueListener)
             emitter.setCancellable {
@@ -230,14 +232,15 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
                     }
                 }
             }
-            rootReference.child("${userSettings.getHouseholdId()}/expenses").addChildEventListener(listener)
+            rootReference.child("${userSettings.getHouseholdId()}/$EXPENSES").addChildEventListener(listener)
             emitter.setCancellable { rootReference.removeEventListener(listener) }
         }
     }
 
-    private fun initUsersObservable() {
-        usersObservable = loadUsers()
-                .replay(1)
-                .refCount()
+    companion object {
+        const val EXPENSES = "expenses"
+        const val USERS = "users"
+        const val HOUSEHOLD = "households"
+        const val CREATOR = "creator"
     }
 }
