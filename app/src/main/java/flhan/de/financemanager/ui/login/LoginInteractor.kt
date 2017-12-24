@@ -1,5 +1,7 @@
 package flhan.de.financemanager.ui.login
 
+import flhan.de.financemanager.common.auth.AuthManager
+import flhan.de.financemanager.common.auth.AuthResult
 import io.reactivex.Observable
 import javax.inject.Inject
 

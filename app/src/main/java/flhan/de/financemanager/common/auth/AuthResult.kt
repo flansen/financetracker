@@ -1,4 +1,4 @@
-package flhan.de.financemanager.ui.login
+package flhan.de.financemanager.common.auth
 
 /**
  * Created by Florian on 09.09.2017.

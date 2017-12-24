@@ -4,9 +4,9 @@ import flhan.de.financemanager.base.InteractorResult
 import flhan.de.financemanager.base.InteractorStatus.Success
 import flhan.de.financemanager.base.RequestResult
 import flhan.de.financemanager.common.UserSettings
+import flhan.de.financemanager.common.auth.AuthManager
 import flhan.de.financemanager.ui.launcher.LauncherState.Initialized
 import flhan.de.financemanager.ui.launcher.LauncherState.NotInitialized
-import flhan.de.financemanager.ui.login.AuthManager
 import io.reactivex.Observable
 import javax.inject.Inject
 
