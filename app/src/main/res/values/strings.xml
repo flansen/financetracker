@@ -21,5 +21,8 @@
     <string name="create_expense_title">Ausgabe erstellen</string>
     <string name="join_household">Join</string>
     <string name="create_household">create</string>
+    <string name="create_edit_expense_cause_hint">Cause</string>
+    <string name="create_edit_expense_amount_hint">Amount</string>
+    <string name="save">save</string>
 
 </resources>
