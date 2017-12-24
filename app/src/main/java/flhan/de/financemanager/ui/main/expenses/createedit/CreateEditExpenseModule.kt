@@ -16,6 +16,9 @@ class CreateEditExpenseModule {
     @ExpenseId
     fun providesId(activity: CreateEditExpenseActivity): String? = activity.retrieveExpenseId()
 
+    @Provides
+    fun fetchUsersInteractor(interactor: FetchUsersInteractorImpl): FetchUsersInteractor = interactor
+
 
     @Qualifier
     @MustBeDocumented
