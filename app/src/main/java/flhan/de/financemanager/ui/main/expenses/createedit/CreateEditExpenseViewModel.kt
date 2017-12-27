@@ -4,6 +4,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import flhan.de.financemanager.base.InteractorResult
 import flhan.de.financemanager.base.InteractorStatus.*
+import flhan.de.financemanager.base.scheduler.SchedulerProvider
 import flhan.de.financemanager.common.CreateEditMode
 import flhan.de.financemanager.common.CreateEditMode.Create
 import flhan.de.financemanager.common.CreateEditMode.Edit
@@ -16,12 +17,16 @@ import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
 import io.reactivex.rxkotlin.addTo
+import java.util.*
 
+//TODO: Error Handling
 class CreateEditExpenseViewModel(
         findExpenseByIdInteractor: FindExpenseByIdInteractor,
         fetchUsersInteractor: FetchUsersInteractor,
-        private val userSettings: UserSettings,
-        @CreateEditExpenseModule.ExpenseId expenseId: String?)
+        userSettings: UserSettings,
+        @CreateEditExpenseModule.ExpenseId expenseId: String?,
+        private val saveExpenseInteractor: CreateUpdateExpenseInteractor,
+        private val scheduler: SchedulerProvider)
     : ViewModel() {
 
     val isLoading = MutableLiveData<Boolean>()
@@ -42,51 +47,37 @@ class CreateEditExpenseViewModel(
         currentUserId = userSettings.getUserId()
 
         val expenseObservable: Observable<InteractorResult<Expense>>
-        val usersObservable = fetchUsersInteractor.fetchAll()
 
+        val usersObservable = fetchUsersInteractor.fetchAll().subscribeOn(scheduler.io()).replay(1).refCount()
         if (!expenseId.isNullOrEmpty()) {
             mode.value = Edit
             expenseObservable = findExpenseByIdInteractor.findExpense(expenseId!!)
+                    .subscribeOn(scheduler.io())
+                    .replay(1).refCount()
+
         } else {
             mode.value = Create
             expenseObservable = Observable.just(InteractorResult(Success, Expense()))
+                    .replay(1).refCount()
         }
 
         val loadingObservable: Observable<Boolean> = Observable.combineLatest(expenseObservable, usersObservable, BiFunction { expense, userStatus ->
-            return@BiFunction expense.status == Loading && userStatus.status == Loading
+            return@BiFunction expense.status == Loading || userStatus.status == Loading
         })
 
-        loadingObservable.subscribe {
-            isLoading.value = it
-        }.addTo(disposables)
+        loadingObservable
+                .subscribeOn(scheduler.io())
+                .observeOn(scheduler.main())
+                .subscribe { isLoading.value = it }.addTo(disposables)
 
-        expenseObservable.subscribe { result ->
-            when (result.status) {
-                Loading -> {
-                    /* do nothing*/
-                }
-                Error -> {
-                }
-                Success -> onExpenseLoaded(result.result!!)
-            }
-        }.addTo(disposables)
-
-        usersObservable.subscribe { result ->
-            when (result.status) {
-                Loading -> {
-                }
-                Error -> {
-                }
-                Success -> onUsersLoaded(result.result!!)
-            }
-        }.addTo(disposables)
-
-        Observable.combineLatest(
+        Observable.zip(
                 expenseObservable.filter { it.status == Success },
                 usersObservable.filter { it.status == Success },
-                BiFunction { _: InteractorResult<Expense>, _: InteractorResult<MutableList<User>> ->
-                    onLoadingFinished()
+                BiFunction { expenseResult: InteractorResult<Expense>, userResult: InteractorResult<MutableList<User>> ->
+                    onExpenseLoaded(expenseResult.result!!)
+                    onUsersLoaded(userResult.result!!)
                 })
+                .subscribeOn(scheduler.main())
                 .subscribe { onLoadingFinished() }
                 .addTo(disposables)
     }
@@ -95,7 +86,27 @@ class CreateEditExpenseViewModel(
         if (selectedUserIndex.value != position) {
             selectedUserIndex.value = position
         }
+    }
 
+    fun onSaveClicked(success: () -> Unit) {
+        expense!!.apply {
+            cause = this@CreateEditExpenseViewModel.cause.value!!
+            amount = this@CreateEditExpenseViewModel.amount.value!!.toDouble()
+            createdAt = createdAt ?: Date()
+            creator = userItems.value!![selectedUserIndex.value!!].id!!
+        }
+
+        saveExpenseInteractor.save(expense!!)
+                .subscribeOn(scheduler.io())
+                .observeOn(scheduler.main())
+                .subscribe { result ->
+                    isLoading.value = result.status == Loading
+                    if (result.status == Success) {
+                        success()
+                    } else if (result.status == Error) {
+                        handleError(result.exception!!)
+                    }
+                }
     }
 
     override fun onCleared() {
@@ -117,7 +128,7 @@ class CreateEditExpenseViewModel(
 
     private fun onExpenseLoaded(expense: Expense) {
         this.expense = expense
-        amount.value = expense.amount.toString()
+        amount.value = expense.amount?.toString() ?: ""
         cause.value = expense.cause
     }
 
@@ -129,5 +140,4 @@ class CreateEditExpenseViewModel(
         val index = userItems.value?.indexOfFirst { it.id?.equals(id) ?: false }
         selectedUserIndex.value = index
     }
-
 }

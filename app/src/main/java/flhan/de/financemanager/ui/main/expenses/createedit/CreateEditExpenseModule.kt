@@ -19,6 +19,9 @@ class CreateEditExpenseModule {
     @Provides
     fun fetchUsersInteractor(interactor: FetchUsersInteractorImpl): FetchUsersInteractor = interactor
 
+    @Provides
+    fun saveExpenseInteractor(interactor: CreateUpdateExpenseInteractorImpl): CreateUpdateExpenseInteractor = interactor
+
 
     @Qualifier
     @MustBeDocumented

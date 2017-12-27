@@ -7,13 +7,17 @@ import flhan.de.financemanager.common.data.Expense
 import flhan.de.financemanager.common.events.Create
 import flhan.de.financemanager.common.events.Delete
 import flhan.de.financemanager.common.events.Update
+import flhan.de.financemanager.common.extensions.cleanUp
 import flhan.de.financemanager.common.extensions.toOverviewItem
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
 
 class ExpenseOverviewViewModel(fetchExpensesInteractor: FetchExpensesInteractor) : ViewModel() {
 
     val listItems = MutableLiveData<List<ExpenseOverviewItem>>()
 
     private val expenses = mutableListOf<ExpenseOverviewItem>()
+    private val disposables = CompositeDisposable()
 
     init {
         fetchExpensesInteractor.fetchAll()
@@ -40,6 +44,12 @@ class ExpenseOverviewViewModel(fetchExpensesInteractor: FetchExpensesInteractor)
                     }
                 }
                 .subscribe { listItems.value = expenses }
+                .addTo(disposables)
+    }
+
+    override fun onCleared() {
+        disposables.cleanUp()
+        super.onCleared()
     }
 }
 

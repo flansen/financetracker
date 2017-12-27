@@ -10,6 +10,12 @@ import java.util.*
 data class Expense(var cause: String = "",
                    var creator: String = "",
                    var createdAt: Date? = null,
-                   var amount: Double = 0.0,
+                   var amount: Double? = null,
                    var id: String = "",
-                   @get:Exclude var user: User? = null)
+                   @get:Exclude var user: User? = null) {
+    companion object {
+        const val CAUSE = "cause"
+        const val CREATOR = "creator"
+        const val AMOUNT = "amount"
+    }
+}

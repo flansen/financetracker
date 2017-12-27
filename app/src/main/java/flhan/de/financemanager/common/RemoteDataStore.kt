@@ -12,8 +12,12 @@ import flhan.de.financemanager.common.events.RepositoryEvent
 import flhan.de.financemanager.common.events.Update
 import flhan.de.financemanager.ui.login.createjoinhousehold.NoSuchHouseholdThrowable
 import flhan.de.financemanager.ui.main.expenses.createedit.NoExpenseFoundThrowable
-import io.reactivex.*
+import io.reactivex.Observable
+import io.reactivex.ObservableEmitter
+import io.reactivex.Single
+import io.reactivex.SingleEmitter
 import javax.inject.Inject
+
 
 /**
  * Created by Florian on 14.09.2017.
@@ -26,7 +30,7 @@ interface RemoteDataStore {
     fun loadExpenses(): Observable<RepositoryEvent<Expense>>
     fun findExpenseBy(id: String): Observable<RequestResult<Expense>>
     fun loadUsers(): Observable<MutableList<User>>
-    fun saveExpense(expense: Expense): Completable
+    fun saveExpense(expense: Expense): Observable<Unit>
 }
 
 class FirebaseClient @Inject constructor(private val userSettings: UserSettings) : RemoteDataStore {
@@ -71,14 +75,14 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
         }.onErrorReturn { RequestResult(null, NoExpenseFoundThrowable("Could not find Expense for id $id")) }
     }
 
-    override fun saveExpense(expense: Expense): Completable {
-        return Completable.fromAction {
-            expense.creator = getCurrentUser().id
-            val ref = rootReference.child("${userSettings.getHouseholdId()}/$EXPENSES/").push()
-            expense.id = ref.key
-            ref.setValue(expense)
+    override fun saveExpense(expense: Expense): Observable<Unit> {
+        return if (expense.id.isBlank()) {
+            createExpense(expense)
+        } else {
+            updateExpense(expense)
         }
     }
+
 
     //TODO: Check name existency before creation
     override fun createHousehold(household: Household): Single<RequestResult<Household>> {
@@ -96,18 +100,6 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
             performJoin(household)
             emitter.onSuccess(RequestResult(household))
         }.onErrorReturn { RequestResult(null, it) }
-    }
-
-    private fun performJoin(household: Household) {
-        val user = getCurrentUser()
-
-        val householdUserRef = rootReference.child("${household.id}/$USERS/")
-        val userId = householdUserRef.push().key
-        user.id = userId
-        household.users.put(user.id, user)
-        householdUserRef.child(userId).setValue(user)
-        userSettings.setUserId(userId)
-        userSettings.setHouseholdId(household.id)
     }
 
     override fun getCurrentUser(): User {
@@ -234,6 +226,47 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
             }
             rootReference.child("${userSettings.getHouseholdId()}/$EXPENSES").addChildEventListener(listener)
             emitter.setCancellable { rootReference.removeEventListener(listener) }
+        }
+    }
+
+    private fun performJoin(household: Household) {
+        val user = getCurrentUser()
+
+        val householdUserRef = rootReference.child("${household.id}/$USERS/")
+        val userId = householdUserRef.push().key
+        user.id = userId
+        household.users.put(user.id, user)
+        householdUserRef.child(userId).setValue(user)
+        userSettings.setUserId(userId)
+        userSettings.setHouseholdId(household.id)
+    }
+
+    private fun updateExpense(expense: Expense): Observable<Unit> {
+        return Observable.create { emitter ->
+            val expenseRef = rootReference.child("${userSettings.getHouseholdId()}/$EXPENSES/${expense.id}")
+            val updateMap = mutableMapOf<String, Any>()
+            updateMap.put(Expense.AMOUNT, expense.amount!!)
+            updateMap.put(Expense.CAUSE, expense.cause)
+            updateMap.put(Expense.CREATOR, expense.creator)
+
+            expenseRef.updateChildren(updateMap) { databaseError, databaseReference ->
+                if (databaseError == null) {
+                    emitter.onNext(Unit)
+                    emitter.onComplete()
+                } else {
+                    emitter.onError(databaseError.toException())
+                }
+            }
+        }
+    }
+
+    private fun createExpense(expense: Expense): Observable<Unit> {
+        return Observable.create { emitter ->
+            expense.creator = getCurrentUser().id
+            val ref = rootReference.child("${userSettings.getHouseholdId()}/$EXPENSES/").push()
+            expense.id = ref.key
+            ref.setValue(expense)
+            emitter.onComplete()
         }
     }
 

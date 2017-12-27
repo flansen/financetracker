@@ -45,36 +45,10 @@ class CreateEditExpenseActivity : BaseActivity() {
         setContentView(R.layout.activity_expense_create_edit)
         ButterKnife.bind(this)
 
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        userAdapter = UserSpinnerAdapter()
-        createEditExpenseUserSpinner.adapter = userAdapter
-        createEditExpenseUserSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(p0: AdapterView<*>?) {
-            }
-
-            override fun onItemSelected(adapterView: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                viewModel.onUserSelected(position)
-            }
-
-        }
-        viewModel = ViewModelProviders.of(this, factory).get(CreateEditExpenseViewModel::class.java)
-        viewModel.mode.observe(this, Observer { mode -> setTitleForMode(mode) })
-        viewModel.isLoading.observe(this, Observer { isLoading -> createEditExpenseLoadingView.visible(isLoading ?: true) })
-        viewModel.userItems.observe(this, Observer { userAdapter.setItems(it ?: mutableListOf()) })
-        viewModel.selectedUserIndex.observe(this, Observer { createEditExpenseUserSpinner.setSelection(it ?: 0) })
-        viewModel.amount.observe(this, Observer { amount ->
-            if (amount != amountText.text.toString()) {
-                amountText.setText(amount ?: "")
-            }
-        })
-        viewModel.cause.observe(this, Observer { cause ->
-            if (cause != causeText.text.toString()) {
-                causeText.setText(cause ?: "")
-            }
-        })
+        setupView()
+        setupBinding()
     }
+
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return if (item?.itemId == android.R.id.home) {
@@ -95,6 +69,41 @@ class CreateEditExpenseActivity : BaseActivity() {
         viewModel.amount.value = cause.toString()
     }
 
+    private fun setupBinding() {
+        createEditExpenseUserSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+            }
+
+            override fun onItemSelected(adapterView: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                viewModel.onUserSelected(position)
+            }
+        }
+        viewModel = ViewModelProviders.of(this, factory).get(CreateEditExpenseViewModel::class.java)
+        viewModel.mode.observe(this, Observer { mode -> setTitleForMode(mode) })
+        viewModel.isLoading.observe(this, Observer { isLoading -> createEditExpenseLoadingView.visible(isLoading ?: true) })
+        viewModel.userItems.observe(this, Observer { userAdapter.items = it ?: mutableListOf() })
+        viewModel.selectedUserIndex.observe(this, Observer { createEditExpenseUserSpinner.setSelection(it ?: 0) })
+        viewModel.amount.observe(this, Observer { amount ->
+            if (amount != amountText.text.toString()) {
+                amountText.setText(amount ?: "")
+            }
+        })
+        viewModel.cause.observe(this, Observer { cause ->
+            if (cause != causeText.text.toString()) {
+                causeText.setText(cause ?: "")
+            }
+        })
+
+        create_edit_expense_save.setOnClickListener { viewModel.onSaveClicked({ finish() }) }
+    }
+
+    private fun setupView() {
+        setSupportActionBar(toolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        userAdapter = UserSpinnerAdapter()
+        createEditExpenseUserSpinner.adapter = userAdapter
+    }
+
     private fun setTitleForMode(mode: CreateEditMode?) {
         when (mode) {
             Create -> supportActionBar!!.title = createTitle
@@ -104,6 +113,7 @@ class CreateEditExpenseActivity : BaseActivity() {
 
     companion object {
         private const val ID_KEY = "id"
+        private const val USER_LAYOUT_RESOURCE = android.R.layout.simple_list_item_activated_1
 
         fun createIntent(context: Context, id: String?): Intent {
             val intent = Intent(context, CreateEditExpenseActivity::class.java)
@@ -119,12 +129,16 @@ class CreateEditExpenseActivity : BaseActivity() {
 
     inner class UserSpinnerAdapter : ArrayAdapter<CreateEditUserItem>(this, 0) {
 
-        private var items: List<CreateEditUserItem>? = null
+        var items: List<CreateEditUserItem>? = null
+            set(value) {
+                field = value
+                notifyDataSetChanged()
+            }
 
         override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup?): View {
             var view = convertView
             if (view == null) {
-                view = LayoutInflater.from(context).inflate(android.R.layout.simple_list_item_activated_1, parent!!, false)
+                view = LayoutInflater.from(context).inflate(USER_LAYOUT_RESOURCE, parent!!, false)
             }
             val textView = view!!.findViewById<TextView>(android.R.id.text1)
             textView.text = items!![position].name
@@ -134,7 +148,7 @@ class CreateEditExpenseActivity : BaseActivity() {
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
             var view = convertView
             if (view == null) {
-                view = LayoutInflater.from(context).inflate(android.R.layout.simple_list_item_activated_1, parent!!, false)
+                view = LayoutInflater.from(context).inflate(USER_LAYOUT_RESOURCE, parent!!, false)
             }
             val textView = view!!.findViewById<TextView>(android.R.id.text1)
             textView.text = items!![position].name
@@ -143,11 +157,6 @@ class CreateEditExpenseActivity : BaseActivity() {
 
         override fun getCount(): Int {
             return items?.count() ?: 0
-        }
-
-        fun setItems(items: List<CreateEditUserItem>) {
-            this.items = items
-            notifyDataSetChanged()
         }
     }
 }
