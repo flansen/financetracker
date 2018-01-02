@@ -5,13 +5,9 @@ import java.util.*
 
 class CurrencyString(
         initialValue: String = "",
-        private val locale: Locale = Locale.getDefault()
-) {
+        private val locale: Locale = Locale.getDefault()) {
 
     constructor(initialValue: Double?) : this(initialValue?.toString() ?: "")
-
-    var baseString: String
-        private set
 
     var displayString: String
         get() {
@@ -30,6 +26,19 @@ class CurrencyString(
             baseString = value
         }
 
+    var amount: Double? = null
+        get() {
+            return if (baseString.isEmpty()) {
+                0.0
+            } else {
+                baseString.toDouble() / 100
+            }
+        }
+        private set
+
+    var baseString: String
+        private set
+
     init {
         var valueString = initialValue.replace(',', '.')
         if (valueString.contains('.')) {
@@ -47,7 +56,5 @@ class CurrencyString(
     companion object {
         const val CURRENCY_NUMBER_PATTERN = "###,##0.00"
         const val CURRENCY_PATTERN = "%s %s"
-        const val ZERO = "0"
-        const val TWO_DECIMAL_PLACES = 100
     }
 }

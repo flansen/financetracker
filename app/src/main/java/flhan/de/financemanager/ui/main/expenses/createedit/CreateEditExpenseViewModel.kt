@@ -93,7 +93,7 @@ class CreateEditExpenseViewModel
     fun onSaveClicked(success: () -> Unit) {
         expense!!.apply {
             cause = this@CreateEditExpenseViewModel.cause.value!!
-            amount = this@CreateEditExpenseViewModel.amount.value!!.baseString.toDouble()
+            amount = this@CreateEditExpenseViewModel.amount.value!!.amount
             createdAt = createdAt ?: Date()
             creator = userItems.value!![selectedUserIndex.value!!].id!!
         }

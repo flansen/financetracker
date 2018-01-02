@@ -37,7 +37,7 @@ class ExpenseOverviewAdapter(private val clickListener: (String) -> Unit) : Recy
                     .buildRound(item.creator, generator.getColor(item.creator))
             holder.apply {
                 name.setImageDrawable(drawable)
-                amount.text = item.amount
+                amount.text = item.amount.displayString
                 cause.text = item.cause
                 date.text = item.date
                 root.setOnClickListener { clickListener(item.id) }
