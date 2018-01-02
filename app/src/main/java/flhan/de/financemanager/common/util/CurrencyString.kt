@@ -46,7 +46,7 @@ class CurrencyString(
             val numberOfDecimals = decimalsString.length
             val index = valueString.indexOfFirst { it == '.' }
             valueString = valueString.removeRange(index, index + 1)
-            for (i in 1..numberOfDecimals) {
+            for (i in 1..(2 - numberOfDecimals)) {
                 valueString += "0"
             }
         }

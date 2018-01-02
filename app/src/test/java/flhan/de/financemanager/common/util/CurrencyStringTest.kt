@@ -17,8 +17,8 @@ class CurrencyStringTest {
 
     @Test
     fun displayStringWithInitialDouble() {
-        val initialValue = 123.4
-        val expected = "123" + decimalSeparator + "40 " + currencySymbol
+        val initialValue = 123.41
+        val expected = "123" + decimalSeparator + "41 " + currencySymbol
         val currencyString = CurrencyString(initialValue)
 
         val result = currencyString.displayString
@@ -28,8 +28,8 @@ class CurrencyStringTest {
 
     @Test
     fun displayStringWithInitialString() {
-        val initialValue = "123.4"
-        val expected = "123" + decimalSeparator + "40 " + currencySymbol
+        val initialValue = "123.41"
+        val expected = "123" + decimalSeparator + "41 " + currencySymbol
         val currencyString = CurrencyString(initialValue)
 
         val result = currencyString.displayString
@@ -49,8 +49,8 @@ class CurrencyStringTest {
 
     @Test
     fun testAmountByString() {
-        val initialValue = "123.4"
-        val expected = 123.4
+        val initialValue = "123.41"
+        val expected = 123.41
         val currencyString = CurrencyString(initialValue)
 
         val result = currencyString.amount
@@ -60,7 +60,7 @@ class CurrencyStringTest {
 
     @Test
     fun testAmountByDouble() {
-        val initialValue = 123.4
+        val initialValue = 123.41
         val currencyString = CurrencyString(initialValue)
 
         val result = currencyString.amount
@@ -76,5 +76,35 @@ class CurrencyStringTest {
         val result = currencyString.amount
 
         assertEquals(expected, result)
+    }
+
+    @Test
+    fun testAmountTwoDecimalPlaces() {
+        val initialValue = 123.41
+        val currencyString = CurrencyString(initialValue)
+
+        val result = currencyString.amount
+
+        assertEquals(initialValue, result)
+    }
+
+    @Test
+    fun testAmountOneDecimalPlaces() {
+        val initialValue = 123.4
+        val currencyString = CurrencyString(initialValue)
+
+        val result = currencyString.amount
+
+        assertEquals(initialValue, result)
+    }
+
+    @Test
+    fun testAmountNoDecimalPlaces() {
+        val initialValue = "123".toDouble()
+        val currencyString = CurrencyString(initialValue)
+
+        val result = currencyString.amount
+
+        assertEquals(initialValue, result)
     }
 }
