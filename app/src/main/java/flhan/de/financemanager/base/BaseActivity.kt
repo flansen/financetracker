@@ -11,8 +11,8 @@ import flhan.de.financemanager.R
  */
 abstract class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         AndroidInjection.inject(this)
+        super.onCreate(savedInstanceState)
     }
 
     fun showErrorDialog(message: String? = null, title: String? = null) {

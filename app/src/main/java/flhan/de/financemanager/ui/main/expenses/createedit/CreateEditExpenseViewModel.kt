@@ -17,17 +17,24 @@ import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
 import io.reactivex.rxkotlin.addTo
+import java.text.DecimalFormat
 import java.util.*
 
 //TODO: Error Handling
-class CreateEditExpenseViewModel(
+class CreateEditExpenseViewModel
+(
         findExpenseByIdInteractor: FindExpenseByIdInteractor,
         fetchUsersInteractor: FetchUsersInteractor,
         userSettings: UserSettings,
         @CreateEditExpenseModule.ExpenseId expenseId: String?,
         private val saveExpenseInteractor: CreateUpdateExpenseInteractor,
-        private val scheduler: SchedulerProvider)
-    : ViewModel() {
+        private val scheduler: SchedulerProvider
+) : ViewModel() {
+
+    var amountString: String = ""
+        set(value) {
+            amount.value = onAmountChanged(value)
+        }
 
     val isLoading = MutableLiveData<Boolean>()
     val hasError = MutableLiveData<Boolean>()
@@ -109,6 +116,25 @@ class CreateEditExpenseViewModel(
                 }
     }
 
+    //TODO: Extract
+    fun onAmountChanged(amountString: String?): String {
+        val amountWithDecimalPlaces = when {
+            amountString.isNullOrEmpty() -> "0.00"
+            amountString!!.length == 1 -> "0.0" + amountString
+            amountString.length == 2 -> "0." + amountString
+            else -> {
+                val beforeDecSep = amountString.substring(0, amountString.length - 2)
+                val afterDecSeparator = amountString.substring(amountString.length - 2, amountString.length)
+                String.format("%s.%s", beforeDecSep, afterDecSeparator)
+            }
+        }
+
+        val format = DecimalFormat.getInstance() as DecimalFormat
+        format.applyPattern("###,##0.00")
+        val moneyAmount = format.format(amountWithDecimalPlaces.toDouble())
+        return String.format("%s %s", moneyAmount, format.currency.symbol)
+    }
+
     override fun onCleared() {
         disposables.cleanUp()
         super.onCleared()
@@ -128,7 +154,7 @@ class CreateEditExpenseViewModel(
 
     private fun onExpenseLoaded(expense: Expense) {
         this.expense = expense
-        amount.value = expense.amount?.toString() ?: ""
+        amountString = expense.amount?.toString() ?: ""
         cause.value = expense.cause
     }
 

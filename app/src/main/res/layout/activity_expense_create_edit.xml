@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -25,11 +26,34 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="?attr/actionBarSize"
             android:orientation="vertical">
 
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/amountDisplayText"
+                    style="@style/Base.TextAppearance.AppCompat.Display1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:foreground="@android:color/transparent"
+                    android:gravity="center_horizontal"
+                    tools:text="0.00 €" />
+
+                <EditText
+                    android:id="@+id/amountEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:inputType="number" />
+            </FrameLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -43,20 +67,6 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/create_edit_expense_cause_hint"
                     android:inputType="textAutoComplete"
-                    android:singleLine="true" />
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp">
-
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/amountText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/create_edit_expense_amount_hint"
-                    android:inputType="numberDecimal"
                     android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
 

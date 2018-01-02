@@ -10,12 +10,13 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo.IME_ACTION_NEXT
+import android.view.inputmethod.InputMethodManager
+import android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.TextView
-import butterknife.BindString
-import butterknife.ButterKnife
-import butterknife.OnTextChanged
+import butterknife.*
 import butterknife.OnTextChanged.Callback.AFTER_TEXT_CHANGED
 import flhan.de.financemanager.R
 import flhan.de.financemanager.base.BaseActivity
@@ -64,9 +65,31 @@ class CreateEditExpenseActivity : BaseActivity() {
         viewModel.cause.value = cause.toString()
     }
 
-    @OnTextChanged(R.id.amountText, callback = AFTER_TEXT_CHANGED)
-    fun onAmountChanged(cause: Editable) {
-        viewModel.amount.value = cause.toString()
+    @OnTextChanged(R.id.amountEditText, callback = AFTER_TEXT_CHANGED)
+    fun onAmountChanged(amount: Editable) {
+        viewModel.amountString = amount.toString()
+    }
+
+    @OnEditorAction(R.id.amountEditText)
+    fun onAmountEditorAction(actionId: Int): Boolean {
+        return if (actionId == IME_ACTION_NEXT) {
+            causeText.requestFocus()
+            true
+        } else {
+            false
+        }
+    }
+
+    @OnClick(R.id.amountDisplayText)
+    fun onAmountClicked() {
+        amountEditText.requestFocusFromTouch()
+        val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.showSoftInput(amountEditText, SHOW_IMPLICIT)
+    }
+
+    @OnClick(R.id.create_edit_expense_save)
+    fun onSaveClicked() {
+        viewModel.onSaveClicked({ finish() })
     }
 
     private fun setupBinding() {
@@ -84,17 +107,13 @@ class CreateEditExpenseActivity : BaseActivity() {
         viewModel.userItems.observe(this, Observer { userAdapter.items = it ?: mutableListOf() })
         viewModel.selectedUserIndex.observe(this, Observer { createEditExpenseUserSpinner.setSelection(it ?: 0) })
         viewModel.amount.observe(this, Observer { amount ->
-            if (amount != amountText.text.toString()) {
-                amountText.setText(amount ?: "")
-            }
+            amountDisplayText.text = amount ?: ""
         })
         viewModel.cause.observe(this, Observer { cause ->
             if (cause != causeText.text.toString()) {
                 causeText.setText(cause ?: "")
             }
         })
-
-        create_edit_expense_save.setOnClickListener { viewModel.onSaveClicked({ finish() }) }
     }
 
     private fun setupView() {
@@ -162,29 +181,6 @@ class CreateEditExpenseActivity : BaseActivity() {
 }
 
 /*
-<FrameLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="100dp">
-
-    <TextView
-        android:id="@+id/tv"
-        style="@style/Base.TextAppearance.AppCompat.Display1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:clickable="false"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:foreground="@android:color/transparent"
-        android:gravity="center_horizontal" />
-
-    <EditText
-        android:id="@+id/et"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:inputType="number" />
-</FrameLayout>
 
 
 EditText et;
