@@ -1,14 +1,14 @@
 <tabs>
     <tab
+        icon="@drawable/ic_shopping_cart_black"
         id="@+id/tab_expenses"
-        icon="@drawable/ic_shopping_cart_black"
-        title="@string/tab_expenses_title" />
+        title="@string/tab_expenses" />
     <tab
+        icon="@drawable/ic_note_black"
         id="@+id/tab_shopping_items"
-        icon="@drawable/ic_shopping_cart_black"
-        title="@string/tab_expenses_title" />
+        title="@string/tab_shopping_items" />
     <tab
+        icon="@drawable/ic_attach_money_black"
         id="@+id/tab_cash_disbursements"
-        icon="@drawable/ic_shopping_cart_black"
-        title="@string/tab_expenses_title" />
+        title="@string/tab_cash_disbursements" />
 </tabs>

@@ -9,6 +9,7 @@ import flhan.de.financemanager.R
 import flhan.de.financemanager.base.BaseActivity
 import flhan.de.financemanager.ui.main.expenses.overview.ExpenseOverviewFragment
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.toolbar.*
 import javax.inject.Inject
 
 class MainActivity : BaseActivity(), HasSupportFragmentInjector {
@@ -20,6 +21,7 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+        toolbar!!.setTitle(R.string.app_name)
         mainBottombar.setOnTabSelectListener { selectedTabId ->
             when(selectedTabId) {
                 R.id.tab_expenses -> {

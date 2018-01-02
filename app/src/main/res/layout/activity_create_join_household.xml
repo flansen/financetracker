@@ -6,18 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".ui.login.createjoinhousehold.CreateJoinHouseholdActivity">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        style="@style/toolbar"
+    <include
+        layout="@layout/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:title="@string/create_join_household_title" />
+        android:layout_height="wrap_content" />
 
     <include
         android:id="@+id/createJoinLoadingView"
         layout="@layout/progress_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="?attr/actionBarSize"
         android:visibility="gone" />
 
     <ScrollView

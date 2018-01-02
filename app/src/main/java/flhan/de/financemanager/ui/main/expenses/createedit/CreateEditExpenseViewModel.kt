@@ -79,8 +79,8 @@ class CreateEditExpenseViewModel
                 .addTo(disposables)
 
         Observable.zip(
-                expenseObservable.filter { it.status == Success },
-                usersObservable.filter { it.status == Success },
+                expenseObservable.observeOn(scheduler.main()).filter { it.status == Success },
+                usersObservable.observeOn(scheduler.main()).filter { it.status == Success },
                 BiFunction { expenseResult: InteractorResult<Expense>, userResult: InteractorResult<MutableList<User>> ->
                     onExpenseLoaded(expenseResult.result!!)
                     onUsersLoaded(userResult.result!!)

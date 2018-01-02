@@ -22,6 +22,7 @@ import flhan.de.financemanager.ui.login.createjoinhousehold.CreateJoinFocusTarge
 import flhan.de.financemanager.ui.login.createjoinhousehold.ErrorType.*
 import flhan.de.financemanager.ui.main.MainActivity
 import kotlinx.android.synthetic.main.activity_create_join_household.*
+import kotlinx.android.synthetic.main.toolbar.*
 import javax.inject.Inject
 
 
@@ -74,6 +75,7 @@ class CreateJoinHouseholdActivity : BaseActivity() {
 
     private fun setupView() {
         setSupportActionBar(toolbar)
+        supportActionBar!!.setTitle(R.string.create_join_household_title)
         viewModel.joinEnabled.observe(this, Observer {
             val isEnabled = it ?: false
             joinHousehold.isEnabled = isEnabled

@@ -1,5 +1,7 @@
 <resources>
-    <string name="tab_expenses_title">Expenses</string>
+    <string name="tab_expenses">Expenses</string>
+    <string name="tab_shopping_items">Shopping-Items</string>
+    <string name="tab_cash_disbursements">Cash</string>
     <string name="app_name">financemanager</string>
     <string name="login_title">Financetracker</string>
     <string name="login_subtitle">Please sign in with your Google Account</string>

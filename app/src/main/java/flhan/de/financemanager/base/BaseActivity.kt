@@ -10,6 +10,7 @@ import flhan.de.financemanager.R
  * Created by Florian on 09.09.2017.
  */
 abstract class BaseActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
