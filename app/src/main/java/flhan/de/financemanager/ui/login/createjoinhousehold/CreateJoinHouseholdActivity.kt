@@ -43,12 +43,12 @@ class CreateJoinHouseholdActivity : BaseActivity() {
     }
 
     @OnClick(R.id.joinHousehold)
-    fun onJoinClicked(view: View) {
+    fun onJoinClicked() {
         viewModel.submit { startOverview() }
     }
 
     @OnClick(R.id.createHousehold)
-    fun onCreateClicked(view: View) {
+    fun onCreateClicked() {
         viewModel.submit { startOverview() }
     }
 

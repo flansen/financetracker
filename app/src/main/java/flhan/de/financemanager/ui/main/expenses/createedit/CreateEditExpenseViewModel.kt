@@ -13,34 +13,29 @@ import flhan.de.financemanager.common.data.Expense
 import flhan.de.financemanager.common.data.User
 import flhan.de.financemanager.common.extensions.cleanUp
 import flhan.de.financemanager.common.extensions.toListItem
+import flhan.de.financemanager.common.util.CurrencyString
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
 import io.reactivex.rxkotlin.addTo
-import java.text.DecimalFormat
 import java.util.*
 
 //TODO: Error Handling
 class CreateEditExpenseViewModel
 (
+        private val saveExpenseInteractor: CreateUpdateExpenseInteractor,
+        private val scheduler: SchedulerProvider,
         findExpenseByIdInteractor: FindExpenseByIdInteractor,
         fetchUsersInteractor: FetchUsersInteractor,
         userSettings: UserSettings,
-        @CreateEditExpenseModule.ExpenseId expenseId: String?,
-        private val saveExpenseInteractor: CreateUpdateExpenseInteractor,
-        private val scheduler: SchedulerProvider
+        @CreateEditExpenseModule.ExpenseId expenseId: String?
 ) : ViewModel() {
-
-    var amountString: String = ""
-        set(value) {
-            amount.value = onAmountChanged(value)
-        }
 
     val isLoading = MutableLiveData<Boolean>()
     val hasError = MutableLiveData<Boolean>()
     val mode = MutableLiveData<CreateEditMode>()
     val cause = MutableLiveData<String>()
-    val amount = MutableLiveData<String>()
+    val amount = MutableLiveData<CurrencyString>()
     val userItems = MutableLiveData<List<CreateEditUserItem>>()
     val selectedUserIndex = MutableLiveData<Int>()
 
@@ -98,7 +93,7 @@ class CreateEditExpenseViewModel
     fun onSaveClicked(success: () -> Unit) {
         expense!!.apply {
             cause = this@CreateEditExpenseViewModel.cause.value!!
-            amount = this@CreateEditExpenseViewModel.amount.value!!.toDouble()
+            amount = this@CreateEditExpenseViewModel.amount.value!!.baseString.toDouble()
             createdAt = createdAt ?: Date()
             creator = userItems.value!![selectedUserIndex.value!!].id!!
         }
@@ -116,23 +111,8 @@ class CreateEditExpenseViewModel
                 }
     }
 
-    //TODO: Extract
-    fun onAmountChanged(amountString: String?): String {
-        val amountWithDecimalPlaces = when {
-            amountString.isNullOrEmpty() -> "0.00"
-            amountString!!.length == 1 -> "0.0" + amountString
-            amountString.length == 2 -> "0." + amountString
-            else -> {
-                val beforeDecSep = amountString.substring(0, amountString.length - 2)
-                val afterDecSeparator = amountString.substring(amountString.length - 2, amountString.length)
-                String.format("%s.%s", beforeDecSep, afterDecSeparator)
-            }
-        }
-
-        val format = DecimalFormat.getInstance() as DecimalFormat
-        format.applyPattern("###,##0.00")
-        val moneyAmount = format.format(amountWithDecimalPlaces.toDouble())
-        return String.format("%s %s", moneyAmount, format.currency.symbol)
+    fun onAmountChanged(amountString: String) {
+        amount.value = CurrencyString(amountString)
     }
 
     override fun onCleared() {
@@ -154,7 +134,7 @@ class CreateEditExpenseViewModel
 
     private fun onExpenseLoaded(expense: Expense) {
         this.expense = expense
-        amountString = expense.amount?.toString() ?: ""
+        amount.value = CurrencyString(expense.amount)
         cause.value = expense.cause
     }
 

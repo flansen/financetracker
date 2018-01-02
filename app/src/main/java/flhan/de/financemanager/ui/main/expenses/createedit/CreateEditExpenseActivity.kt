@@ -25,6 +25,8 @@ import flhan.de.financemanager.common.CreateEditMode.Create
 import flhan.de.financemanager.common.CreateEditMode.Edit
 import flhan.de.financemanager.common.extensions.visible
 import kotlinx.android.synthetic.main.activity_expense_create_edit.*
+import kotlinx.android.synthetic.main.money_input.*
+import kotlinx.android.synthetic.main.toolbar.*
 import javax.inject.Inject
 
 class CreateEditExpenseActivity : BaseActivity() {
@@ -67,7 +69,7 @@ class CreateEditExpenseActivity : BaseActivity() {
 
     @OnTextChanged(R.id.amountEditText, callback = AFTER_TEXT_CHANGED)
     fun onAmountChanged(amount: Editable) {
-        viewModel.amountString = amount.toString()
+        viewModel.onAmountChanged(amount.toString())
     }
 
     @OnEditorAction(R.id.amountEditText)
@@ -107,7 +109,11 @@ class CreateEditExpenseActivity : BaseActivity() {
         viewModel.userItems.observe(this, Observer { userAdapter.items = it ?: mutableListOf() })
         viewModel.selectedUserIndex.observe(this, Observer { createEditExpenseUserSpinner.setSelection(it ?: 0) })
         viewModel.amount.observe(this, Observer { amount ->
-            amountDisplayText.text = amount ?: ""
+            amountDisplayText.text = amount?.displayString ?: ""
+            if (amount?.baseString?.equals(amountEditText.text.toString()) == false) {
+                amountEditText.setText(amount.baseString)
+                amountEditText.setSelection(amount.baseString.length)
+            }
         })
         viewModel.cause.observe(this, Observer { cause ->
             if (cause != causeText.text.toString()) {
@@ -179,69 +185,3 @@ class CreateEditExpenseActivity : BaseActivity() {
         }
     }
 }
-
-/*
-
-
-EditText et;
-TextView tv;
-
-@Override
-protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_starter);
-
-    et = (EditText) findViewById(R.id.et);
-    tv = (TextView) findViewById(R.id.tv);
-
-    tv.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(final View v) {
-            et.requestFocusFromTouch();
-            InputMethodManager lManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            lManager.showSoftInput(et, SHOW_IMPLICIT);
-        }
-    });
-
-    et.addTextChangedListener(new TextWatcher() {
-        @Override
-        public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
-
-        }
-
-        @Override
-        public void afterTextChanged(final Editable s) {
-            formatInput(s.toString());
-        }
-    });
-
-    formatInput("");
-}
-
-private void formatInput(final String input) {
-    String output;
-
-    if (input.length() == 0) {
-        output = "0.00";
-    } else if (input.length() == 1) {
-        output = "0.0" + input;
-    } else if (input.length() == 2) {
-        output = "0." + input;
-    } else {
-        final String beforeDecSep = input.substring(0, input.length() - 2);
-        final String afterDecSeparator = input.substring(input.length() - 2, input.length());
-        output = String.format("%s.%s", beforeDecSep, afterDecSeparator);
-    }
-
-    final DecimalFormat format = (DecimalFormat) DecimalFormat.getInstance();
-    format.applyPattern("###,##0.00");
-    final String moneyAmount = format.format(Double.parseDouble(output));
-    final String currencySymbol = format.getCurrency().getSymbol();
-    final String moneyString = String.format("%s %s", moneyAmount, currencySymbol);
-    tv.setText(moneyString);
-}*/

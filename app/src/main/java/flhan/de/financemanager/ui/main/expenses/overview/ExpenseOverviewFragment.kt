@@ -64,7 +64,7 @@ class ExpenseOverviewFragment : Fragment() {
     }
 
     @OnClick(R.id.expense_overview_fab)
-    fun onCreateExpenseClicked(view: View) {
+    fun onCreateExpenseClicked() {
         presentCreateEdit(null)
     }
 

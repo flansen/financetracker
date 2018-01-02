@@ -16,7 +16,7 @@ class CreateEditExpenseViewModelFactory @Inject constructor(
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(CreateEditExpenseViewModel::class.java)) {
-            return CreateEditExpenseViewModel(findExpenseByIdInteractor, fetchUsersInteractor, userSettings, id, createUpdateExpenseInteractor, schedulerProvider) as T
+            return CreateEditExpenseViewModel(createUpdateExpenseInteractor, schedulerProvider, findExpenseByIdInteractor, fetchUsersInteractor, userSettings, id) as T
         }
         throw IllegalArgumentException("${this.javaClass.name} cannot create a ViewModel of Type ${modelClass.name}")
     }
