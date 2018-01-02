@@ -20,7 +20,6 @@ import io.reactivex.functions.BiFunction
 import io.reactivex.rxkotlin.addTo
 import java.util.*
 
-//TODO: Error Handling
 class CreateEditExpenseViewModel
 (
         private val saveExpenseInteractor: CreateUpdateExpenseInteractor,
@@ -44,33 +43,40 @@ class CreateEditExpenseViewModel
     private val disposables = CompositeDisposable()
 
     init {
-        isLoading.value = false
-        hasError.value = false
-        currentUserId = userSettings.getUserId()
-
         val expenseObservable: Observable<InteractorResult<Expense>>
+        val usersObservable = fetchUsersInteractor.fetchAll()
+                .subscribeOn(scheduler.io())
+                .replay(1)
+                .refCount()
 
-        val usersObservable = fetchUsersInteractor.fetchAll().subscribeOn(scheduler.io()).replay(1).refCount()
         if (!expenseId.isNullOrEmpty()) {
             mode.value = Edit
-            expenseObservable = findExpenseByIdInteractor.findExpense(expenseId!!)
-                    .subscribeOn(scheduler.io())
-                    .replay(1).refCount()
-
+            expenseObservable = findExpenseByIdInteractor
+                    .findExpense(expenseId!!)
         } else {
             mode.value = Create
-            expenseObservable = Observable.just(InteractorResult(Success, Expense()))
-                    .replay(1).refCount()
+            expenseObservable = Observable
+                    .just(InteractorResult(Success, Expense()))
         }
 
-        val loadingObservable: Observable<Boolean> = Observable.combineLatest(expenseObservable, usersObservable, BiFunction { expense, userStatus ->
-            return@BiFunction expense.status == Loading || userStatus.status == Loading
-        })
+        expenseObservable
+                .subscribeOn(scheduler.io())
+                .replay(1)
+                .refCount()
+
+        val loadingObservable: Observable<Boolean> =
+                Observable.combineLatest(
+                        expenseObservable,
+                        usersObservable,
+                        BiFunction { expense, userStatus ->
+                            return@BiFunction expense.status == Loading || userStatus.status == Loading
+                        }
+                )
 
         loadingObservable
-                .subscribeOn(scheduler.io())
                 .observeOn(scheduler.main())
-                .subscribe { isLoading.value = it }.addTo(disposables)
+                .subscribe { isLoading.value = it }
+                .addTo(disposables)
 
         Observable.zip(
                 expenseObservable.filter { it.status == Success },
@@ -79,9 +85,13 @@ class CreateEditExpenseViewModel
                     onExpenseLoaded(expenseResult.result!!)
                     onUsersLoaded(userResult.result!!)
                 })
-                .subscribeOn(scheduler.main())
+                .observeOn(scheduler.main())
                 .subscribe { onLoadingFinished() }
                 .addTo(disposables)
+
+        isLoading.value = false
+        hasError.value = false
+        currentUserId = userSettings.getUserId()
     }
 
     fun onUserSelected(position: Int) {
@@ -98,7 +108,8 @@ class CreateEditExpenseViewModel
             creator = userItems.value!![selectedUserIndex.value!!].id!!
         }
 
-        saveExpenseInteractor.save(expense!!)
+        saveExpenseInteractor
+                .save(expense!!)
                 .subscribeOn(scheduler.io())
                 .observeOn(scheduler.main())
                 .subscribe { result ->

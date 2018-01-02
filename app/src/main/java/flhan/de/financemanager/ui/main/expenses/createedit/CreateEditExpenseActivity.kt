@@ -52,7 +52,6 @@ class CreateEditExpenseActivity : BaseActivity() {
         setupBinding()
     }
 
-
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return if (item?.itemId == android.R.id.home) {
             finish()
