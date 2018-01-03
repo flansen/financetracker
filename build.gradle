@@ -44,4 +44,5 @@ ext {
     textdrawableVersion = "1.0.1"
     archComponentsVersion = "1.0.0"
     butterknifeVersion = "8.8.1"
+    mockitoVersion = "2.+"
 }

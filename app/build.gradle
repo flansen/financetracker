@@ -7,7 +7,7 @@ android {
     signingConfigs {
     }
     compileSdkVersion rootProject.ext.compileSdk
-    buildToolsVersion '27.0.2'
+    buildToolsVersion rootProject.ext.supportVersion
     defaultConfig {
         applicationId "flhan.de.financemanager"
         minSdkVersion rootProject.ext.minSdk
@@ -23,9 +23,9 @@ android {
         }
     }
 
-    configurations.all { config ->
+    configurations.all { final config ->
         if (config.name.contains('UnitTest') || config.name.contains('AndroidTest')) {
-            config.resolutionStrategy.eachDependency { details ->
+            config.resolutionStrategy.eachDependency { final details ->
                 if (details.requested.group == 'com.squareup.leakcanary' && details.requested.name == 'leakcanary-android') {
                     details.useTarget(group: details.requested.group, name: 'leakcanary-android-no-op', version: details.requested.version)
                 }
@@ -80,7 +80,7 @@ dependencies {
     androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.1', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    testImplementation "org.mockito:mockito-core:2.+"
+    testImplementation "org.mockito:mockito-core:$rootProject.mockitoVersion"
 }
 
 apply plugin: 'com.google.gms.google-services'
