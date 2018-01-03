@@ -7,7 +7,7 @@ class CurrencyString(
         initialValue: String = "",
         private val locale: Locale = Locale.getDefault()) {
 
-    constructor(initialValue: Double?) : this(initialValue?.toString() ?: "")
+    constructor(initialDouble: Double?) : this(initialDouble?.toString() ?: "")
 
     var displayString: String
         get() {
@@ -16,10 +16,10 @@ class CurrencyString(
             } else {
                 baseString
             }
-            val amountValue = amountString.toDouble() / 100
+            val amountDouble = amountString.toDouble() / 100
             val decimalFormat = DecimalFormat.getInstance(locale) as DecimalFormat
             decimalFormat.applyPattern(CURRENCY_NUMBER_PATTERN)
-            val currencyAmount = decimalFormat.format(amountValue)
+            val currencyAmount = decimalFormat.format(amountDouble)
             return String.format(CURRENCY_PATTERN, currencyAmount, decimalFormat.currency.symbol)
         }
         set(value) {
@@ -42,15 +42,21 @@ class CurrencyString(
     init {
         var valueString = initialValue.replace(',', '.')
         if (valueString.contains('.')) {
-            val decimalsString = valueString.split('.')[1]
-            val numberOfDecimals = decimalsString.length
-            val index = valueString.indexOfFirst { it == '.' }
-            valueString = valueString.removeRange(index, index + 1)
-            for (i in 1..(2 - numberOfDecimals)) {
-                valueString += "0"
-            }
+            valueString = fillUpTrailingZeros(valueString)
         }
         baseString = valueString
+    }
+
+    private fun fillUpTrailingZeros(amountString: String): String {
+        var valueString = amountString
+        val decimalsString = valueString.split('.')[1]
+        val numberOfDecimals = decimalsString.length
+        val index = valueString.indexOfFirst { it == '.' }
+        valueString = valueString.removeRange(index, index + 1)
+        for (i in 1..(2 - numberOfDecimals)) {
+            valueString += "0"
+        }
+        return valueString
     }
 
     companion object {

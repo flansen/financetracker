@@ -15,6 +15,7 @@
         android:focusableInTouchMode="false"
         android:foreground="@android:color/transparent"
         android:gravity="center_horizontal"
+        android:textColor="@drawable/money_input_color_selector"
         tools:text="0.00 €" />
 
     <EditText

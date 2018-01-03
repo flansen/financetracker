@@ -22,7 +22,9 @@
             </intent-filter>
         </activity>
         <activity android:name="flhan.de.financemanager.ui.main.MainActivity" />
-        <activity android:name="flhan.de.financemanager.ui.main.expenses.createedit.CreateEditExpenseActivity" />
+        <activity
+            android:name="flhan.de.financemanager.ui.main.expenses.createedit.CreateEditExpenseActivity"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

@@ -81,9 +81,14 @@ class CreateEditExpenseActivity : BaseActivity() {
         }
     }
 
+    @OnFocusChange(R.id.amountEditText)
+    fun onEditTextFocusChanged(hasFocus: Boolean) {
+        amountDisplayText.isSelected = hasFocus
+    }
+
     @OnClick(R.id.amountDisplayText)
     fun onAmountClicked() {
-        amountEditText.requestFocusFromTouch()
+        amountEditText.requestFocus()
         val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.showSoftInput(amountEditText, SHOW_IMPLICIT)
     }
@@ -91,6 +96,12 @@ class CreateEditExpenseActivity : BaseActivity() {
     @OnClick(R.id.create_edit_expense_save)
     fun onSaveClicked() {
         viewModel.onSaveClicked({ finish() })
+    }
+
+    @OnTouch(R.id.createEditExpenseUserSpinner)
+    fun onSpinnerTouched(): Boolean {
+        createEditExpenseUserSpinner.requestFocusFromTouch()
+        return false
     }
 
     private fun setupBinding() {
