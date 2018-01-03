@@ -12,7 +12,10 @@
         android:theme="@style/AppTheme">
         <activity android:name="flhan.de.financemanager.ui.login.LoginActivity" />
         <activity
-            android:name="flhan.de.financemanager.ui.login.createjoinhousehold.CreateJoinHouseholdActivity"
+            android:name="flhan.de.financemanager.ui.login.createjoinhousehold.create.CreateHouseholdActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="flhan.de.financemanager.ui.login.createjoinhousehold.join.JoinHouseholdActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name="flhan.de.financemanager.ui.launcher.LauncherActivity">
             <intent-filter>

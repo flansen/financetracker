@@ -1,4 +1,4 @@
-package flhan.de.financemanager.ui.login.createjoinhousehold
+package flhan.de.financemanager.ui.login.createjoinhousehold.join
 
 import flhan.de.financemanager.base.InteractorResult
 import flhan.de.financemanager.base.InteractorStatus.*

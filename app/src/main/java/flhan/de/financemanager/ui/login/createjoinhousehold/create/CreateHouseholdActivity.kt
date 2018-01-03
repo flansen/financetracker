@@ -1,14 +1,12 @@
-package flhan.de.financemanager.ui.login.createjoinhousehold
+package flhan.de.financemanager.ui.login.createjoinhousehold.create
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.text.Editable
-import android.view.View
 import android.view.inputmethod.InputMethodManager
 import butterknife.ButterKnife
 import butterknife.OnClick
-import butterknife.OnFocusChange
 import butterknife.OnTextChanged
 import butterknife.OnTextChanged.Callback.AFTER_TEXT_CHANGED
 import flhan.de.financemanager.R
@@ -17,35 +15,32 @@ import flhan.de.financemanager.common.extensions.start
 import flhan.de.financemanager.common.extensions.stringByName
 import flhan.de.financemanager.common.extensions.toast
 import flhan.de.financemanager.common.extensions.visible
-import flhan.de.financemanager.ui.login.createjoinhousehold.CreateJoinFocusTarget.Email
-import flhan.de.financemanager.ui.login.createjoinhousehold.CreateJoinFocusTarget.Name
+import flhan.de.financemanager.ui.login.createjoinhousehold.CreateJoinErrorState
 import flhan.de.financemanager.ui.login.createjoinhousehold.ErrorType.*
+import flhan.de.financemanager.ui.login.createjoinhousehold.join.JoinHouseholdActivity
 import flhan.de.financemanager.ui.main.MainActivity
 import kotlinx.android.synthetic.main.activity_create_join_household.*
 import kotlinx.android.synthetic.main.toolbar.*
 import javax.inject.Inject
 
-
-//TODO: Split join and create views
-//TODO: Implement join "secreet"
-class CreateJoinHouseholdActivity : BaseActivity() {
+class CreateHouseholdActivity : BaseActivity() {
 
     @Inject
-    lateinit var factory: CreateJoinHouseholdViewModelFactory
+    lateinit var factory: CreateHouseholdViewModelFactory
 
-    private lateinit var viewModel: CreateJoinHouseholdViewModel
+    private lateinit var viewModel: CreateHouseholdViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_join_household)
         ButterKnife.bind(this)
-        viewModel = ViewModelProviders.of(this, factory).get(CreateJoinHouseholdViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, factory).get(CreateHouseholdViewModel::class.java)
         setupView()
     }
 
     @OnClick(R.id.joinHousehold)
     fun onJoinClicked() {
-        viewModel.submit { startOverview() }
+        start(JoinHouseholdActivity::class)
     }
 
     @OnClick(R.id.createHousehold)
@@ -53,33 +48,19 @@ class CreateJoinHouseholdActivity : BaseActivity() {
         viewModel.submit { startOverview() }
     }
 
-    @OnTextChanged(R.id.nameText, callback = AFTER_TEXT_CHANGED)
+    @OnTextChanged(R.id.secretText, callback = AFTER_TEXT_CHANGED)
     fun onNameChanged(name: Editable) {
-        viewModel.name.value = name.toString()
+        viewModel.secret.value = name.toString()
     }
 
-    @OnTextChanged(R.id.mailText, callback = AFTER_TEXT_CHANGED)
+    @OnTextChanged(R.id.nameText, callback = AFTER_TEXT_CHANGED)
     fun onMailChanged(mail: Editable) {
-        viewModel.mail.value = mail.toString()
-    }
-
-    @OnFocusChange(value = [R.id.mailText, R.id.nameText])
-    fun onFocusChanged(view: View, hasFocus: Boolean) {
-        if (hasFocus) {
-            when (view.id) {
-                R.id.mailText -> viewModel.focusChanged(Email)
-                R.id.nameText -> viewModel.focusChanged(Name)
-            }
-        }
+        viewModel.name.value = mail.toString()
     }
 
     private fun setupView() {
         setSupportActionBar(toolbar)
-        supportActionBar!!.setTitle(R.string.create_join_household_title)
-        viewModel.joinEnabled.observe(this, Observer {
-            val isEnabled = it ?: false
-            joinHousehold.isEnabled = isEnabled
-        })
+        supportActionBar!!.setTitle(R.string.create_household_title)
         viewModel.createEnabled.observe(this, Observer {
             val isEnabled = it ?: false
             createHousehold.isEnabled = isEnabled
@@ -92,10 +73,10 @@ class CreateJoinHouseholdActivity : BaseActivity() {
                 nameText.setText(it)
             }
         })
-        viewModel.mail.observe(this, Observer {
-            val text = mailText.text
+        viewModel.secret.observe(this, Observer {
+            val text = secretText.text
             if (text.toString() != it) {
-                mailText.setText(it)
+                secretText.setText(it)
             }
         })
     }
@@ -103,15 +84,12 @@ class CreateJoinHouseholdActivity : BaseActivity() {
     private fun handleError(errorState: CreateJoinErrorState?) {
         errorState?.apply {
             when (errorState.type) {
-                NoSuchHousehold -> setEmailError(stringByName(errorState.message!!))
+                NoSuchHousehold -> toast(stringByName(errorState.message!!))
                 Unknown -> toast(stringByName(errorState.message!!))
-                None -> setEmailError(null)
+                None -> {
+                }
             }
         }
-    }
-
-    private fun setEmailError(message: String?) {
-        mailText.error = message
     }
 
     private fun startOverview() {

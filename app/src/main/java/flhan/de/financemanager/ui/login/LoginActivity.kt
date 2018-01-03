@@ -14,7 +14,7 @@ import com.google.android.gms.common.api.GoogleApiClient
 import flhan.de.financemanager.R
 import flhan.de.financemanager.base.BaseActivity
 import flhan.de.financemanager.common.extensions.start
-import flhan.de.financemanager.ui.login.createjoinhousehold.CreateJoinHouseholdActivity
+import flhan.de.financemanager.ui.login.createjoinhousehold.create.CreateHouseholdActivity
 import javax.inject.Inject
 
 class LoginActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener {
@@ -76,7 +76,7 @@ class LoginActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
     }
 
     private fun startCreateJoin() {
-        start(CreateJoinHouseholdActivity::class)
+        start(CreateHouseholdActivity::class)
         finish()
     }
 

@@ -6,7 +6,7 @@ import flhan.de.financemanager.base.RequestResult
 import flhan.de.financemanager.common.data.Expense
 import flhan.de.financemanager.common.data.Household
 import flhan.de.financemanager.common.data.User
-import flhan.de.financemanager.ui.login.createjoinhousehold.NoSuchHouseholdThrowable
+import flhan.de.financemanager.ui.login.createjoinhousehold.join.NoSuchHouseholdThrowable
 import flhan.de.financemanager.ui.main.expenses.createedit.NoExpenseFoundThrowable
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
