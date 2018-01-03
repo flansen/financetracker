@@ -13,6 +13,7 @@ import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import flhan.de.financemanager.R
 import flhan.de.financemanager.base.BaseActivity
+import flhan.de.financemanager.common.extensions.start
 import flhan.de.financemanager.ui.login.createjoinhousehold.CreateJoinHouseholdActivity
 import javax.inject.Inject
 
@@ -75,8 +76,7 @@ class LoginActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
     }
 
     private fun startCreateJoin() {
-        viewModel.dispose()
-        startActivity(Intent(this, CreateJoinHouseholdActivity::class.java))
+        start(CreateJoinHouseholdActivity::class)
         finish()
     }
 

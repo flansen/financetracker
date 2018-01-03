@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModel
 import flhan.de.financemanager.base.InteractorResult
 import flhan.de.financemanager.base.InteractorStatus.*
 import flhan.de.financemanager.base.scheduler.SchedulerProvider
+import flhan.de.financemanager.common.GENERIC_ERROR_KEY
 import flhan.de.financemanager.common.NO_SUCH_HOUSEHOLD_KEY
 import flhan.de.financemanager.common.data.Household
 import flhan.de.financemanager.common.extensions.cleanUp
@@ -73,6 +74,7 @@ class CreateJoinHouseholdViewModel(
         when (inputStateMediator.value) {
             Join -> joinHousehold(success)
             Create -> createHousehold(success)
+        // FIXME: is this an error?
             null -> TODO()
         }
     }
@@ -114,7 +116,7 @@ class CreateJoinHouseholdViewModel(
     private fun onInteractorError(exception: Throwable?) {
         when (exception) {
             is NoSuchHouseholdThrowable -> errorState.value = CreateJoinErrorState(NoSuchHousehold, NO_SUCH_HOUSEHOLD_KEY)
-            else -> errorState.value = CreateJoinErrorState(Unknown, NO_SUCH_HOUSEHOLD_KEY)
+            else -> errorState.value = CreateJoinErrorState(Unknown, GENERIC_ERROR_KEY)
         }
     }
 }

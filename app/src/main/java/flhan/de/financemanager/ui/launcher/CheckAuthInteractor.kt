@@ -19,8 +19,8 @@ interface CheckAuthInteractor {
 
 class CheckAuthInteractorImpl @Inject constructor(
         private val authManager: AuthManager,
-        private val userSettings: UserSettings)
-    : CheckAuthInteractor {
+        private val userSettings: UserSettings
+) : CheckAuthInteractor {
 
     override fun execute(): Observable<InteractorResult<LauncherState>> {
         return userSettings

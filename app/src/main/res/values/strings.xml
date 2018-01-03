@@ -2,13 +2,12 @@
     <string name="tab_expenses">Expenses</string>
     <string name="tab_shopping_items">Shopping-Items</string>
     <string name="tab_cash_disbursements">Cash</string>
-    <string name="app_name">financemanager</string>
-    <string name="login_title">Financetracker</string>
+    <string name="app_name">FinanceBuddy</string>
     <string name="login_subtitle">Please sign in with your Google Account</string>
     <string name="error_generic_title">Unhandled Error</string>
-    <string name="error_generic_body">An unhandled error occured.</string>
+    <string name="error_generic_body">An unhandled error occurred.</string>
     <string name="error_connection_title">No Internet Connection</string>
-    <string name="error_connection_body">Please connect your smartphone to the Internet.</string>
+    <string name="error_connection_body">Please connect your cellphone to the Internet.</string>
     <string name="error_generic">Something very bad happened. Please try again.</string>
     <string name="error_no_such_household">No household for provided email found.</string>
     <string name="create_join_household_title">Create or Join a Household</string>
@@ -19,13 +18,13 @@
     <string name="create_join_household_join_name_hint">Give it a name</string>
     <string name="done">Done</string>
     <string name="expense_overview_title">Expenses</string>
-    <string name="edit_expense_title">Ausgabe bearbeiten</string>
-    <string name="create_expense_title">Ausgabe erstellen</string>
+    <string name="edit_expense_title">Edit Expense</string>
+    <string name="create_expense_title">Create Expense</string>
     <string name="join_household">Join</string>
     <string name="create_household">create</string>
     <string name="create_edit_expense_cause_hint">Cause</string>
     <string name="create_edit_expense_amount_hint">Amount</string>
     <string name="save">save</string>
-    <string name="placeholder">Coming in the future...</string>
+    <string name="placeholder">Coming in the future…</string>
 
 </resources>

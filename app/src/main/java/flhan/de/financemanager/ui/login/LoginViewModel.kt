@@ -3,6 +3,7 @@ package flhan.de.financemanager.ui.login
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import flhan.de.financemanager.base.scheduler.SchedulerProvider
+import flhan.de.financemanager.common.extensions.cleanUp
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 
@@ -12,7 +13,7 @@ class LoginViewModel(
     : ViewModel() {
 
     val error = MutableLiveData<String>()
-    private val cd = CompositeDisposable()
+    private val compositeDisposable = CompositeDisposable()
 
     fun startAuth(token: String, success: () -> Unit) {
         loginInteractor.login(token)
@@ -24,12 +25,12 @@ class LoginViewModel(
                     } else {
                         error.value = loginResult.error
                     }
-                }.addTo(cd)
+                }
+                .addTo(compositeDisposable)
     }
 
-    fun dispose() {
-        cd.clear()
-        cd.dispose()
+    override fun onCleared() {
+        compositeDisposable.cleanUp()
         super.onCleared()
     }
 }
