@@ -1,4 +1,4 @@
-package flhan.de.financemanager.common.events
+package flhan.de.financemanager.common.datastore
 
 /**
  * Created by Florian on 07.10.2017.

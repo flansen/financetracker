@@ -16,14 +16,13 @@ interface AuthManager {
 }
 
 class AuthManagerImpl @Inject constructor() : AuthManager {
+
     private val mAuth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
 
     override fun auth(token: String): Observable<AuthResult> {
         return Observable.create { e: ObservableEmitter<AuthResult> ->
             val credential = GoogleAuthProvider.getCredential(token, null)
             mAuth.signInWithCredential(credential).addOnCompleteListener { task ->
-                //if (task.isSuccessful) remoteDataStore.init()
-
                 e.onNext(AuthResult(task.exception.toString(), task.isSuccessful))
                 e.onComplete()
             }

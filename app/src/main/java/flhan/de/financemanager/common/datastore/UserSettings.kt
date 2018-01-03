@@ -1,4 +1,4 @@
-package flhan.de.financemanager.common
+package flhan.de.financemanager.common.datastore
 
 import android.content.SharedPreferences
 import io.reactivex.Single

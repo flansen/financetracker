@@ -8,9 +8,9 @@ import flhan.de.financemanager.base.scheduler.SchedulerProvider
 import flhan.de.financemanager.common.CreateEditMode
 import flhan.de.financemanager.common.CreateEditMode.Create
 import flhan.de.financemanager.common.CreateEditMode.Edit
-import flhan.de.financemanager.common.UserSettings
 import flhan.de.financemanager.common.data.Expense
 import flhan.de.financemanager.common.data.User
+import flhan.de.financemanager.common.datastore.UserSettings
 import flhan.de.financemanager.common.extensions.cleanUp
 import flhan.de.financemanager.common.extensions.toListItem
 import flhan.de.financemanager.common.util.CurrencyString

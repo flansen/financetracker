@@ -7,12 +7,12 @@ import dagger.Module
 import dagger.Provides
 import flhan.de.financemanager.base.scheduler.SchedulerProvider
 import flhan.de.financemanager.base.scheduler.SchedulerProviderImpl
-import flhan.de.financemanager.common.FirebaseClient
-import flhan.de.financemanager.common.RemoteDataStore
-import flhan.de.financemanager.common.UserSettings
-import flhan.de.financemanager.common.UserSettingsImpl
 import flhan.de.financemanager.common.auth.AuthManager
 import flhan.de.financemanager.common.auth.AuthManagerImpl
+import flhan.de.financemanager.common.datastore.FirebaseClient
+import flhan.de.financemanager.common.datastore.RemoteDataStore
+import flhan.de.financemanager.common.datastore.UserSettings
+import flhan.de.financemanager.common.datastore.UserSettingsImpl
 import javax.inject.Singleton
 
 /**

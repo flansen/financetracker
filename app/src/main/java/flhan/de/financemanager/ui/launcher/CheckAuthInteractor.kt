@@ -3,8 +3,8 @@ package flhan.de.financemanager.ui.launcher
 import flhan.de.financemanager.base.InteractorResult
 import flhan.de.financemanager.base.InteractorStatus.Success
 import flhan.de.financemanager.base.RequestResult
-import flhan.de.financemanager.common.UserSettings
 import flhan.de.financemanager.common.auth.AuthManager
+import flhan.de.financemanager.common.datastore.UserSettings
 import flhan.de.financemanager.ui.launcher.LauncherState.Initialized
 import flhan.de.financemanager.ui.launcher.LauncherState.NotInitialized
 import io.reactivex.Observable

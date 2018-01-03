@@ -1,4 +1,4 @@
-package flhan.de.financemanager.common
+package flhan.de.financemanager.common.datastore
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -6,10 +6,6 @@ import flhan.de.financemanager.base.RequestResult
 import flhan.de.financemanager.common.data.Expense
 import flhan.de.financemanager.common.data.Household
 import flhan.de.financemanager.common.data.User
-import flhan.de.financemanager.common.events.Create
-import flhan.de.financemanager.common.events.Delete
-import flhan.de.financemanager.common.events.RepositoryEvent
-import flhan.de.financemanager.common.events.Update
 import flhan.de.financemanager.ui.login.createjoinhousehold.NoSuchHouseholdThrowable
 import flhan.de.financemanager.ui.main.expenses.createedit.NoExpenseFoundThrowable
 import io.reactivex.Observable
@@ -50,7 +46,7 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
     override fun findExpenseBy(id: String): Observable<RequestResult<Expense>> {
         return usersObservable.flatMap { users ->
             Observable.create { emitter: ObservableEmitter<RequestResult<Expense>> ->
-                val ref = rootReference.child("${userSettings.getHouseholdId()}/$EXPENSES/$id")
+                val ref = rootReference.child("${userSettings.getHouseholdId()}/${EXPENSES}/$id")
                 val listener = object : ValueEventListener {
                     override fun onCancelled(databaseError: DatabaseError?) {
                         emitter.onNext(RequestResult(null, NoExpenseFoundThrowable("Could not find Expense for id $id")))
@@ -173,7 +169,7 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
                 }
             }
 
-            val ref = rootReference.child("${userSettings.getHouseholdId()}/$USERS")
+            val ref = rootReference.child("${userSettings.getHouseholdId()}/${USERS}")
             ref.keepSynced(true)
             ref.addListenerForSingleValueEvent(valueListener)
             emitter.setCancellable {
@@ -224,7 +220,7 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
                     }
                 }
             }
-            rootReference.child("${userSettings.getHouseholdId()}/$EXPENSES").addChildEventListener(listener)
+            rootReference.child("${userSettings.getHouseholdId()}/${EXPENSES}").addChildEventListener(listener)
             emitter.setCancellable { rootReference.removeEventListener(listener) }
         }
     }
@@ -232,7 +228,7 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
     private fun performJoin(household: Household) {
         val user = getCurrentUser()
 
-        val householdUserRef = rootReference.child("${household.id}/$USERS/")
+        val householdUserRef = rootReference.child("${household.id}/${USERS}/")
         val userId = householdUserRef.push().key
         user.id = userId
         household.users.put(user.id, user)
@@ -243,7 +239,7 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
 
     private fun updateExpense(expense: Expense): Observable<Unit> {
         return Observable.create { emitter ->
-            val expenseRef = rootReference.child("${userSettings.getHouseholdId()}/$EXPENSES/${expense.id}")
+            val expenseRef = rootReference.child("${userSettings.getHouseholdId()}/${EXPENSES}/${expense.id}")
             val updateMap = mutableMapOf<String, Any>()
             updateMap.put(Expense.AMOUNT, expense.amount!!)
             updateMap.put(Expense.CAUSE, expense.cause)
@@ -263,7 +259,7 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
     private fun createExpense(expense: Expense): Observable<Unit> {
         return Observable.create { emitter ->
             expense.creator = getCurrentUser().id
-            val ref = rootReference.child("${userSettings.getHouseholdId()}/$EXPENSES/").push()
+            val ref = rootReference.child("${userSettings.getHouseholdId()}/${EXPENSES}/").push()
             expense.id = ref.key
             ref.setValue(expense)
             emitter.onComplete()

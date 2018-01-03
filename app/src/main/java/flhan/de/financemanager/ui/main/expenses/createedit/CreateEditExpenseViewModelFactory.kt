@@ -3,7 +3,7 @@ package flhan.de.financemanager.ui.main.expenses.createedit
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import flhan.de.financemanager.base.scheduler.SchedulerProvider
-import flhan.de.financemanager.common.UserSettings
+import flhan.de.financemanager.common.datastore.UserSettings
 import javax.inject.Inject
 
 class CreateEditExpenseViewModelFactory @Inject constructor(

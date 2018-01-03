@@ -2,9 +2,9 @@ package flhan.de.financemanager.ui.main.expenses.overview
 
 import flhan.de.financemanager.base.InteractorResult
 import flhan.de.financemanager.base.InteractorStatus.Success
-import flhan.de.financemanager.common.RemoteDataStore
 import flhan.de.financemanager.common.data.Expense
-import flhan.de.financemanager.common.events.RepositoryEvent
+import flhan.de.financemanager.common.datastore.RemoteDataStore
+import flhan.de.financemanager.common.datastore.RepositoryEvent
 import io.reactivex.Observable
 import javax.inject.Inject
 

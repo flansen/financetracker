@@ -3,8 +3,8 @@ package flhan.de.financemanager.ui.main.expenses.createedit
 import flhan.de.financemanager.base.InteractorResult
 import flhan.de.financemanager.base.InteractorStatus.Loading
 import flhan.de.financemanager.base.InteractorStatus.Success
-import flhan.de.financemanager.common.RemoteDataStore
 import flhan.de.financemanager.common.data.User
+import flhan.de.financemanager.common.datastore.RemoteDataStore
 import io.reactivex.Observable
 import javax.inject.Inject
 
