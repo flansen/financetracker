@@ -23,10 +23,11 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector {
         setSupportActionBar(toolbar)
         toolbar!!.setTitle(R.string.app_name)
         mainBottombar.setOnTabSelectListener { selectedTabId ->
-            when(selectedTabId) {
+            when (selectedTabId) {
                 R.id.tab_expenses -> {
                     showTab(ExpenseOverviewFragment.newInstance())
                 }
+                else -> showTab(PlaceholderFragment())
             }
         }
     }

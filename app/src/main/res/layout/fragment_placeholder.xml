@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/lightGrey"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.AppCompatTextView
+        style="@style/Base.TextAppearance.AppCompat.Display1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:gravity="center"
+        android:maxLines="1"
+        android:text="@string/placeholder"
+        app:autoSizeTextType="uniform" />
+
+</LinearLayout>

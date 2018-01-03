@@ -26,5 +26,6 @@
     <string name="create_edit_expense_cause_hint">Cause</string>
     <string name="create_edit_expense_amount_hint">Amount</string>
     <string name="save">save</string>
+    <string name="placeholder">Coming in the future...</string>
 
 </resources>

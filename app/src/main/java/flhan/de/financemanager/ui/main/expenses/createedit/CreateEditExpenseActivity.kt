@@ -61,6 +61,11 @@ class CreateEditExpenseActivity : BaseActivity() {
         }
     }
 
+    override fun onDestroy() {
+        createEditExpenseUserSpinner.adapter = null
+        super.onDestroy()
+    }
+
     @OnTextChanged(R.id.causeText, callback = AFTER_TEXT_CHANGED)
     fun onCauseChanged(cause: Editable) {
         viewModel.cause.value = cause.toString()

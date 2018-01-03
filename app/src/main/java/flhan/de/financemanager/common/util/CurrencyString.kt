@@ -4,7 +4,7 @@ import java.text.DecimalFormat
 import java.util.*
 
 class CurrencyString(
-        initialValue: String = "",
+        initialString: String = "",
         private val locale: Locale = Locale.getDefault()) {
 
     constructor(initialDouble: Double?) : this(initialDouble?.toString() ?: "")
@@ -40,11 +40,13 @@ class CurrencyString(
         private set
 
     init {
-        var valueString = initialValue.replace(',', '.')
-        if (valueString.contains('.')) {
+        if (initialString.contains('.')) {
+            var valueString = initialString.replace(',', '.')
             valueString = fillUpTrailingZeros(valueString)
+            baseString = valueString
+        } else {
+            baseString = initialString
         }
-        baseString = valueString
     }
 
     private fun fillUpTrailingZeros(amountString: String): String {
