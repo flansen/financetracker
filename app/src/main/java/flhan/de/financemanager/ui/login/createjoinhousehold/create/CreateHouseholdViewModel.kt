@@ -1,8 +1,6 @@
 package flhan.de.financemanager.ui.login.createjoinhousehold.create
 
-import android.arch.lifecycle.MediatorLiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
+import android.arch.lifecycle.*
 import flhan.de.financemanager.base.InteractorResult
 import flhan.de.financemanager.base.InteractorStatus.*
 import flhan.de.financemanager.base.scheduler.SchedulerProvider
@@ -13,7 +11,6 @@ import flhan.de.financemanager.common.extensions.cleanUp
 import flhan.de.financemanager.common.validators.NameValidator
 import flhan.de.financemanager.ui.login.createjoinhousehold.CreateJoinErrorState
 import flhan.de.financemanager.ui.login.createjoinhousehold.ErrorType.*
-import flhan.de.financemanager.ui.login.createjoinhousehold.InputState
 import flhan.de.financemanager.ui.login.createjoinhousehold.join.NoSuchHouseholdThrowable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
@@ -24,28 +21,28 @@ class CreateHouseholdViewModel(
         private val schedulerProvider: SchedulerProvider
 ) : ViewModel() {
 
-    val createEnabled = MediatorLiveData<Boolean>()
+    val createEnabled: LiveData<Boolean>
     val isLoading = MutableLiveData<Boolean>()
     val errorState = MutableLiveData<CreateJoinErrorState>()
     val name = MutableLiveData<String>()
     val secret = MutableLiveData<String>()
 
-    private val inputStateMediator: MediatorLiveData<InputState>
+    private val inputStateMediator: MediatorLiveData<Unit>
     private val disposables = CompositeDisposable()
 
     init {
-        createEnabled.value = false
         isLoading.value = false
         errorState.value = CreateJoinErrorState(None)
         secret.value = ""
         name.value = ""
 
         inputStateMediator = MediatorLiveData()
-        inputStateMediator.addSource(name, { Unit })
-        inputStateMediator.addSource(secret, { Unit })
+        inputStateMediator.addSource(name, { inputStateMediator.value = Unit })
+        inputStateMediator.addSource(secret, { inputStateMediator.value = Unit })
 
-        createEnabled.addSource(inputStateMediator, { inputState ->
-            createEnabled.value = nameValidator.validate(name.value ?: "") && secret.value!!.length > 3
+        // TODO: Verify secret
+        createEnabled = Transformations.map(inputStateMediator, { _ ->
+            nameValidator.validate(name.value ?: "") && secret.value!!.length >= 3
         })
     }
 

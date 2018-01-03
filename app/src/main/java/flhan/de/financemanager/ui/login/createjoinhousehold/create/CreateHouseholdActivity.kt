@@ -49,13 +49,13 @@ class CreateHouseholdActivity : BaseActivity() {
     }
 
     @OnTextChanged(R.id.secretText, callback = AFTER_TEXT_CHANGED)
-    fun onNameChanged(name: Editable) {
-        viewModel.secret.value = name.toString()
+    fun onSecretChanged(secret: Editable) {
+        viewModel.secret.value = secret.toString()
     }
 
     @OnTextChanged(R.id.nameText, callback = AFTER_TEXT_CHANGED)
-    fun onMailChanged(mail: Editable) {
-        viewModel.name.value = mail.toString()
+    fun onNameChanged(name: Editable) {
+        viewModel.name.value = name.toString()
     }
 
     private fun setupView() {

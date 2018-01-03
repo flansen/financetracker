@@ -14,8 +14,9 @@ interface JoinHouseholdByMailInteractor {
     fun execute(email: String): Observable<InteractorResult<Household>>
 }
 
-class JoinHouseholdByMailInteractorImpl @Inject constructor(private val dataStore: RemoteDataStore)
-    : JoinHouseholdByMailInteractor {
+// TODO: Check secret
+class JoinHouseholdByMailInteractorImpl @Inject constructor(private val dataStore: RemoteDataStore
+) : JoinHouseholdByMailInteractor {
 
     override fun execute(email: String): Observable<InteractorResult<Household>> {
         return dataStore.joinHouseholdByMail(email)
