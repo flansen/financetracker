@@ -1,17 +1,40 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    ext.kotlinVersion = '1.2.10'
-    ext.googleServicesVersion = "3.1.2"
 
     repositories {
         google()
         jcenter()
     }
 
+    ext {
+        toolVersions = [
+                minSdk    : 21,
+                compileSdk: 27,
+                targetSdk : 27,
+                buildTools: "27.0.2",
+                kotlin    : "1.2.10",
+        ]
+        libVersions = [
+                androidSupport: "27.0.2",
+                archComponents: "1.0.0",
+                butterknife   : "8.8.1",
+                dagger        : "2.13",
+                firebase      : "11.8.0",
+                jUnit         : "4.12",
+                mockito       : "2.+",
+                leakCanary    : "1.5.4",
+                roughike      : "2.3.1",
+                rxAndroid     : "2.0.1",
+                rxkotlin      : "2.1.0",
+                textdrawable  : "1.0.1",
+                googleServices: "3.1.2"
+        ]
+    }
+
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-        classpath "com.google.gms:google-services:$googleServicesVersion"
+        classpath "com.android.tools.build:gradle:3.0.1"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$toolVersions.kotlin"
+        classpath "com.google.gms:google-services:$libVersions.googleServices"
     }
 }
 
@@ -22,27 +45,11 @@ allprojects {
         google()
         jcenter()
         maven {
-            url 'http://dl.bintray.com/amulyakhare/maven'
+            url "http://dl.bintray.com/amulyakhare/maven"
         }
     }
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
-}
-
-ext {
-    compileSdk = 27
-    minSdk = 21
-    rxAndroidVersion = '2.0.1'
-    supportVersion = '27.0.2'
-    firebaseVersion = '11.8.0'
-    leakCanaryVersion = "1.5.4"
-    rxkotlinVersion = "2.1.0"
-    daggerVersion = "2.13"
-    roughikeVersion = "2.3.1"
-    textdrawableVersion = "1.0.1"
-    archComponentsVersion = "1.0.0"
-    butterknifeVersion = "8.8.1"
-    mockitoVersion = "2.+"
 }
