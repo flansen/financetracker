@@ -4,14 +4,13 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
-    signingConfigs {
-    }
-    compileSdkVersion rootProject.ext.compileSdk
-    buildToolsVersion rootProject.ext.supportVersion
+    compileSdkVersion toolVersions.compileSdk
+    buildToolsVersion toolVersions.buildTools
+
     defaultConfig {
         applicationId "flhan.de.financemanager"
-        minSdkVersion rootProject.ext.minSdk
-        targetSdkVersion rootProject.ext.compileSdk
+        minSdkVersion toolVersions.minSdk
+        targetSdkVersion toolVersions.compileSdk
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -38,49 +37,49 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     // Support Libs
-    implementation "com.android.support:appcompat-v7:$rootProject.supportVersion"
-    implementation "com.android.support:design:$rootProject.supportVersion"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlinVersion"
+    implementation "com.android.support:appcompat-v7:$libVersions.androidSupport"
+    implementation "com.android.support:design:$libVersions.androidSupport"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$toolVersions.kotlin"
 
     // RX
-    implementation "io.reactivex.rxjava2:rxandroid:$rootProject.rxAndroidVersion"
-    implementation "io.reactivex.rxjava2:rxkotlin:$rootProject.rxkotlinVersion"
+    implementation "io.reactivex.rxjava2:rxandroid:$libVersions.rxAndroid"
+    implementation "io.reactivex.rxjava2:rxkotlin:$libVersions.rxkotlin"
 
     // Firebase
-    implementation "com.google.firebase:firebase-auth:$rootProject.firebaseVersion"
-    implementation "com.google.firebase:firebase-core:$rootProject.firebaseVersion"
-    implementation "com.google.firebase:firebase-database:$rootProject.firebaseVersion"
-    implementation "com.google.android.gms:play-services-auth:$rootProject.firebaseVersion"
+    implementation "com.google.firebase:firebase-auth:$libVersions.firebase"
+    implementation "com.google.firebase:firebase-core:$libVersions.firebase"
+    implementation "com.google.firebase:firebase-database:$libVersions.firebase"
+    implementation "com.google.android.gms:play-services-auth:$libVersions.firebase"
 
     // Dagger
-    implementation "com.google.dagger:dagger:$rootProject.daggerVersion"
-    kapt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
-    kapt "com.google.dagger:dagger-android-processor:$rootProject.daggerVersion"
-    implementation "com.google.dagger:dagger-android-support:$rootProject.daggerVersion"
+    implementation "com.google.dagger:dagger:$libVersions.dagger"
+    kapt "com.google.dagger:dagger-compiler:$libVersions.dagger"
+    kapt "com.google.dagger:dagger-android-processor:$libVersions.dagger"
+    implementation "com.google.dagger:dagger-android-support:$libVersions.dagger"
 
     // Architecture Components
-    implementation "android.arch.lifecycle:extensions:$rootProject.archComponentsVersion"
-    testImplementation "android.arch.core:core-testing:$rootProject.archComponentsVersion"
-    implementation "android.arch.lifecycle:reactivestreams:$rootProject.archComponentsVersion"
+    implementation "android.arch.lifecycle:extensions:$libVersions.archComponents"
+    testImplementation "android.arch.core:core-testing:$libVersions.archComponents"
+    implementation "android.arch.lifecycle:reactivestreams:$libVersions.archComponents"
 
     // UI
-    implementation "com.amulyakhare:com.amulyakhare.textdrawable:$rootProject.textdrawableVersion"
-    implementation "com.roughike:bottom-bar:$rootProject.roughikeVersion"
+    implementation "com.amulyakhare:com.amulyakhare.textdrawable:$libVersions.textdrawable"
+    implementation "com.roughike:bottom-bar:$libVersions.roughike"
 
     // Butterknife
-    implementation "com.jakewharton:butterknife:$rootProject.butterknifeVersion"
-    kapt "com.jakewharton:butterknife-compiler:$rootProject.butterknifeVersion"
+    implementation "com.jakewharton:butterknife:$libVersions.butterknife"
+    kapt "com.jakewharton:butterknife-compiler:$libVersions.butterknife"
 
     // Leak Canary
-    debugImplementation "com.squareup.leakcanary:leakcanary-android:$rootProject.leakCanaryVersion"
-    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$rootProject.leakCanaryVersion"
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:$libVersions.leakCanary"
+    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$libVersions.leakCanary"
 
     // Test
-    testImplementation 'junit:junit:4.12'
+    testImplementation "junit:junit:$libVersions.jUnit"
     androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.1', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    testImplementation "org.mockito:mockito-core:$rootProject.mockitoVersion"
+    testImplementation "org.mockito:mockito-core:$libVersions.mockito"
 }
 
 apply plugin: 'com.google.gms.google-services'
