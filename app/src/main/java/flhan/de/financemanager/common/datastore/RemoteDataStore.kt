@@ -290,6 +290,7 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
             val ref = rootReference.child("${userSettings.getHouseholdId()}/$EXPENSES/").push()
             expense.id = ref.key
             ref.setValue(expense)
+            emitter.onNext(Unit)
             emitter.onComplete()
         }
     }
