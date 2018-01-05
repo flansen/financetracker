@@ -11,13 +11,13 @@ import javax.inject.Inject
  * Created by Florian on 03.10.2017.
  */
 interface CreateHouseholdInteractor {
-    fun execute(name: String): Observable<InteractorResult<Household>>
+    fun execute(name: String, secret: String): Observable<InteractorResult<Household>>
 }
 
 class CreateHouseholdInteractorImpl @Inject constructor(private val dataStore: RemoteDataStore) : CreateHouseholdInteractor {
 
-    override fun execute(name: String): Observable<InteractorResult<Household>> {
-        val household = Household(name)
+    override fun execute(name: String, secret: String): Observable<InteractorResult<Household>> {
+        val household = Household(name, secret = secret)
 
         return dataStore.createHousehold(household)
                 .flatMap {

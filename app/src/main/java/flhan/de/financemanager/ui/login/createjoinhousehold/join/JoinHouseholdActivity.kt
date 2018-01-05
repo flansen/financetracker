@@ -17,7 +17,7 @@ import flhan.de.financemanager.common.extensions.stringByName
 import flhan.de.financemanager.common.extensions.toast
 import flhan.de.financemanager.common.extensions.visible
 import flhan.de.financemanager.ui.login.createjoinhousehold.CreateJoinErrorState
-import flhan.de.financemanager.ui.login.createjoinhousehold.ErrorType
+import flhan.de.financemanager.ui.login.createjoinhousehold.ErrorType.*
 import flhan.de.financemanager.ui.main.MainActivity
 import kotlinx.android.synthetic.main.activity_join_household.*
 import kotlinx.android.synthetic.main.toolbar.*
@@ -89,9 +89,10 @@ class JoinHouseholdActivity : BaseActivity() {
     private fun handleError(errorState: CreateJoinErrorState?) {
         errorState?.apply {
             when (errorState.type) {
-                ErrorType.NoSuchHousehold -> toast(stringByName(errorState.message!!))
-                ErrorType.Unknown -> toast(stringByName(errorState.message!!))
-                ErrorType.None -> {
+                NoSuchHousehold -> toast(stringByName(errorState.message!!))
+                Unknown -> toast(stringByName(errorState.message!!))
+                InvalidSecret -> toast(stringByName(errorState.message!!))
+                None -> {
                 }
             }
         }

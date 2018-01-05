@@ -9,6 +9,7 @@
     <string name="error_connection_title">No Internet Connection</string>
     <string name="error_connection_body">Please connect your cellphone to the Internet.</string>
     <string name="error_generic">Something very bad happened. Please try again.</string>
+    <string name="error_invalid_secret">The secret was incorrect.</string>
     <string name="error_no_such_household">No household for provided email found.</string>
     <string name="create_household_title">Setup your Experience</string>
     <string name="create_join_household_intro">In order to use the app, you need to create or join a household. You can join your mates household by his or her e-mail. Or create your own and invite another person to it.</string>

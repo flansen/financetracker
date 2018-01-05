@@ -7,6 +7,7 @@ package flhan.de.financemanager.ui.login.createjoinhousehold
 enum class ErrorType {
     NoSuchHousehold,
     Unknown,
+    InvalidSecret,
     None
 }
 

@@ -8,4 +8,5 @@ data class Household(
         var name: String = "",
         var id: String = "",
         var creator: String = "",
-        var users: MutableMap<String, User> = mutableMapOf<String, User>())
+        var users: MutableMap<String, User> = mutableMapOf(),
+        var secret: String = "")

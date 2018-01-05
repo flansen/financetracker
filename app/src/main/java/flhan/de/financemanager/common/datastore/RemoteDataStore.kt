@@ -6,6 +6,7 @@ import flhan.de.financemanager.base.RequestResult
 import flhan.de.financemanager.common.data.Expense
 import flhan.de.financemanager.common.data.Household
 import flhan.de.financemanager.common.data.User
+import flhan.de.financemanager.ui.login.createjoinhousehold.join.InvalidSecretThrowable
 import flhan.de.financemanager.ui.login.createjoinhousehold.join.NoSuchHouseholdThrowable
 import flhan.de.financemanager.ui.main.expenses.createedit.NoExpenseFoundThrowable
 import io.reactivex.Observable
@@ -21,7 +22,7 @@ import javax.inject.Inject
 interface RemoteDataStore {
     fun createHousehold(household: Household): Single<RequestResult<Household>>
     fun joinHousehold(household: Household): Single<RequestResult<Household>>
-    fun joinHouseholdByMail(email: String): Single<RequestResult<Household>>
+    fun joinHouseholdByMail(email: String, secret: String): Single<RequestResult<Household>>
     fun getCurrentUser(): User
     fun loadExpenses(): Observable<RepositoryEvent<Expense>>
     fun findExpenseBy(id: String): Observable<RequestResult<Expense>>
@@ -79,13 +80,13 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
         }
     }
 
-
-    //TODO: Check name existency before creation
     override fun createHousehold(household: Household): Single<RequestResult<Household>> {
         return Single.create { emitter: SingleEmitter<RequestResult<Household>> ->
-            household.creator = getCurrentUser().email
             val key = rootReference.push().key
-            household.id = key
+            household.apply {
+                creator = getCurrentUser().email
+                id = key
+            }
             rootReference.child(key).setValue(household)
             emitter.onSuccess(RequestResult(household))
         }.onErrorReturn { RequestResult(null, it) }
@@ -93,26 +94,28 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
 
     override fun joinHousehold(household: Household): Single<RequestResult<Household>> {
         return Single.create { emitter: SingleEmitter<RequestResult<Household>> ->
-            performJoin(household)
-            emitter.onSuccess(RequestResult(household))
+            performJoin(household, household.secret, {
+                emitter.onSuccess(RequestResult(household))
+            }, { throwable ->
+                emitter.onSuccess(RequestResult(null, throwable))
+            })
         }.onErrorReturn { RequestResult(null, it) }
     }
 
+    //TODO: Throw better exception
     override fun getCurrentUser(): User {
         val user = User()
-        val currentAuthorizedUser = FirebaseAuth.getInstance().currentUser
-        currentAuthorizedUser?.let {
-            user.name = currentAuthorizedUser.displayName ?: ""
-            user.email = currentAuthorizedUser.email ?: ""
-        }
         val userId = userSettings.getUserId()
-        if (!userId.isEmpty()) {
-            user.id = userId
+        val currentAuthorizedUser = FirebaseAuth.getInstance().currentUser?.let { it } ?: throw Throwable()
+        user.apply {
+            name = currentAuthorizedUser.displayName ?: ""
+            email = currentAuthorizedUser.email ?: ""
+            id = userId
         }
         return user
     }
 
-    override fun joinHouseholdByMail(email: String): Single<RequestResult<Household>> {
+    override fun joinHouseholdByMail(email: String, secret: String): Single<RequestResult<Household>> {
         return Single.create({ emitter: SingleEmitter<RequestResult<Household>> ->
             rootReference.orderByChild(CREATOR)
                     .equalTo(email)
@@ -126,8 +129,11 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
                             if (dataSnapshot?.childrenCount?.toInt() != 0) {
                                 val first = dataSnapshot?.children?.first()
                                 val household = first?.getValue(Household::class.java)
-                                performJoin(household!!)
-                                emitter.onSuccess(RequestResult(household))
+                                performJoin(household!!, secret, {
+                                    emitter.onSuccess(RequestResult(household))
+                                }, { throwable ->
+                                    emitter.onSuccess(RequestResult(null, throwable))
+                                })
                             } else {
                                 emitter.onSuccess(RequestResult(null, NoSuchHouseholdThrowable()))
                             }
@@ -225,16 +231,38 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
         }
     }
 
-    private fun performJoin(household: Household) {
+    private fun performJoin(household: Household, secret: String, success: () -> Unit, error: (Throwable) -> Unit) {
         val user = getCurrentUser()
+        val householdRef = rootReference.child(household.id)
 
-        val householdUserRef = rootReference.child("${household.id}/${USERS}/")
-        val userId = householdUserRef.push().key
-        user.id = userId
-        household.users.put(user.id, user)
-        householdUserRef.child(userId).setValue(user)
-        userSettings.setUserId(userId)
-        userSettings.setHouseholdId(household.id)
+        householdRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError?) {
+                error(Throwable("Cancelled"))
+            }
+
+            override fun onDataChange(dataSnapshot: DataSnapshot?) {
+                val householdToJoin = dataSnapshot?.getValue(Household::class.java)
+                if (householdToJoin == null) {
+                    error(NoSuchHouseholdThrowable())
+                    return
+                }
+
+                if (householdToJoin.secret == secret) {
+                    val householdUserRef = householdRef.child(USERS)
+                    val userId = householdUserRef.push().key
+                    user.id = userId
+                    household.users.put(user.id, user)
+                    householdUserRef.child(userId).setValue(user)
+                    userSettings.apply {
+                        setUserId(userId)
+                        setHouseholdId(household.id)
+                    }
+                    success()
+                } else {
+                    error(InvalidSecretThrowable())
+                }
+            }
+        })
     }
 
     private fun updateExpense(expense: Expense): Observable<Unit> {
@@ -259,7 +287,7 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
     private fun createExpense(expense: Expense): Observable<Unit> {
         return Observable.create { emitter ->
             expense.creator = getCurrentUser().id
-            val ref = rootReference.child("${userSettings.getHouseholdId()}/${EXPENSES}/").push()
+            val ref = rootReference.child("${userSettings.getHouseholdId()}/$EXPENSES/").push()
             expense.id = ref.key
             ref.setValue(expense)
             emitter.onComplete()

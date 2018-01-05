@@ -8,6 +8,7 @@ import flhan.de.financemanager.base.InteractorResult
 import flhan.de.financemanager.base.InteractorStatus
 import flhan.de.financemanager.base.scheduler.SchedulerProvider
 import flhan.de.financemanager.common.GENERIC_ERROR_KEY
+import flhan.de.financemanager.common.INVALID_SECRET_KEY
 import flhan.de.financemanager.common.NO_SUCH_HOUSEHOLD_KEY
 import flhan.de.financemanager.common.data.Household
 import flhan.de.financemanager.common.extensions.cleanUp
@@ -50,7 +51,7 @@ class JoinHouseholdViewModel(
 
 
     private fun joinHousehold(success: () -> Unit) {
-        joinHouseholdByMailInteractor.execute(mail.value!!)
+        joinHouseholdByMailInteractor.execute(mail.value!!, secret.value!!)
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.main())
                 .subscribe { result ->
@@ -76,6 +77,7 @@ class JoinHouseholdViewModel(
     private fun onInteractorError(exception: Throwable?) {
         when (exception) {
             is NoSuchHouseholdThrowable -> errorState.value = CreateJoinErrorState(NoSuchHousehold, NO_SUCH_HOUSEHOLD_KEY)
+            is InvalidSecretThrowable -> errorState.value = CreateJoinErrorState(InvalidSecret, INVALID_SECRET_KEY)
             else -> errorState.value = CreateJoinErrorState(Unknown, GENERIC_ERROR_KEY)
         }
     }

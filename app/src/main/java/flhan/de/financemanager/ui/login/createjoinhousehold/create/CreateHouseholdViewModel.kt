@@ -5,18 +5,17 @@ import flhan.de.financemanager.base.InteractorResult
 import flhan.de.financemanager.base.InteractorStatus.*
 import flhan.de.financemanager.base.scheduler.SchedulerProvider
 import flhan.de.financemanager.common.GENERIC_ERROR_KEY
-import flhan.de.financemanager.common.NO_SUCH_HOUSEHOLD_KEY
 import flhan.de.financemanager.common.data.Household
 import flhan.de.financemanager.common.extensions.cleanUp
-import flhan.de.financemanager.common.validators.NameValidator
+import flhan.de.financemanager.common.validators.LengthValidator
 import flhan.de.financemanager.ui.login.createjoinhousehold.CreateJoinErrorState
-import flhan.de.financemanager.ui.login.createjoinhousehold.ErrorType.*
-import flhan.de.financemanager.ui.login.createjoinhousehold.join.NoSuchHouseholdThrowable
+import flhan.de.financemanager.ui.login.createjoinhousehold.ErrorType.None
+import flhan.de.financemanager.ui.login.createjoinhousehold.ErrorType.Unknown
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 
 class CreateHouseholdViewModel(
-        private val nameValidator: NameValidator,
+        private val lengthValidator: LengthValidator,
         private val createHouseholdInteractor: CreateHouseholdInteractor,
         private val schedulerProvider: SchedulerProvider
 ) : ViewModel() {
@@ -27,7 +26,7 @@ class CreateHouseholdViewModel(
     val name = MutableLiveData<String>()
     val secret = MutableLiveData<String>()
 
-    private val inputStateMediator: MediatorLiveData<Unit>
+    private val validationTrigger: MediatorLiveData<Unit>
     private val disposables = CompositeDisposable()
 
     init {
@@ -36,13 +35,12 @@ class CreateHouseholdViewModel(
         secret.value = ""
         name.value = ""
 
-        inputStateMediator = MediatorLiveData()
-        inputStateMediator.addSource(name, { inputStateMediator.value = Unit })
-        inputStateMediator.addSource(secret, { inputStateMediator.value = Unit })
+        validationTrigger = MediatorLiveData()
+        validationTrigger.addSource(name, { validationTrigger.value = Unit })
+        validationTrigger.addSource(secret, { validationTrigger.value = Unit })
 
-        // TODO: Verify secret
-        createEnabled = Transformations.map(inputStateMediator, { _ ->
-            nameValidator.validate(name.value ?: "") && secret.value!!.length >= 3
+        createEnabled = Transformations.map(validationTrigger, { _ ->
+            lengthValidator.validate(name.value) && lengthValidator.validate(secret.value)
         })
     }
 
@@ -56,7 +54,9 @@ class CreateHouseholdViewModel(
     }
 
     private fun createHousehold(success: () -> Unit) {
-        createHouseholdInteractor.execute(name.value!!)
+        val householdName = name.value?.let { it } ?: return
+        val householdSecret = secret.value?.let { it } ?: return
+        createHouseholdInteractor.execute(householdName, householdSecret)
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.main())
                 .subscribe { result ->
@@ -70,7 +70,7 @@ class CreateHouseholdViewModel(
             Loading -> isLoading.value = true
             Error -> {
                 isLoading.value = false
-                onInteractorError(result.exception)
+                onInteractorError()
             }
             Success -> {
                 isLoading.value = false
@@ -79,10 +79,7 @@ class CreateHouseholdViewModel(
         }
     }
 
-    private fun onInteractorError(exception: Throwable?) {
-        when (exception) {
-            is NoSuchHouseholdThrowable -> errorState.value = CreateJoinErrorState(NoSuchHousehold, NO_SUCH_HOUSEHOLD_KEY)
-            else -> errorState.value = CreateJoinErrorState(Unknown, GENERIC_ERROR_KEY)
-        }
+    private fun onInteractorError() {
+        errorState.value = CreateJoinErrorState(Unknown, GENERIC_ERROR_KEY)
     }
 }
