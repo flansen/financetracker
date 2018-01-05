@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.login.createjoinhousehold.create.CreateHouseholdActivity">
+    android:orientation="vertical">
 
     <include
         layout="@layout/toolbar"
@@ -12,7 +10,7 @@
         android:layout_height="wrap_content" />
 
     <include
-        android:id="@+id/createJoinLoadingView"
+        android:id="@+id/joinLoadingView"
         layout="@layout/progress_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,46 +19,43 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:orientation="vertical">
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:orientation="vertical"
+            android:paddingTop="?attr/actionBarSize">
 
             <TextView
                 style="@style/Base.TextAppearance.AppCompat.Medium"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:text="@string/create_join_household_intro"
+                android:layout_marginTop="16dp"
+                android:text="@string/join_household_info"
                 android:textColor="@color/greyText" />
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
+                android:layout_marginBottom="24dp"
                 android:layout_marginTop="24dp">
 
                 <android.support.design.widget.TextInputEditText
-                    android:id="@+id/nameText"
+                    android:id="@+id/mailText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/create_join_household_join_name_hint"
-                    android:inputType="text"
+                    android:hint="@string/create_join_household_join_mail_hint"
+                    android:inputType="textEmailAddress"
                     android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
+                android:layout_marginBottom="24dp"
                 android:layout_marginTop="24dp">
 
                 <android.support.design.widget.TextInputEditText
@@ -72,23 +67,14 @@
                     android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
 
+
             <Button
-                android:id="@+id/createHousehold"
+                android:id="@+id/joinHousehold"
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="8dp"
-                android:text="@string/create_household" />
-
-            <Button
-                android:id="@+id/joinHousehold"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="32dp"
-                android:text="@string/create_join_household_button" />
+                android:text="@string/join_household" />
         </LinearLayout>
     </ScrollView>
-</android.support.design.widget.CoordinatorLayout>
+</FrameLayout>

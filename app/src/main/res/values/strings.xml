@@ -9,8 +9,9 @@
     <string name="error_connection_title">No Internet Connection</string>
     <string name="error_connection_body">Please connect your cellphone to the Internet.</string>
     <string name="error_generic">Something very bad happened. Please try again.</string>
+    <string name="error_invalid_secret">The secret was incorrect.</string>
     <string name="error_no_such_household">No household for provided email found.</string>
-    <string name="create_join_household_title">Create or Join a Household</string>
+    <string name="create_household_title">Setup your Experience</string>
     <string name="create_join_household_intro">In order to use the app, you need to create or join a household. You can join your mates household by his or her e-mail. Or create your own and invite another person to it.</string>
     <string name="create_join_household_join_mail_hint">Your mate\'s mail</string>
     <string name="create_join_household_join_groupheader">Join a Household</string>
@@ -21,10 +22,14 @@
     <string name="edit_expense_title">Edit Expense</string>
     <string name="create_expense_title">Create Expense</string>
     <string name="join_household">Join</string>
-    <string name="create_household">create</string>
+    <string name="join_household_title">Join a Household</string>
+    <string name="create_household">create your own household</string>
     <string name="create_edit_expense_cause_hint">Cause</string>
     <string name="create_edit_expense_amount_hint">Amount</string>
     <string name="save">save</string>
     <string name="placeholder">Coming in the future…</string>
+    <string name="create_join_household_button">join an existing household</string>
+    <string name="create_join_household_secret_hint">Household Secret</string>
+    <string name="join_household_info">Enter the E-Mail address of the household owner below. Also, you will have to ask him or her for the household\'s secret.</string>
 
 </resources>

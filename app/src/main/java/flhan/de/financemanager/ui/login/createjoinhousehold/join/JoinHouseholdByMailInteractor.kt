@@ -1,4 +1,4 @@
-package flhan.de.financemanager.ui.login.createjoinhousehold
+package flhan.de.financemanager.ui.login.createjoinhousehold.join
 
 import flhan.de.financemanager.base.InteractorResult
 import flhan.de.financemanager.base.InteractorStatus.*
@@ -11,14 +11,15 @@ import javax.inject.Inject
  * Created by Florian on 03.10.2017.
  */
 interface JoinHouseholdByMailInteractor {
-    fun execute(email: String): Observable<InteractorResult<Household>>
+    fun execute(email: String, secret: String): Observable<InteractorResult<Household>>
 }
 
-class JoinHouseholdByMailInteractorImpl @Inject constructor(private val dataStore: RemoteDataStore)
-    : JoinHouseholdByMailInteractor {
+// TODO: Check secret
+class JoinHouseholdByMailInteractorImpl @Inject constructor(private val dataStore: RemoteDataStore
+) : JoinHouseholdByMailInteractor {
 
-    override fun execute(email: String): Observable<InteractorResult<Household>> {
-        return dataStore.joinHouseholdByMail(email)
+    override fun execute(email: String, secret: String): Observable<InteractorResult<Household>> {
+        return dataStore.joinHouseholdByMail(email, secret)
                 .map {
                     if (it.exception == null) {
                         InteractorResult(Success, it.result)
