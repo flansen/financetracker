@@ -86,8 +86,8 @@ dependencies {
 
     // Test
     testImplementation "junit:junit:$libVersions.jUnit"
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.1', {
-        exclude group: 'com.android.support', module: 'support-annotations'
+    androidTestImplementation("com.android.support.test.espresso:espresso-core:$libVersions.espresso", {
+        exclude group: "com.android.support", module: "support-annotations"
     })
     testImplementation "org.mockito:mockito-core:$libVersions.mockito"
 }

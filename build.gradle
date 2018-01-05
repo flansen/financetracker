@@ -19,6 +19,7 @@ buildscript {
                 archComponents: "1.0.0",
                 butterknife   : "8.8.1",
                 dagger        : "2.13",
+                espresso      : "3.0.1",
                 firebase      : "11.8.0",
                 jUnit         : "4.12",
                 mockito       : "2.+",
