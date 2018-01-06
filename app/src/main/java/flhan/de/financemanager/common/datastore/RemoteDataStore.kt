@@ -13,6 +13,7 @@ import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
 import io.reactivex.Single
 import io.reactivex.SingleEmitter
+import io.reactivex.rxkotlin.withLatestFrom
 import javax.inject.Inject
 
 
@@ -31,7 +32,6 @@ interface RemoteDataStore {
 }
 
 class FirebaseClient @Inject constructor(private val userSettings: UserSettings) : RemoteDataStore {
-
     private val firebaseDatabase by lazy { FirebaseDatabase.getInstance() }
     private val rootReference by lazy { firebaseDatabase.getReference(HOUSEHOLD) }
     private val usersObservable by lazy {
@@ -143,9 +143,20 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
     }
 
     override fun loadExpenses(): Observable<RepositoryEvent<Expense>> {
-        return usersObservable.flatMap { users ->
-            return@flatMap createExpenseObservable(users)
-        }
+        return createExpenseObservable().withLatestFrom(usersObservable, { expenseEvent: RepositoryEvent<Expense>, userList: MutableList<User>? ->
+            when (expenseEvent) {
+                is Update -> {
+                    val user = userList?.firstOrNull { expenseEvent.obj.creator == it.id }
+                    expenseEvent.obj.user = user
+                }
+                is Create -> {
+                    val user = userList?.firstOrNull { expenseEvent.obj.creator == it.id }
+                    expenseEvent.obj.user = user
+                }
+            }
+
+            return@withLatestFrom expenseEvent
+        })
     }
 
     override fun loadUsers(): Observable<MutableList<User>> {
@@ -155,6 +166,7 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
     private fun createUserObservable(): Observable<MutableList<User>> {
         return Observable.create { emitter: ObservableEmitter<MutableList<User>> ->
             val users = mutableListOf<User>()
+            var isInitialLoadingDone = false
 
             val valueListener = object : ValueEventListener {
                 override fun onCancelled(databaseError: DatabaseError?) {
@@ -162,6 +174,7 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
                 }
 
                 override fun onDataChange(dataSnapshot: DataSnapshot?) {
+                    isInitialLoadingDone = true
                     dataSnapshot?.let {
                         for (snapshot in dataSnapshot.children) {
                             val user = snapshot.getValue(User::class.java)
@@ -174,17 +187,44 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
                     emitter.onNext(users)
                 }
             }
+            val childListener = object : ChildEventListener {
+                override fun onCancelled(p0: DatabaseError?) {
+                }
 
-            val ref = rootReference.child("${userSettings.getHouseholdId()}/${USERS}")
+                override fun onChildMoved(p0: DataSnapshot?, p1: String?) {
+                }
+
+                override fun onChildChanged(p0: DataSnapshot?, p1: String?) {
+                }
+
+                override fun onChildAdded(dataSnapshot: DataSnapshot?, p1: String?) {
+                    if (isInitialLoadingDone) {
+                        dataSnapshot?.let {
+                            val user = dataSnapshot.getValue(User::class.java)
+                            user?.let {
+                                user.id = dataSnapshot.key
+                                users.add(user)
+                            }
+                        }
+                        emitter.onNext(users)
+                    }
+                }
+
+                override fun onChildRemoved(p0: DataSnapshot?) {
+                }
+            }
+            val ref = rootReference.child("${userSettings.getHouseholdId()}/$USERS")
             ref.keepSynced(true)
+            ref.addChildEventListener(childListener)
             ref.addListenerForSingleValueEvent(valueListener)
             emitter.setCancellable {
                 ref.removeEventListener(valueListener)
+                ref.removeEventListener(childListener)
             }
         }
     }
 
-    private fun createExpenseObservable(users: List<User>): Observable<RepositoryEvent<Expense>> {
+    private fun createExpenseObservable(): Observable<RepositoryEvent<Expense>> {
         return Observable.create { emitter ->
             val listener = object : ChildEventListener {
                 override fun onCancelled(databaseError: DatabaseError?) {
@@ -199,7 +239,7 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
                         val expense = dataSnapshot.getValue(Expense::class.java)
                         expense?.apply {
                             id = dataSnapshot.key
-                            user = users.firstOrNull { creator == it.id }
+                            //user = users.firstOrNull { creator == it.id }
                         }
                         val event = Update(expense!!)
                         emitter.onNext(event)
@@ -211,7 +251,7 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
                         val expense = dataSnapshot.getValue(Expense::class.java)
                         expense?.apply {
                             id = dataSnapshot.key
-                            user = users.firstOrNull { creator == it.id }
+                            //user = users.firstOrNull { creator == it.id }
                         }
                         val event = Create(expense!!)
                         emitter.onNext(event)

@@ -27,9 +27,9 @@ android {
     flavorDimensions "environment"
     productFlavors {
         production {
-            applicationIdSuffix ".release"
         }
         development {
+            applicationIdSuffix ".development"
         }
     }
     configurations.all { final config ->
