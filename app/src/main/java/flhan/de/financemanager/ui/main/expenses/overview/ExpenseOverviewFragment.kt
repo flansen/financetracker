@@ -61,6 +61,10 @@ class ExpenseOverviewFragment : Fragment() {
         viewModel.listItems.observe(this, Observer { listItems ->
             adapter.items = listItems ?: mutableListOf()
         })
+
+        viewModel.paymentSums.observe(this, Observer { amounts ->
+            amounts?.forEach { println("User ${it.name} - Amount ${it.amount}") }
+        })
     }
 
     @OnClick(R.id.expense_overview_fab)

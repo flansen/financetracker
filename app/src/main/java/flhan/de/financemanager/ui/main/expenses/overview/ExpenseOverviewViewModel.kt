@@ -1,6 +1,8 @@
 package flhan.de.financemanager.ui.main.expenses.overview
 
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
 import flhan.de.financemanager.base.InteractorStatus.Success
 import flhan.de.financemanager.common.data.Expense
@@ -15,6 +17,7 @@ import io.reactivex.rxkotlin.addTo
 class ExpenseOverviewViewModel(fetchExpensesInteractor: FetchExpensesInteractor) : ViewModel() {
 
     val listItems = MutableLiveData<List<ExpenseOverviewItem>>()
+    val paymentSums: LiveData<List<ExpensePaymentItem>>
 
     private val expenses = mutableListOf<ExpenseOverviewItem>()
     private val disposables = CompositeDisposable()
@@ -45,6 +48,18 @@ class ExpenseOverviewViewModel(fetchExpensesInteractor: FetchExpensesInteractor)
                 }
                 .subscribe { listItems.value = expenses }
                 .addTo(disposables)
+
+        paymentSums = Transformations.map(listItems, { items ->
+            return@map items
+                    .groupBy { it.creatorId }
+                    .mapValues {
+                        it.value.sumByDouble { it.amount.amount ?: 0.0 }
+                    }
+                    .map { entry ->
+                        val username = items.firstOrNull { it.creatorId == entry.key }?.creator ?: ""
+                        ExpensePaymentItem(username, entry.value.toString())
+                    }
+        })
     }
 
     override fun onCleared() {

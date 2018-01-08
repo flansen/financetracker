@@ -13,5 +13,5 @@ fun Expense.toOverviewItem(): ExpenseOverviewItem {
     user?.name?.split(' ')?.forEach { nameString += it[0] }
     val dateFormat = SimpleDateFormat.getInstance() as SimpleDateFormat
     dateFormat.applyPattern(LONG_DATE_FORMAT)
-    return ExpenseOverviewItem(id, nameString, CurrencyString(amount), cause, dateFormat.format(createdAt))
+    return ExpenseOverviewItem(id, nameString, user!!.id, CurrencyString(amount), cause, dateFormat.format(createdAt))
 }
