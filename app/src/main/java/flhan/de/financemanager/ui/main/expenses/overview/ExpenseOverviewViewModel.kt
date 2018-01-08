@@ -11,6 +11,7 @@ import flhan.de.financemanager.common.datastore.Delete
 import flhan.de.financemanager.common.datastore.Update
 import flhan.de.financemanager.common.extensions.cleanUp
 import flhan.de.financemanager.common.extensions.toOverviewItem
+import flhan.de.financemanager.common.util.CurrencyString
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 
@@ -53,11 +54,12 @@ class ExpenseOverviewViewModel(fetchExpensesInteractor: FetchExpensesInteractor)
             return@map items
                     .groupBy { it.creatorId }
                     .mapValues {
-                        it.value.sumByDouble { it.amount.amount ?: 0.0 }
+                        val amount = it.value.sumByDouble { it.amount.amount ?: 0.0 }
+                        CurrencyString(amount)
                     }
                     .map { entry ->
-                        val username = items.firstOrNull { it.creatorId == entry.key }?.creator ?: ""
-                        ExpensePaymentItem(username, entry.value.toString())
+                        val item = items.firstOrNull { it.creatorId == entry.key }
+                        ExpensePaymentItem(item?.id ?: "", item?.creator ?: "", entry.value.displayString)
                     }
         })
     }

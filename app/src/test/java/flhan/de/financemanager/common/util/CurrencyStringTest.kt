@@ -99,6 +99,28 @@ class CurrencyStringTest {
     }
 
     @Test
+    fun testAmountThreeDecimalPlaces() {
+        val initialValue = 123.456
+        val expected = 123.46
+        val currencyString = CurrencyString(initialValue)
+
+        val result = currencyString.amount
+
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun testDisplayStringThreeDecimalPlaces() {
+        val initialValue = 123.456
+        val expected = "123" + decimalSeparator + "46 " + currencySymbol
+        val currencyString = CurrencyString(initialValue)
+
+        val result = currencyString.displayString
+
+        assertEquals(expected, result)
+    }
+
+    @Test
     fun testAmountNoDecimalPlaces() {
         val initialValue = "123".toDouble()
         val currencyString = CurrencyString(initialValue)

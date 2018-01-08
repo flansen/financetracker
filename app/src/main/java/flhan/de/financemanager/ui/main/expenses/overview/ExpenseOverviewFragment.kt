@@ -63,6 +63,7 @@ class ExpenseOverviewFragment : Fragment() {
         })
 
         viewModel.paymentSums.observe(this, Observer { amounts ->
+            paymentItemView.addOrUpdateItems(amounts)
             amounts?.forEach { println("User ${it.name} - Amount ${it.amount}") }
         })
     }
