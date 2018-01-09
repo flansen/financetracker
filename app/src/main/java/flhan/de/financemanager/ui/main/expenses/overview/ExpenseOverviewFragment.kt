@@ -11,7 +11,6 @@ import android.support.v7.widget.LinearLayoutManager.VERTICAL
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import butterknife.BindString
 import butterknife.ButterKnife
 import butterknife.OnClick
 import dagger.android.support.AndroidSupportInjection
@@ -25,9 +24,6 @@ class ExpenseOverviewFragment : Fragment() {
 
     @Inject
     lateinit var factory: OverviewViewModelFactory
-
-    @BindString(R.string.expense_overview_title)
-    lateinit var title: String
 
     private lateinit var viewModel: ExpenseOverviewViewModel
 
@@ -44,7 +40,7 @@ class ExpenseOverviewFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_expense_overview, container, false)
         ButterKnife.bind(this, view)
-        (activity as AppCompatActivity).supportActionBar?.title = title
+        (activity as AppCompatActivity).setSupportActionBar(toolbar)
         return view
     }
 
@@ -64,7 +60,6 @@ class ExpenseOverviewFragment : Fragment() {
 
         viewModel.paymentSums.observe(this, Observer { amounts ->
             paymentItemView.addOrUpdateItems(amounts)
-            amounts?.forEach { println("User ${it.name} - Amount ${it.amount}") }
         })
     }
 

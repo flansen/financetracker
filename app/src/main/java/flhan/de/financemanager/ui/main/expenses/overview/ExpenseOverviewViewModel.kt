@@ -59,7 +59,7 @@ class ExpenseOverviewViewModel(fetchExpensesInteractor: FetchExpensesInteractor)
                     }
                     .map { entry ->
                         val item = items.firstOrNull { it.creatorId == entry.key }
-                        ExpensePaymentItem(item?.id ?: "", item?.creator ?: "", entry.value.displayString)
+                        ExpensePaymentItem(item?.creatorId ?: "", item?.creator ?: "", entry.value.displayString)
                     }
         })
     }
