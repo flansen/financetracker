@@ -6,10 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.inputmethod.EditorInfo.IME_ACTION_NEXT
 import android.view.inputmethod.InputMethodManager
 import android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT
@@ -42,6 +39,7 @@ class CreateEditExpenseActivity : BaseActivity() {
 
     private lateinit var viewModel: CreateEditExpenseViewModel
     private lateinit var userAdapter: UserSpinnerAdapter
+    private var showDeleteAction = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,11 +51,25 @@ class CreateEditExpenseActivity : BaseActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return if (item?.itemId == android.R.id.home) {
-            finish()
+        return when (item?.itemId) {
+            android.R.id.home -> {
+                finish()
+                true
+            }
+            R.id.action_delete -> {
+                viewModel.delete { finish() }
+                true
+            }
+            else -> false
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        return if (showDeleteAction) {
+            menuInflater.inflate(R.menu.create_edit_menu, menu)
             true
         } else {
-            super.onOptionsItemSelected(item)
+            super.onCreateOptionsMenu(menu)
         }
     }
 
@@ -147,7 +159,11 @@ class CreateEditExpenseActivity : BaseActivity() {
     private fun setTitleForMode(mode: CreateEditMode?) {
         when (mode) {
             Create -> supportActionBar!!.title = createTitle
-            Edit -> supportActionBar!!.title = editTitle
+            Edit -> {
+                supportActionBar!!.title = editTitle
+                showDeleteAction = true
+                invalidateOptionsMenu()
+            }
         }
     }
 

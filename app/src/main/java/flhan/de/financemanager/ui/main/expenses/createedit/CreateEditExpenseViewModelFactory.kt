@@ -9,6 +9,7 @@ import javax.inject.Inject
 class CreateEditExpenseViewModelFactory @Inject constructor(
         private val findExpenseByIdInteractor: FindExpenseByIdInteractor,
         private val fetchUsersInteractor: FetchUsersInteractor,
+        private val deleteExpenseInteractor: DeleteExpenseInteractor,
         private val createUpdateExpenseInteractor: CreateUpdateExpenseInteractor,
         private val userSettings: UserSettings,
         private val schedulerProvider: SchedulerProvider,
@@ -16,7 +17,7 @@ class CreateEditExpenseViewModelFactory @Inject constructor(
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(CreateEditExpenseViewModel::class.java)) {
-            return CreateEditExpenseViewModel(createUpdateExpenseInteractor, schedulerProvider, findExpenseByIdInteractor, fetchUsersInteractor, userSettings, id) as T
+            return CreateEditExpenseViewModel(createUpdateExpenseInteractor, schedulerProvider, deleteExpenseInteractor, findExpenseByIdInteractor, fetchUsersInteractor, userSettings, id) as T
         }
         throw IllegalArgumentException("${this.javaClass.name} cannot create a ViewModel of Type ${modelClass.name}")
     }

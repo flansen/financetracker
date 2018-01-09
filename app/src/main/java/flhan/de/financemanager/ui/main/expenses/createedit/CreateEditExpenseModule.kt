@@ -22,6 +22,9 @@ class CreateEditExpenseModule {
     @Provides
     fun saveExpenseInteractor(interactor: CreateUpdateExpenseInteractorImpl): CreateUpdateExpenseInteractor = interactor
 
+    @Provides
+    fun deleteInteractor(interactor: DeleteExpenseInteractorImpl): DeleteExpenseInteractor = interactor
+
 
     @Qualifier
     @MustBeDocumented

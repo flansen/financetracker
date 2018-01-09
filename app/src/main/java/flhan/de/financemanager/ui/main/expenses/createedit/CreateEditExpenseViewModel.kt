@@ -24,6 +24,7 @@ class CreateEditExpenseViewModel
 (
         private val saveExpenseInteractor: CreateUpdateExpenseInteractor,
         private val scheduler: SchedulerProvider,
+        private val deleteInteractor: DeleteExpenseInteractor,
         findExpenseByIdInteractor: FindExpenseByIdInteractor,
         fetchUsersInteractor: FetchUsersInteractor,
         userSettings: UserSettings,
@@ -124,6 +125,16 @@ class CreateEditExpenseViewModel
 
     fun onAmountChanged(amountString: String) {
         amount.value = CurrencyString(amountString)
+    }
+
+
+    fun delete(success: () -> Unit) {
+        deleteInteractor.delete(expense!!.id)
+                .subscribeOn(scheduler.io())
+                .observeOn(scheduler.main())
+                //TODO: Handle errors
+                .filter { it }
+                .subscribe { success() }
     }
 
     override fun onCleared() {

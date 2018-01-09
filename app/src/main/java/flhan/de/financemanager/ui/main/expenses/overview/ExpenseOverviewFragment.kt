@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.LinearLayoutManager.VERTICAL
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import butterknife.ButterKnife
@@ -72,6 +73,8 @@ class ExpenseOverviewFragment : Fragment() {
         viewModel.paymentSums.observe(this, Observer { amounts ->
             if (amounts != null && !amounts.isEmpty()) {
                 paymentItemView.visibility = VISIBLE
+            } else {
+                paymentItemView.visibility = GONE
             }
             paymentItemView.addOrUpdateItems(amounts)
         })

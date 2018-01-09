@@ -29,9 +29,11 @@ interface RemoteDataStore {
     fun findExpenseBy(id: String): Observable<RequestResult<Expense>>
     fun loadUsers(): Observable<MutableList<User>>
     fun saveExpense(expense: Expense): Observable<Unit>
+    fun deleteExpense(id: String): Single<Boolean>
 }
 
 class FirebaseClient @Inject constructor(private val userSettings: UserSettings) : RemoteDataStore {
+
     private val firebaseDatabase by lazy { FirebaseDatabase.getInstance() }
     private val rootReference by lazy { firebaseDatabase.getReference(HOUSEHOLD) }
     private val usersObservable by lazy {
@@ -162,6 +164,15 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
     override fun loadUsers(): Observable<MutableList<User>> {
         return usersObservable
     }
+
+    override fun deleteExpense(id: String): Single<Boolean> {
+        return Single.fromCallable {
+            val ref = rootReference.child("${userSettings.getHouseholdId()}/$EXPENSES/$id")
+            ref.removeValue()
+            return@fromCallable true
+        }
+    }
+
 
     private fun createUserObservable(): Observable<MutableList<User>> {
         return Observable.create { emitter: ObservableEmitter<MutableList<User>> ->

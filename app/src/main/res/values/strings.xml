@@ -31,5 +31,6 @@
     <string name="create_join_household_button">join an existing household</string>
     <string name="create_join_household_secret_hint">Household Secret</string>
     <string name="join_household_info">Enter the E-Mail address of the household owner below. Also, you will have to ask him or her for the household\'s secret.</string>
+    <string name="delete_action_title">Delete</string>
 
 </resources>
