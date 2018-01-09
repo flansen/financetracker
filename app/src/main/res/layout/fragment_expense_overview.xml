@@ -28,7 +28,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="?android:attr/actionBarSize"
                     android:padding="16dp"
-                    android:scrollbars="none" />
+                    android:scrollbars="none"
+                    android:visibility="gone" />
             </HorizontalScrollView>
 
             <android.support.v7.widget.Toolbar
