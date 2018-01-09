@@ -18,14 +18,18 @@
             app:titleEnabled="false">
 
             <!-- Add HorizontalScrollView here -->
-
-            <flhan.de.financemanager.ui.views.HorizontalItemView
-                android:id="@+id/paymentItemView"
+            <HorizontalScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="?android:attr/actionBarSize"
-                android:padding="16dp"
-                android:scrollbars="none" />
+                android:layout_height="wrap_content">
+
+                <flhan.de.financemanager.ui.views.HorizontalItemView
+                    android:id="@+id/paymentItemView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="?android:attr/actionBarSize"
+                    android:padding="16dp"
+                    android:scrollbars="none" />
+            </HorizontalScrollView>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"

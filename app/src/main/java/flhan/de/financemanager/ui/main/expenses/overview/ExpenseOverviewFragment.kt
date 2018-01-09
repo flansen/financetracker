@@ -3,6 +3,7 @@ package flhan.de.financemanager.ui.main.expenses.overview
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
+import android.graphics.Point
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
@@ -20,12 +21,20 @@ import flhan.de.financemanager.ui.main.expenses.createedit.CreateEditExpenseActi
 import kotlinx.android.synthetic.main.fragment_expense_overview.*
 import javax.inject.Inject
 
+
 class ExpenseOverviewFragment : Fragment() {
 
     @Inject
     lateinit var factory: OverviewViewModelFactory
 
+    private val screenWidth by lazy {
+        val size = Point()
+        activity?.windowManager?.defaultDisplay?.getSize(size)
+        size.x
+    }
+
     private lateinit var viewModel: ExpenseOverviewViewModel
+
 
     companion object {
         fun newInstance(): ExpenseOverviewFragment = ExpenseOverviewFragment()
@@ -52,6 +61,7 @@ class ExpenseOverviewFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
+        paymentItemView.minimumWidth = screenWidth
         val adapter = ExpenseOverviewAdapter({ id -> presentCreateEdit(id) })
         expense_overview_recycler.adapter = adapter
         viewModel.listItems.observe(this, Observer { listItems ->
