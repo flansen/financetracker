@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.text.Editable
+import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
 import butterknife.ButterKnife
 import butterknife.OnClick
@@ -17,7 +18,6 @@ import flhan.de.financemanager.common.extensions.toast
 import flhan.de.financemanager.common.extensions.visible
 import flhan.de.financemanager.ui.login.createjoinhousehold.CreateJoinErrorState
 import flhan.de.financemanager.ui.login.createjoinhousehold.ErrorType.*
-import flhan.de.financemanager.ui.login.createjoinhousehold.join.JoinHouseholdActivity
 import flhan.de.financemanager.ui.main.MainActivity
 import kotlinx.android.synthetic.main.activity_create_join_household.*
 import kotlinx.android.synthetic.main.toolbar.*
@@ -38,10 +38,16 @@ class CreateHouseholdActivity : BaseActivity() {
         setupView()
     }
 
-    @OnClick(R.id.joinHousehold)
-    fun onJoinClicked() {
-        start(JoinHouseholdActivity::class)
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return if (item?.itemId == android.R.id.home) {
+            finish()
+            true
+        } else {
+            false
+        }
     }
+
 
     @OnClick(R.id.createHousehold)
     fun onCreateClicked() {
@@ -60,6 +66,7 @@ class CreateHouseholdActivity : BaseActivity() {
 
     private fun setupView() {
         setSupportActionBar(toolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setTitle(R.string.create_household_title)
         viewModel.createEnabled.observe(this, Observer {
             val isEnabled = it ?: false

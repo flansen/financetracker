@@ -34,7 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="@string/join_household_info"
+                android:text="@string/create_join_household_intro"
                 android:textColor="@color/greyText" />
 
             <android.support.design.widget.TextInputLayout
@@ -75,6 +75,16 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:text="@string/join_household" />
+
+
+            <Button
+                android:id="@+id/createHousehold"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="32dp"
+                android:text="@string/create_household" />
         </LinearLayout>
     </ScrollView>
 </FrameLayout>

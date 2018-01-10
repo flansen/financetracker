@@ -5,7 +5,6 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
-import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
 import butterknife.ButterKnife
 import butterknife.OnClick
@@ -13,11 +12,13 @@ import butterknife.OnTextChanged
 import butterknife.OnTextChanged.Callback.AFTER_TEXT_CHANGED
 import flhan.de.financemanager.R
 import flhan.de.financemanager.base.BaseActivity
+import flhan.de.financemanager.common.extensions.start
 import flhan.de.financemanager.common.extensions.stringByName
 import flhan.de.financemanager.common.extensions.toast
 import flhan.de.financemanager.common.extensions.visible
 import flhan.de.financemanager.ui.login.createjoinhousehold.CreateJoinErrorState
 import flhan.de.financemanager.ui.login.createjoinhousehold.ErrorType.*
+import flhan.de.financemanager.ui.login.createjoinhousehold.create.CreateHouseholdActivity
 import flhan.de.financemanager.ui.main.MainActivity
 import kotlinx.android.synthetic.main.activity_join_household.*
 import kotlinx.android.synthetic.main.toolbar.*
@@ -38,14 +39,6 @@ class JoinHouseholdActivity : BaseActivity() {
         setupView()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return if (item?.itemId == android.R.id.home) {
-            finish()
-            true
-        } else {
-            false
-        }
-    }
 
     @OnTextChanged(R.id.secretText, callback = AFTER_TEXT_CHANGED)
     fun onNameChanged(name: Editable) {
@@ -62,9 +55,13 @@ class JoinHouseholdActivity : BaseActivity() {
         viewModel.submit { startOverview() }
     }
 
+    @OnClick(R.id.createHousehold)
+    fun onJoinClicked() {
+        start(CreateHouseholdActivity::class)
+    }
+
     private fun setupView() {
         setSupportActionBar(toolbar)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setTitle(R.string.join_household)
         viewModel.joinEnabled.observe(this, Observer {
             val isEnabled = it ?: false
