@@ -8,7 +8,6 @@ class CurrencyString(
         initialString: String = "",
         private val locale: Locale = Locale.getDefault()) {
 
-
     constructor(initialDouble: Double?) : this(initialDouble?.let { NUMBER_FORMAT.format(it).toString() } ?: "")
 
     var displayString: String
