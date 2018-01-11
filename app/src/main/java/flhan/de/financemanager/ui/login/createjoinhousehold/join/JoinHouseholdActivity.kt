@@ -93,9 +93,9 @@ class JoinHouseholdActivity : BaseActivity() {
     }
 
     private fun startOverview() {
-        currentFocus?.run {
+        currentFocus?.also {
             val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(windowToken, 0)
+            imm.hideSoftInputFromWindow(it.windowToken, 0)
         }
         val intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
