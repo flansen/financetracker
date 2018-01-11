@@ -17,6 +17,6 @@ fun View.visible(isVisible: Boolean) {
         this.visibility = GONE
 }
 
-infix fun ViewGroup.inflate(@LayoutRes layoutResourceId: Int): View {
-    return LayoutInflater.from(context).inflate(layoutResourceId, this, false)
+infix fun ViewGroup?.inflate(@LayoutRes layoutResourceId: Int): View? {
+    return this?.let { LayoutInflater.from(context).inflate(layoutResourceId, this, false) }
 }

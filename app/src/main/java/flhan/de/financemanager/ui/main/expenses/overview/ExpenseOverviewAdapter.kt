@@ -19,7 +19,7 @@ class ExpenseOverviewAdapter(private val clickListener: (String) -> Unit) : Recy
             notifyDataSetChanged()
         }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int) = ExpenseOverviewViewHolder(parent!!)
+    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int) = ExpenseOverviewViewHolder(parent)
 
     override fun onBindViewHolder(holder: ExpenseOverviewViewHolder?, position: Int) {
         holder?.let {
@@ -44,7 +44,7 @@ class ExpenseOverviewAdapter(private val clickListener: (String) -> Unit) : Recy
 
     override fun getItemCount() = items.count()
 
-    inner class ExpenseOverviewViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(parent inflate LAYOUT_RES_ID)
+    inner class ExpenseOverviewViewHolder(parent: ViewGroup?) : RecyclerView.ViewHolder(parent inflate LAYOUT_RES_ID)
 
     companion object {
         const val LAYOUT_RES_ID = R.layout.expense_overview_item
