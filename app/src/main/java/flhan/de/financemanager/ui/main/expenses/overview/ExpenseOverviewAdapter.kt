@@ -22,9 +22,9 @@ class ExpenseOverviewAdapter(private val clickListener: (String) -> Unit) : Recy
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int) = ExpenseOverviewViewHolder(parent)
 
     override fun onBindViewHolder(holder: ExpenseOverviewViewHolder?, position: Int) {
-        holder?.let {
+        holder?.apply {
             val item = items[position]
-            val bubbleSize = holder.itemView.context.resources.getDimension(R.dimen.bubble_size).toInt()
+            val bubbleSize = itemView.context.resources.getDimension(R.dimen.bubble_size).toInt()
             val generator = MATERIAL
             val drawable = TextDrawable.builder()
                     .beginConfig()
@@ -32,7 +32,7 @@ class ExpenseOverviewAdapter(private val clickListener: (String) -> Unit) : Recy
                     .height(bubbleSize)
                     .endConfig()
                     .buildRound(item.creator, generator.getColor(item.creatorId))
-            holder.itemView.apply {
+            itemView.apply {
                 overview_item_name.setImageDrawable(drawable)
                 overview_item_amount.text = item.amount.displayString
                 overview_item_cause.text = item.cause

@@ -39,7 +39,6 @@ class JoinHouseholdActivity : BaseActivity() {
         setupView()
     }
 
-
     @OnTextChanged(R.id.secretText, callback = AFTER_TEXT_CHANGED)
     fun onNameChanged(name: Editable) {
         viewModel.secret.value = name.toString()
@@ -62,7 +61,7 @@ class JoinHouseholdActivity : BaseActivity() {
 
     private fun setupView() {
         setSupportActionBar(toolbar)
-        supportActionBar!!.setTitle(R.string.join_household)
+        supportActionBar?.setTitle(R.string.join_household)
         viewModel.joinEnabled.observe(this, Observer {
             val isEnabled = it ?: false
             joinHousehold.isEnabled = isEnabled
@@ -84,21 +83,19 @@ class JoinHouseholdActivity : BaseActivity() {
     }
 
     private fun handleError(errorState: CreateJoinErrorState?) {
-        errorState?.apply {
-            when (errorState.type) {
-                NoSuchHousehold -> toast(stringByName(errorState.message!!))
-                Unknown -> toast(stringByName(errorState.message!!))
-                InvalidSecret -> toast(stringByName(errorState.message!!))
-                None -> {
-                }
+        when (errorState?.type) {
+            NoSuchHousehold -> toast(stringByName(errorState.message!!))
+            Unknown -> toast(stringByName(errorState.message!!))
+            InvalidSecret -> toast(stringByName(errorState.message!!))
+            None -> {
             }
         }
     }
 
     private fun startOverview() {
-        currentFocus?.let {
+        currentFocus?.run {
             val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(it.windowToken, 0)
+            imm.hideSoftInputFromWindow(windowToken, 0)
         }
         val intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)

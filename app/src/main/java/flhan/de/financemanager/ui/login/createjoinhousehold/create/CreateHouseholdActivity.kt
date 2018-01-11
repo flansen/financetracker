@@ -38,7 +38,6 @@ class CreateHouseholdActivity : BaseActivity() {
         setupView()
     }
 
-
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return if (item?.itemId == android.R.id.home) {
             finish()
@@ -47,7 +46,6 @@ class CreateHouseholdActivity : BaseActivity() {
             false
         }
     }
-
 
     @OnClick(R.id.createHousehold)
     fun onCreateClicked() {
