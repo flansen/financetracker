@@ -9,11 +9,11 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.LinearLayoutManager.VERTICAL
-import android.view.LayoutInflater
-import android.view.View
+import android.support.v7.widget.Toolbar
+import android.view.*
 import android.view.View.GONE
 import android.view.View.VISIBLE
-import android.view.ViewGroup
+import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
 import dagger.android.support.AndroidSupportInjection
@@ -29,6 +29,9 @@ class ExpenseOverviewFragment : Fragment() {
     @Inject
     lateinit var factory: OverviewViewModelFactory
 
+    @BindView(R.id.toolbar)
+    lateinit var toolbar: Toolbar
+
     private val screenWidth by lazy {
         val size = Point()
         activity?.windowManager?.defaultDisplay?.getSize(size)
@@ -37,15 +40,15 @@ class ExpenseOverviewFragment : Fragment() {
 
     private lateinit var viewModel: ExpenseOverviewViewModel
 
-
-    companion object {
-        fun newInstance(): ExpenseOverviewFragment = ExpenseOverviewFragment()
-    }
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
         AndroidSupportInjection.inject(this)
         viewModel = ViewModelProviders.of(this, factory).get(ExpenseOverviewViewModel::class.java)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -80,6 +83,18 @@ class ExpenseOverviewFragment : Fragment() {
         })
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.expense_overview_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return if (item?.itemId == R.id.action_bill_all) {
+            true
+        } else {
+            super.onOptionsItemSelected(item)
+        }
+    }
+
     @OnClick(R.id.expense_overview_fab)
     fun onCreateExpenseClicked() {
         presentCreateEdit(null)
@@ -88,5 +103,9 @@ class ExpenseOverviewFragment : Fragment() {
     private fun presentCreateEdit(id: String?) {
         val intent = CreateEditExpenseActivity.createIntent(context!!, id)
         startActivity(intent)
+    }
+
+    companion object {
+        fun newInstance(): ExpenseOverviewFragment = ExpenseOverviewFragment()
     }
 }

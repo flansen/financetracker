@@ -33,5 +33,6 @@
     <string name="join_household_info">Enter the E-Mail address of the household owner below. Also, you will have to ask him or her for the household\'s secret.</string>
     <string name="delete_action_title">Delete</string>
     <string name="create_household_intro">Setup your own household to start using the app. Just enter a name and a secret below to start.</string>
+    <string name="action_clear_expenses">Bill All</string>
 
 </resources>
