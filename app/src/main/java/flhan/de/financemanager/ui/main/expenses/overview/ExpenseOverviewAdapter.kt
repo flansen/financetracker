@@ -1,7 +1,6 @@
 package flhan.de.financemanager.ui.main.expenses.overview
 
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
@@ -10,6 +9,7 @@ import butterknife.ButterKnife
 import com.amulyakhare.textdrawable.TextDrawable
 import com.amulyakhare.textdrawable.util.ColorGenerator.MATERIAL
 import flhan.de.financemanager.R
+import flhan.de.financemanager.common.extensions.inflate
 
 /**
  * Created by Florian on 06.10.2017.
@@ -34,7 +34,7 @@ class ExpenseOverviewAdapter(private val clickListener: (String) -> Unit) : Recy
                     .width(bubbleSize)
                     .height(bubbleSize)
                     .endConfig()
-                    .buildRound(item.creator, generator.getColor(item.creator))
+                    .buildRound(item.creator, generator.getColor(item.creatorId))
             holder.apply {
                 name.setImageDrawable(drawable)
                 amount.text = item.amount.displayString
@@ -47,7 +47,7 @@ class ExpenseOverviewAdapter(private val clickListener: (String) -> Unit) : Recy
 
     override fun getItemCount() = items.count()
 
-    inner class ExpenseOverviewViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.expense_overview_item, parent, false)) {
+    inner class ExpenseOverviewViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(parent inflate LAYOUT_RES_ID) {
 
         @BindView(R.id.overview_item_name)
         lateinit var name: ImageView
@@ -67,5 +67,9 @@ class ExpenseOverviewAdapter(private val clickListener: (String) -> Unit) : Recy
         init {
             ButterKnife.bind(this, itemView)
         }
+    }
+
+    companion object {
+        const val LAYOUT_RES_ID = R.layout.expense_overview_item
     }
 }
