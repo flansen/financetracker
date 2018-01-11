@@ -2,14 +2,11 @@ package flhan.de.financemanager.ui.main.expenses.overview
 
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import butterknife.BindView
-import butterknife.ButterKnife
 import com.amulyakhare.textdrawable.TextDrawable
 import com.amulyakhare.textdrawable.util.ColorGenerator.MATERIAL
 import flhan.de.financemanager.R
 import flhan.de.financemanager.common.extensions.inflate
+import kotlinx.android.synthetic.main.expense_overview_item.view.*
 
 /**
  * Created by Florian on 06.10.2017.
@@ -27,7 +24,7 @@ class ExpenseOverviewAdapter(private val clickListener: (String) -> Unit) : Recy
     override fun onBindViewHolder(holder: ExpenseOverviewViewHolder?, position: Int) {
         holder?.let {
             val item = items[position]
-            val bubbleSize = holder.name.context.resources.getDimension(R.dimen.bubble_size).toInt()
+            val bubbleSize = holder.itemView.context.resources.getDimension(R.dimen.bubble_size).toInt()
             val generator = MATERIAL
             val drawable = TextDrawable.builder()
                     .beginConfig()
@@ -35,39 +32,19 @@ class ExpenseOverviewAdapter(private val clickListener: (String) -> Unit) : Recy
                     .height(bubbleSize)
                     .endConfig()
                     .buildRound(item.creator, generator.getColor(item.creatorId))
-            holder.apply {
-                name.setImageDrawable(drawable)
-                amount.text = item.amount.displayString
-                cause.text = item.cause
-                date.text = item.date
-                root.setOnClickListener { clickListener(item.id) }
+            holder.itemView.apply {
+                overview_item_name.setImageDrawable(drawable)
+                overview_item_amount.text = item.amount.displayString
+                overview_item_cause.text = item.cause
+                overview_item_date.text = item.date
+                setOnClickListener { clickListener(item.id) }
             }
         }
     }
 
     override fun getItemCount() = items.count()
 
-    inner class ExpenseOverviewViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(parent inflate LAYOUT_RES_ID) {
-
-        @BindView(R.id.overview_item_name)
-        lateinit var name: ImageView
-
-        @BindView(R.id.overview_item_amount)
-        lateinit var amount: TextView
-
-        @BindView(R.id.overview_item_cause)
-        lateinit var cause: TextView
-
-        @BindView(R.id.overview_item_date)
-        lateinit var date: TextView
-
-        @BindView(R.id.overview_item_root)
-        lateinit var root: ViewGroup
-
-        init {
-            ButterKnife.bind(this, itemView)
-        }
-    }
+    inner class ExpenseOverviewViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(parent inflate LAYOUT_RES_ID)
 
     companion object {
         const val LAYOUT_RES_ID = R.layout.expense_overview_item
