@@ -25,7 +25,7 @@ interface RemoteDataStore {
     fun joinHousehold(household: Household): Single<RequestResult<Household>>
     fun joinHouseholdByMail(email: String, secret: String): Single<RequestResult<Household>>
     fun getCurrentUser(): User
-    fun loadExpenses(): Observable<RepositoryEvent<Expense>>
+    fun loadExpenses(): Observable<MutableList<Expense>>
     fun findExpenseBy(id: String): Observable<RequestResult<Expense>>
     fun loadUsers(): Observable<MutableList<User>>
     fun saveExpense(expense: Expense): Observable<Unit>
@@ -144,21 +144,15 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
         }).onErrorReturn { RequestResult(null, it) }
     }
 
-    override fun loadExpenses(): Observable<RepositoryEvent<Expense>> {
-        return createExpenseObservable().withLatestFrom(usersObservable, { expenseEvent: RepositoryEvent<Expense>, userList: MutableList<User>? ->
-            when (expenseEvent) {
-                is Update -> {
-                    val user = userList?.firstOrNull { expenseEvent.obj.creator == it.id }
-                    expenseEvent.obj.user = user
-                }
-                is Create -> {
-                    val user = userList?.firstOrNull { expenseEvent.obj.creator == it.id }
-                    expenseEvent.obj.user = user
-                }
-            }
-
-            return@withLatestFrom expenseEvent
-        })
+    override fun loadExpenses(): Observable<MutableList<Expense>> {
+        return createExpenseObservable()
+                .withLatestFrom(usersObservable, { expenses: MutableList<Expense>, userList: MutableList<User>? ->
+                    for (expense in expenses.filter { it.user == null }) {
+                        val user = userList?.firstOrNull { expense.creator == it.id }
+                        expense.user = user
+                    }
+                    return@withLatestFrom expenses
+                })
     }
 
     override fun loadUsers(): Observable<MutableList<User>> {
@@ -235,9 +229,32 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
         }
     }
 
-    private fun createExpenseObservable(): Observable<RepositoryEvent<Expense>> {
+    private fun createExpenseObservable(): Observable<MutableList<Expense>> {
         return Observable.create { emitter ->
-            val listener = object : ChildEventListener {
+            val expenses = mutableListOf<Expense>()
+            var isInitialLoadingDone = false
+
+            val valueListener = object : ValueEventListener {
+                override fun onCancelled(databaseError: DatabaseError?) {
+                    emitter.onError(databaseError?.toException() ?: Throwable("Listener.OnCancelled"))
+                }
+
+                override fun onDataChange(dataSnapshot: DataSnapshot?) {
+                    dataSnapshot?.apply {
+                        for (snapshot in children) {
+                            val expense = snapshot.getValue(Expense::class.java)
+                            expense?.let {
+                                expense.id = snapshot.key
+                                expenses.add(expense)
+                            }
+                        }
+                        isInitialLoadingDone = true
+                        emitter.onNext(expenses)
+                    }
+                }
+            }
+
+            val childEventListener = object : ChildEventListener {
                 override fun onCancelled(databaseError: DatabaseError?) {
                     emitter.onError(databaseError?.toException()?.cause ?: Throwable("Listener.OnCancelled"))
                 }
@@ -246,39 +263,49 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
                 }
 
                 override fun onChildChanged(dataSnapshot: DataSnapshot?, p1: String?) {
-                    dataSnapshot?.let {
-                        val expense = dataSnapshot.getValue(Expense::class.java)
-                        expense?.apply {
-                            id = dataSnapshot.key
-                            //user = users.firstOrNull { creator == it.id }
+                    if (isInitialLoadingDone) {
+                        dataSnapshot?.let {
+                            val expense = dataSnapshot.getValue(Expense::class.java)
+                            expense?.apply {
+                                id = dataSnapshot.key
+                                val index = expenses.indexOfFirst { id == it.id }
+                                expenses[index] = this
+                            }
+                            emitter.onNext(expenses)
                         }
-                        val event = Update(expense!!)
-                        emitter.onNext(event)
                     }
                 }
 
                 override fun onChildAdded(dataSnapshot: DataSnapshot?, p1: String?) {
-                    dataSnapshot?.let {
-                        val expense = dataSnapshot.getValue(Expense::class.java)
-                        expense?.apply {
-                            id = dataSnapshot.key
-                            //user = users.firstOrNull { creator == it.id }
+                    if (isInitialLoadingDone) {
+                        dataSnapshot?.apply {
+                            val expense = getValue(Expense::class.java)
+                            expense?.apply {
+                                id = key
+                                expenses.add(this)
+                            }
+                            emitter.onNext(expenses)
                         }
-                        val event = Create(expense!!)
-                        emitter.onNext(event)
                     }
                 }
 
                 override fun onChildRemoved(dataSnapshot: DataSnapshot?) {
-                    dataSnapshot?.let {
-                        val key = dataSnapshot.key
-                        val event = Delete<Expense>(key)
-                        emitter.onNext(event)
+                    dataSnapshot?.apply {
+                        val key = key
+                        val index = expenses.indexOfFirst { key == it.id }
+                        expenses.removeAt(index)
+                        emitter.onNext(expenses)
                     }
                 }
             }
-            rootReference.child("${userSettings.getHouseholdId()}/${EXPENSES}").addChildEventListener(listener)
-            emitter.setCancellable { rootReference.removeEventListener(listener) }
+
+            val ref = rootReference.child("${userSettings.getHouseholdId()}/$EXPENSES")
+            ref.apply {
+                keepSynced(true)
+                addChildEventListener(childEventListener)
+                addListenerForSingleValueEvent(valueListener)
+            }
+            emitter.setCancellable { rootReference.removeEventListener(childEventListener) }
         }
     }
 
