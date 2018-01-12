@@ -2,7 +2,6 @@
     <string name="tab_expenses">Expenses</string>
     <string name="tab_shopping_items">Shopping-Items</string>
     <string name="tab_cash_disbursements">Cash</string>
-    <string name="app_name">FinanceBuddy</string>
     <string name="login_subtitle">Please sign in with your Google Account</string>
     <string name="error_generic_title">Unhandled Error</string>
     <string name="error_generic_body">An unhandled error occurred.</string>

@@ -27,8 +27,10 @@ android {
     flavorDimensions "environment"
     productFlavors {
         production {
+            resValue "string", "app_name", "FinanceBuddy"
         }
         development {
+            resValue "string", "app_name", "FinanceBuddyDebug"
             applicationIdSuffix ".development"
         }
     }
