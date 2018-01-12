@@ -14,11 +14,12 @@ interface FetchExpensesInteractor {
     fun fetchAll(): Observable<InteractorResult<List<Expense>>>
 }
 
-class FetchExpensesInteractorImpl @Inject constructor(private val dataStore: RemoteDataStore)
-    : FetchExpensesInteractor {
+class FetchExpensesInteractorImpl @Inject constructor(private val dataStore: RemoteDataStore
+) : FetchExpensesInteractor {
 
     override fun fetchAll(): Observable<InteractorResult<List<Expense>>> {
         return dataStore
+                // TODO: Handle error cases?
                 .loadExpenses()
                 .map { expenseList ->
                     InteractorResult(Success, expenseList.toList())

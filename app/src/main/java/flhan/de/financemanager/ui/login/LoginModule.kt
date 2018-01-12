@@ -11,5 +11,4 @@ class LoginModule {
 
     @Provides
     fun interactor(interactor: LoginInteractorImpl): LoginInteractor = interactor
-
 }

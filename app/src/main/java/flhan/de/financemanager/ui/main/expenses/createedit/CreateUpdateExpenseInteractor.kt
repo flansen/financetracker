@@ -11,7 +11,9 @@ interface CreateUpdateExpenseInteractor {
     fun save(expense: Expense): Observable<InteractorResult<Unit>>
 }
 
-class CreateUpdateExpenseInteractorImpl @Inject constructor(private val remoteDataStore: RemoteDataStore) : CreateUpdateExpenseInteractor {
+class CreateUpdateExpenseInteractorImpl @Inject constructor(private val remoteDataStore: RemoteDataStore
+) : CreateUpdateExpenseInteractor {
+
     override fun save(expense: Expense): Observable<InteractorResult<Unit>> {
         return remoteDataStore
                 .saveExpense(expense)

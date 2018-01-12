@@ -19,10 +19,6 @@ import javax.inject.Inject
 
 class LoginActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener {
 
-    companion object {
-        private const val SIGN_IN_ID: Int = 12515
-    }
-
     private val mGoogleApiClient: GoogleApiClient by lazy {
         GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
@@ -83,5 +79,9 @@ class LoginActivity : BaseActivity(), GoogleApiClient.OnConnectionFailedListener
     private fun startGoogleAuth() {
         val signInIntent = GoogleSignInApi.getSignInIntent(mGoogleApiClient)
         startActivityForResult(signInIntent, SIGN_IN_ID)
+    }
+
+    companion object {
+        private const val SIGN_IN_ID: Int = 12515
     }
 }

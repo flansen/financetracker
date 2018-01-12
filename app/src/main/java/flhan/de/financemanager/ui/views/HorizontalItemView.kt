@@ -30,6 +30,10 @@ class HorizontalItemView @JvmOverloads constructor(
         bindView(view, item)
     }
 
+    fun addOrUpdateItems(items: List<ExpensePaymentItem>?) {
+        items?.forEach { addOrUpdateItem(it) }
+    }
+
     private fun bindView(view: View, item: ExpensePaymentItem) {
         val bubbleSize = context.resources.getDimension(R.dimen.bubble_size).toInt()
         val drawable = TextDrawable.builder()
@@ -51,7 +55,4 @@ class HorizontalItemView @JvmOverloads constructor(
         return view
     }
 
-    fun addOrUpdateItems(items: List<ExpensePaymentItem>?) {
-        items?.forEach { addOrUpdateItem(it) }
-    }
 }

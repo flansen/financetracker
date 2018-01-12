@@ -5,8 +5,8 @@ import android.arch.lifecycle.ViewModelProvider
 import javax.inject.Inject
 
 class OverviewViewModelFactory @Inject constructor(
-        private val fetchExpensesInteractor: FetchExpensesInteractor)
-    : ViewModelProvider.Factory {
+        private val fetchExpensesInteractor: FetchExpensesInteractor
+) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ExpenseOverviewViewModel::class.java)) {

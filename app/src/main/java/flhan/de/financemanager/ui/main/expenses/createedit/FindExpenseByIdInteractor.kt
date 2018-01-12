@@ -12,7 +12,8 @@ interface FindExpenseByIdInteractor {
     fun findExpense(id: String): Observable<InteractorResult<Expense>>
 }
 
-class FindExpenseByIdInteractorImpl @Inject constructor(private val dataStore: RemoteDataStore) : FindExpenseByIdInteractor {
+class FindExpenseByIdInteractorImpl @Inject constructor(private val dataStore: RemoteDataStore
+) : FindExpenseByIdInteractor {
 
     override fun findExpense(id: String): Observable<InteractorResult<Expense>> {
         return dataStore.findExpenseBy(id)

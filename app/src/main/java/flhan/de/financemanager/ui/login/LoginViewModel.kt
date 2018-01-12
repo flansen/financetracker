@@ -9,8 +9,8 @@ import io.reactivex.rxkotlin.addTo
 
 class LoginViewModel(
         private val loginInteractor: LoginInteractor,
-        private val schedulerProvider: SchedulerProvider)
-    : ViewModel() {
+        private val schedulerProvider: SchedulerProvider
+) : ViewModel() {
 
     val error = MutableLiveData<String>()
     private val compositeDisposable = CompositeDisposable()
