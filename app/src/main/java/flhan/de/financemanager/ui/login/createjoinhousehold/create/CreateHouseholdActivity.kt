@@ -12,10 +12,7 @@ import butterknife.OnTextChanged
 import butterknife.OnTextChanged.Callback.AFTER_TEXT_CHANGED
 import flhan.de.financemanager.R
 import flhan.de.financemanager.base.BaseActivity
-import flhan.de.financemanager.common.extensions.start
-import flhan.de.financemanager.common.extensions.stringByName
-import flhan.de.financemanager.common.extensions.toast
-import flhan.de.financemanager.common.extensions.visible
+import flhan.de.financemanager.common.extensions.*
 import flhan.de.financemanager.ui.login.createjoinhousehold.CreateJoinErrorState
 import flhan.de.financemanager.ui.login.createjoinhousehold.ErrorType.*
 import flhan.de.financemanager.ui.main.MainActivity
@@ -40,7 +37,7 @@ class CreateHouseholdActivity : BaseActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return if (item?.itemId == android.R.id.home) {
-            finish()
+            goUp()
             true
         } else {
             false

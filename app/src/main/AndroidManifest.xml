@@ -13,9 +13,11 @@
         <activity android:name=".ui.login.LoginActivity" />
         <activity
             android:name=".ui.login.createjoinhousehold.create.CreateHouseholdActivity"
+            android:parentActivityName=".ui.login.createjoinhousehold.join.JoinHouseholdActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.login.createjoinhousehold.join.JoinHouseholdActivity"
+            android:launchMode="singleTop"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".ui.launcher.LauncherActivity" />
         <activity
