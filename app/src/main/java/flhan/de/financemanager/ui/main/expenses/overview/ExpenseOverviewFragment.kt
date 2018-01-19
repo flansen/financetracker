@@ -89,6 +89,7 @@ class ExpenseOverviewFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return if (item?.itemId == R.id.action_bill_all) {
+            viewModel.billAll()
             true
         } else {
             super.onOptionsItemSelected(item)

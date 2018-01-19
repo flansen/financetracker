@@ -33,5 +33,9 @@ class ExpenseOverviewViewModel(expenseOverviewInteractor: ExpenseOverviewInterac
         disposables.cleanUp()
         super.onCleared()
     }
+
+    fun billAll() {
+
+    }
 }
 
