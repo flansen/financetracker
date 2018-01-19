@@ -7,6 +7,6 @@ import dagger.Provides
 class ExpenseOverviewModule {
 
     @Provides
-    fun fetchInteractor(interactor: FetchExpensesInteractorImpl): FetchExpensesInteractor = interactor
+    fun fetchInteractor(interactor: ExpenseOverviewInteractorImpl): ExpenseOverviewInteractor = interactor
 
 }

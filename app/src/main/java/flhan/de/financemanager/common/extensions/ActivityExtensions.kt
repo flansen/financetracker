@@ -2,6 +2,7 @@ package flhan.de.financemanager.common.extensions
 
 import android.app.Activity
 import android.content.Intent
+import android.support.v4.app.NavUtils
 import flhan.de.financemanager.App
 import kotlin.reflect.KClass
 
@@ -14,4 +15,8 @@ val Activity.app: App
 
 fun <T : Activity> Activity.start(clazz: KClass<T>) {
     startActivity(Intent(this, clazz.java))
+}
+
+fun Activity.goUp() {
+    NavUtils.navigateUpFromSameTask(this)
 }

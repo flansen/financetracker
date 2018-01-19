@@ -17,18 +17,24 @@
         <activity
             android:name=".ui.login.createjoinhousehold.join.JoinHouseholdActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ui.launcher.LauncherActivity">
+        <activity android:name=".ui.launcher.LauncherActivity" />
+        <activity
+            android:name=".ui.main.MainActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".ui.main.expenses.createedit.CreateEditExpenseActivity"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity-alias
+            android:name="RoutinActivity"
+            android:targetActivity=".ui.launcher.LauncherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity android:name=".ui.main.MainActivity" />
-        <activity
-            android:name=".ui.main.expenses.createedit.CreateEditExpenseActivity"
-            android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ui.TestActivity"></activity>
+        </activity-alias>
     </application>
 
 </manifest>

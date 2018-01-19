@@ -6,12 +6,8 @@ import flhan.de.financemanager.common.util.CurrencyString
 import flhan.de.financemanager.ui.main.expenses.overview.ExpenseOverviewItem
 import java.text.SimpleDateFormat
 
-//TODO: Formatting
-
 fun Expense.toOverviewItem(): ExpenseOverviewItem {
-    var nameString = ""
-    user?.name?.split(' ')?.forEach { nameString += it[0] }
     val dateFormat = SimpleDateFormat.getInstance() as SimpleDateFormat
     dateFormat.applyPattern(LONG_DATE_FORMAT)
-    return ExpenseOverviewItem(id, nameString, user!!.id, CurrencyString(amount), cause, dateFormat.format(createdAt))
+    return ExpenseOverviewItem(id, user!!.displayName, user!!.id, CurrencyString(amount), cause, dateFormat.format(createdAt))
 }

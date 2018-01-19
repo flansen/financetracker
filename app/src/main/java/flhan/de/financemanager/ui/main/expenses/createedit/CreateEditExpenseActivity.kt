@@ -20,6 +20,7 @@ import flhan.de.financemanager.base.BaseActivity
 import flhan.de.financemanager.common.CreateEditMode
 import flhan.de.financemanager.common.CreateEditMode.Create
 import flhan.de.financemanager.common.CreateEditMode.Edit
+import flhan.de.financemanager.common.extensions.goUp
 import flhan.de.financemanager.common.extensions.visible
 import kotlinx.android.synthetic.main.activity_expense_create_edit.*
 import kotlinx.android.synthetic.main.money_input.*
@@ -53,7 +54,7 @@ class CreateEditExpenseActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when (item?.itemId) {
             android.R.id.home -> {
-                finish()
+                goUp()
                 true
             }
             R.id.action_delete -> {
