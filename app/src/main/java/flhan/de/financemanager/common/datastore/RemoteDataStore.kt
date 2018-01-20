@@ -3,6 +3,7 @@ package flhan.de.financemanager.common.datastore
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import flhan.de.financemanager.base.RequestResult
+import flhan.de.financemanager.common.data.Billing
 import flhan.de.financemanager.common.data.Expense
 import flhan.de.financemanager.common.data.Household
 import flhan.de.financemanager.common.data.User
@@ -30,10 +31,11 @@ interface RemoteDataStore {
     fun loadUsers(): Observable<MutableList<User>>
     fun saveExpense(expense: Expense): Observable<Unit>
     fun deleteExpense(id: String): Single<Boolean>
+    fun saveBilling(billing: Billing): Single<RequestResult<Billing>>
+    fun deleteExpenses(): Single<Boolean>
 }
 
 class FirebaseClient @Inject constructor(private val userSettings: UserSettings) : RemoteDataStore {
-
     private val firebaseDatabase by lazy { FirebaseDatabase.getInstance() }
     private val rootReference by lazy { firebaseDatabase.getReference(HOUSEHOLD) }
     private val usersObservable by lazy {
@@ -82,6 +84,20 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
         }
     }
 
+    override fun deleteExpenses(): Single<Boolean> {
+        return Single.create { emitter ->
+            val ref = rootReference.child("${userSettings.getHouseholdId()}/$EXPENSES/")
+            ref.removeValue { error, ref ->
+                if (error == null) {
+                    emitter.onSuccess(true)
+                } else {
+                    emitter.onSuccess(false)
+                }
+            }
+
+        }
+    }
+
     override fun createHousehold(household: Household): Single<RequestResult<Household>> {
         return Single.create { emitter: SingleEmitter<RequestResult<Household>> ->
             val key = rootReference.push().key
@@ -108,7 +124,8 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
     override fun getCurrentUser(): User {
         val user = User()
         val userId = userSettings.getUserId()
-        val currentAuthorizedUser = FirebaseAuth.getInstance().currentUser?.let { it } ?: throw Throwable()
+        val currentAuthorizedUser = FirebaseAuth.getInstance().currentUser?.let { it }
+                ?: throw Throwable()
         user.apply {
             name = currentAuthorizedUser.displayName ?: ""
             email = currentAuthorizedUser.email ?: ""
@@ -124,7 +141,8 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
                     .addListenerForSingleValueEvent(object : ValueEventListener {
 
                         override fun onCancelled(databaseError: DatabaseError?) {
-                            emitter.onSuccess(RequestResult(null, databaseError?.toException() ?: Exception("Could not fetch household for email $email")))
+                            emitter.onSuccess(RequestResult(null, databaseError?.toException()
+                                    ?: Exception("Could not fetch household for email $email")))
                         }
 
                         override fun onDataChange(dataSnapshot: DataSnapshot?) {
@@ -167,6 +185,19 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
         }
     }
 
+    override fun saveBilling(billing: Billing): Single<RequestResult<Billing>> {
+        return Single.create { emitter ->
+            val billingRef = rootReference.child("${userSettings.getHouseholdId()}/$BILLING/").push()
+            billing.id = billingRef.key
+            billingRef.setValue(billing, { error, ref ->
+                if (error != null) {
+                    emitter.onSuccess(RequestResult(null, error.toException()))
+                } else {
+                    emitter.onSuccess(RequestResult(billing))
+                }
+            })
+        }
+    }
 
     private fun createUserObservable(): Observable<MutableList<User>> {
         return Observable.create { emitter: ObservableEmitter<MutableList<User>> ->
@@ -175,7 +206,8 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
 
             val valueListener = object : ValueEventListener {
                 override fun onCancelled(databaseError: DatabaseError?) {
-                    emitter.onError(databaseError?.toException() ?: Throwable("Listener.OnCancelled"))
+                    emitter.onError(databaseError?.toException()
+                            ?: Throwable("Listener.OnCancelled"))
                 }
 
                 override fun onDataChange(dataSnapshot: DataSnapshot?) {
@@ -236,7 +268,8 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
 
             val valueListener = object : ValueEventListener {
                 override fun onCancelled(databaseError: DatabaseError?) {
-                    emitter.onError(databaseError?.toException() ?: Throwable("Listener.OnCancelled"))
+                    emitter.onError(databaseError?.toException()
+                            ?: Throwable("Listener.OnCancelled"))
                 }
 
                 override fun onDataChange(dataSnapshot: DataSnapshot?) {
@@ -256,7 +289,8 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
 
             val childEventListener = object : ChildEventListener {
                 override fun onCancelled(databaseError: DatabaseError?) {
-                    emitter.onError(databaseError?.toException()?.cause ?: Throwable("Listener.OnCancelled"))
+                    emitter.onError(databaseError?.toException()?.cause
+                            ?: Throwable("Listener.OnCancelled"))
                 }
 
                 override fun onChildMoved(dataSnapshot: DataSnapshot?, p1: String?) {
@@ -345,13 +379,13 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
 
     private fun updateExpense(expense: Expense): Observable<Unit> {
         return Observable.create { emitter ->
-            val expenseRef = rootReference.child("${userSettings.getHouseholdId()}/${EXPENSES}/${expense.id}")
+            val expenseRef = rootReference.child("${userSettings.getHouseholdId()}/$EXPENSES/${expense.id}")
             val updateMap = mutableMapOf<String, Any>()
-            updateMap.put(Expense.AMOUNT, expense.amount!!)
-            updateMap.put(Expense.CAUSE, expense.cause)
-            updateMap.put(Expense.CREATOR, expense.creator)
+            updateMap[Expense.AMOUNT] = expense.amount!!
+            updateMap[Expense.CAUSE] = expense.cause
+            updateMap[Expense.CREATOR] = expense.creator
 
-            expenseRef.updateChildren(updateMap) { databaseError, databaseReference ->
+            expenseRef.updateChildren(updateMap) { databaseError, _ ->
                 if (databaseError == null) {
                     emitter.onNext(Unit)
                     emitter.onComplete()
@@ -364,7 +398,6 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
 
     private fun createExpense(expense: Expense): Observable<Unit> {
         return Observable.create { emitter ->
-            expense.creator = getCurrentUser().id
             val ref = rootReference.child("${userSettings.getHouseholdId()}/$EXPENSES/").push()
             expense.id = ref.key
             ref.setValue(expense)
@@ -378,5 +411,6 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
         const val USERS = "users"
         const val HOUSEHOLD = "households"
         const val CREATOR = "creator"
+        const val BILLING = "billing"
     }
 }

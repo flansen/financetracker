@@ -8,7 +8,7 @@ import flhan.de.financemanager.common.extensions.toOverviewItem
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 
-class ExpenseOverviewViewModel(expenseOverviewInteractor: ExpenseOverviewInteractor) : ViewModel() {
+class ExpenseOverviewViewModel(private val expenseOverviewInteractor: ExpenseOverviewInteractor) : ViewModel() {
 
     val listItems = MutableLiveData<List<ExpenseOverviewItem>>()
     val paymentSums = MutableLiveData<List<ExpensePaymentItem>>()
@@ -25,7 +25,7 @@ class ExpenseOverviewViewModel(expenseOverviewInteractor: ExpenseOverviewInterac
                 .addTo(disposables)
 
         expenseOverviewInteractor
-                .getPaymentItems()
+                .calculatePaymentItems()
                 .subscribe { paymentSums.value = it }
     }
 
@@ -35,7 +35,8 @@ class ExpenseOverviewViewModel(expenseOverviewInteractor: ExpenseOverviewInterac
     }
 
     fun billAll() {
-
+        expenseOverviewInteractor.billAll()
+                .subscribe { println(it) }
     }
 }
 

@@ -76,10 +76,10 @@ class ExpenseOverviewFragment : Fragment() {
         viewModel.paymentSums.observe(this, Observer { amounts ->
             if (amounts != null && !amounts.isEmpty()) {
                 paymentItemView.visibility = VISIBLE
+                paymentItemView.setItems(amounts)
             } else {
                 paymentItemView.visibility = GONE
             }
-            paymentItemView.addOrUpdateItems(amounts)
         })
     }
 

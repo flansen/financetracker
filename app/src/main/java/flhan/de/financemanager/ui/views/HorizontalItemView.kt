@@ -17,7 +17,14 @@ class HorizontalItemView @JvmOverloads constructor(
 
     private val views: MutableMap<String, Int> = mutableMapOf()
 
-    fun addOrUpdateItem(item: ExpensePaymentItem) {
+    fun setItems(items: List<ExpensePaymentItem>) {
+        val userIds = items.map { it.userId }
+        val keysToRemove = views.keys.filterNot { userIds.contains(it) }
+        keysToRemove.forEach { removeViewByKey(it) }
+        items.forEach { addOrUpdateItem(it) }
+    }
+
+    private fun addOrUpdateItem(item: ExpensePaymentItem) {
         lateinit var view: View
         if (views.containsKey(item.userId)) {
             view = getChildAt(views[item.userId]!!)
@@ -25,13 +32,9 @@ class HorizontalItemView @JvmOverloads constructor(
             view = createView()
             val index = childCount
             addView(view, index)
-            views.put(item.userId, index)
+            views[item.userId] = index
         }
         bindView(view, item)
-    }
-
-    fun addOrUpdateItems(items: List<ExpensePaymentItem>?) {
-        items?.forEach { addOrUpdateItem(it) }
     }
 
     private fun bindView(view: View, item: ExpensePaymentItem) {
@@ -55,4 +58,8 @@ class HorizontalItemView @JvmOverloads constructor(
         return view
     }
 
+    private fun removeViewByKey(key: String) {
+        removeViewAt(views[key]!!)
+        views.remove(key)
+    }
 }

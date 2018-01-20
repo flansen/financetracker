@@ -51,7 +51,7 @@ class ExpenseOverviewInteractorTest {
         )
         whenever(remoteDatastore.loadExpenses()).thenReturn(Observable.just(expenses))
 
-        sut.getPaymentItems().subscribe(testObserver)
+        sut.calculatePaymentItems().subscribe(testObserver)
 
         testObserver.assertNoErrors()
         testObserver.assertValueCount(1)
