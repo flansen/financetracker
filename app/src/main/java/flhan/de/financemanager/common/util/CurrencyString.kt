@@ -27,7 +27,7 @@ class CurrencyString(
             baseString = value
         }
 
-    var amount: Double? = null
+    val amount: Double?
         get() {
             return if (baseString.isEmpty()) {
                 0.0
@@ -35,7 +35,6 @@ class CurrencyString(
                 baseString.toDouble() / 100
             }
         }
-        private set
 
     var baseString: String
         private set
@@ -51,15 +50,18 @@ class CurrencyString(
     }
 
     private fun fillUpTrailingZeros(amountString: String): String {
-        var valueString = amountString
-        val decimalsString = valueString.split('.')[1]
-        val numberOfDecimals = decimalsString.length
-        val index = valueString.indexOfFirst { it == '.' }
-        valueString = valueString.removeRange(index, index + 1)
+        val numberOfDecimals = amountString.numberOfDecimalPlaces()
+        val index = amountString.indexOfFirst { it == '.' }
+        var valueString = amountString.removeRange(index, index + 1)
         for (i in 1..(2 - numberOfDecimals)) {
             valueString += "0"
         }
         return valueString
+    }
+
+    private fun String.numberOfDecimalPlaces(): Int {
+        val decimalsString = this.split('.')[1]
+        return decimalsString.length
     }
 
     companion object {
