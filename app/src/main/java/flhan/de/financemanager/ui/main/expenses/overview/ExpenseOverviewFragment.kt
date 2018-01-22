@@ -66,6 +66,7 @@ class ExpenseOverviewFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
+        (activity as AppCompatActivity).supportActionBar?.themedContext?.theme?.applyStyle(R.style.MyToolbarStyle, true)
         paymentItemView.minimumWidth = screenWidth
         val adapter = ExpenseOverviewAdapter({ id -> presentCreateEdit(id) })
         expense_overview_recycler.adapter = adapter

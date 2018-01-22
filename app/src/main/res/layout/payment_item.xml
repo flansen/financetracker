@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    tools:background="@color/colorPrimary">
 
     <android.support.v4.widget.Space
         android:id="@+id/leftSpace"
@@ -29,8 +30,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="sans-serif-black"
             android:paddingTop="4dp"
+            android:textColor="@android:color/primary_text_dark"
             tools:text="100.00 €" />
     </LinearLayout>
 

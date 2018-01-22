@@ -3,10 +3,12 @@ package flhan.de.financemanager.common.util
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.*
+import java.util.Locale.US
+import java.util.Locale.getDefault
 
 class CurrencyString(
         initialString: String = "",
-        private val locale: Locale = Locale.getDefault()) {
+        private val locale: Locale = getDefault()) {
 
     constructor(initialDouble: Double?) : this(initialDouble?.let { NUMBER_FORMAT.format(it).toString() } ?: "")
 
@@ -60,13 +62,13 @@ class CurrencyString(
     }
 
     private fun String.numberOfDecimalPlaces(): Int {
-        val decimalsString = this.split('.')[1]
+        val decimalsString = split('.')[1]
         return decimalsString.length
     }
 
     companion object {
         const val CURRENCY_NUMBER_PATTERN = "###,##0.00"
         const val CURRENCY_PATTERN = "%s %s"
-        private val NUMBER_FORMAT = DecimalFormat("0.00", DecimalFormatSymbols(Locale.US))
+        private val NUMBER_FORMAT = DecimalFormat("0.00", DecimalFormatSymbols(US))
     }
 }

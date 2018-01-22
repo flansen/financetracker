@@ -43,7 +43,7 @@ class HorizontalItemView @JvmOverloads constructor(
                 .beginConfig()
                 .width(bubbleSize)
                 .height(bubbleSize)
-                .textColor(ContextCompat.getColor(context, android.R.color.black))
+                .textColor(ContextCompat.getColor(context, android.R.color.primary_text_light))
                 .endConfig()
                 .buildRound(item.name, ContextCompat.getColor(context, android.R.color.white))
         view.paymentItemImage.setImageDrawable(drawable)

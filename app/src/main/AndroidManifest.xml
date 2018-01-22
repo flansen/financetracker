@@ -29,7 +29,7 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity-alias
-            android:name="RoutinActivity"
+            android:name="RoutingActivity"
             android:targetActivity=".ui.launcher.LauncherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
