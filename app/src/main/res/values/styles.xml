@@ -13,7 +13,7 @@
         <item name="android:textColor">@android:color/black</item>
     </style>
 
-    <style name="MyToolbarStyle" parent="ThemeOverlay.AppCompat.ActionBar">
+    <style name="white_control_toolbar" parent="ThemeOverlay.AppCompat.ActionBar">
         <item name="colorControlNormal">#fff</item>
         <item name="android:textColorPrimary">#fff</item>
     </style>
