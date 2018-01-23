@@ -6,13 +6,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
-import android.view.*
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
 import android.view.inputmethod.EditorInfo.IME_ACTION_NEXT
 import android.view.inputmethod.InputMethodManager
 import android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.TextView
 import butterknife.*
 import butterknife.OnTextChanged.Callback.AFTER_TEXT_CHANGED
 import flhan.de.financemanager.R
@@ -39,7 +40,6 @@ class CreateEditExpenseActivity : BaseActivity() {
     lateinit var editTitle: String
 
     private lateinit var viewModel: CreateEditExpenseViewModel
-    private lateinit var userAdapter: UserSpinnerAdapter
     private var showDeleteAction = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -133,9 +133,16 @@ class CreateEditExpenseActivity : BaseActivity() {
         }
         viewModel = ViewModelProviders.of(this, factory).get(CreateEditExpenseViewModel::class.java)
         viewModel.mode.observe(this, Observer { mode -> setTitleForMode(mode) })
-        viewModel.isLoading.observe(this, Observer { isLoading -> createEditExpenseLoadingView.visible(isLoading ?: true) })
-        viewModel.userItems.observe(this, Observer { userAdapter.items = it ?: mutableListOf() })
-        viewModel.selectedUserIndex.observe(this, Observer { createEditExpenseUserSpinner.setSelection(it ?: 0) })
+        viewModel.isLoading.observe(this, Observer { isLoading ->
+            createEditExpenseLoadingView.visible(isLoading ?: true)
+        })
+        viewModel.userItems.observe(this, Observer {
+            val names = it?.map { it.name } ?: mutableListOf()
+            setUserItems(names)
+        })
+        viewModel.selectedUserIndex.observe(this, Observer {
+            createEditExpenseUserSpinner.setSelection(it ?: 0)
+        })
         viewModel.amount.observe(this, Observer { amount ->
             amountDisplayText.text = amount?.displayString ?: ""
             if (amount?.baseString?.equals(amountEditText.text.toString()) == false) {
@@ -150,11 +157,15 @@ class CreateEditExpenseActivity : BaseActivity() {
         })
     }
 
+    private fun setUserItems(names: List<String>) {
+        val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, names)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        createEditExpenseUserSpinner.adapter = adapter
+    }
+
     private fun setupView() {
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        userAdapter = UserSpinnerAdapter()
-        createEditExpenseUserSpinner.adapter = userAdapter
     }
 
     private fun setTitleForMode(mode: CreateEditMode?) {
@@ -182,38 +193,5 @@ class CreateEditExpenseActivity : BaseActivity() {
     @CreateEditExpenseModule.ExpenseId
     fun retrieveExpenseId(): String? {
         return intent.getStringExtra(ID_KEY)
-    }
-
-    inner class UserSpinnerAdapter : ArrayAdapter<CreateEditUserItem>(this, 0) {
-
-        var items: List<CreateEditUserItem>? = null
-            set(value) {
-                field = value
-                notifyDataSetChanged()
-            }
-
-        override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup?): View {
-            var view = convertView
-            if (view == null) {
-                view = LayoutInflater.from(context).inflate(USER_LAYOUT_RESOURCE, parent!!, false)
-            }
-            val textView = view!!.findViewById<TextView>(android.R.id.text1)
-            textView.text = items!![position].name
-            return view
-        }
-
-        override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-            var view = convertView
-            if (view == null) {
-                view = LayoutInflater.from(context).inflate(USER_LAYOUT_RESOURCE, parent!!, false)
-            }
-            val textView = view!!.findViewById<TextView>(android.R.id.text1)
-            textView.text = items!![position].name
-            return view
-        }
-
-        override fun getCount(): Int {
-            return items?.count() ?: 0
-        }
     }
 }

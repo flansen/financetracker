@@ -18,6 +18,7 @@ import butterknife.ButterKnife
 import butterknife.OnClick
 import dagger.android.support.AndroidSupportInjection
 import flhan.de.financemanager.R
+import flhan.de.financemanager.common.extensions.applyWhiteStyle
 import flhan.de.financemanager.common.ui.LineListDivider
 import flhan.de.financemanager.ui.main.expenses.createedit.CreateEditExpenseActivity
 import kotlinx.android.synthetic.main.fragment_expense_overview.*
@@ -66,7 +67,7 @@ class ExpenseOverviewFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        (activity as AppCompatActivity).supportActionBar?.themedContext?.theme?.applyStyle(R.style.MyToolbarStyle, true)
+        (activity as AppCompatActivity).supportActionBar?.applyWhiteStyle()
         paymentItemView.minimumWidth = screenWidth
         val adapter = ExpenseOverviewAdapter({ id -> presentCreateEdit(id) })
         expense_overview_recycler.adapter = adapter
