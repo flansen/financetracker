@@ -15,7 +15,7 @@
     <string name="create_join_household_join_mail_hint">Your mate\'s mail</string>
     <string name="create_join_household_join_groupheader">Join a Household</string>
     <string name="create_join_household_create_groupheader">or Create your own</string>
-    <string name="create_join_household_join_name_hint">Give it a name</string>
+    <string name="create_join_household_join_name_hint">Name</string>
     <string name="done">Done</string>
     <string name="expense_overview_title">Expenses</string>
     <string name="edit_expense_title">Edit Expense</string>
@@ -33,5 +33,4 @@
     <string name="delete_action_title">Delete</string>
     <string name="create_household_intro">Setup your own household to start using the app. Just enter a name and a secret below to start.</string>
     <string name="action_clear_expenses">Bill All</string>
-
 </resources>

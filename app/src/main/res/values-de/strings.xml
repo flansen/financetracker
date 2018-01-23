@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tab_expenses">Ausgaben</string>
+    <string name="tab_shopping_items">Einkaufsliste</string>
+    <string name="tab_cash_disbursements">Barausgaben</string>
+    <string name="login_subtitle">Logge Dich mit deinem Google-Account ein</string>
+    <string name="error_generic_title">Fehler</string>
+    <string name="error_generic_body">Leider ist ein unbekannter Fehler aufgetreten.</string>
+    <string name="error_connection_title">Keine Verbindung</string>
+    <string name="error_connection_body">Bitte stelle eine Internetverbindung her</string>
+    <string name="error_generic">Leider ist ein unbekannter Fehler aufgetreten.</string>
+    <string name="error_invalid_secret">Passwort fehlerhaft</string>
+    <string name="error_no_such_household">Die EMail wurde nicht gefunden</string>
+    <string name="create_household_title">Erstelle einen Haushalt</string>
+    <string name="create_join_household_intro">Um die App verwenden zu können, tritt einem bereits bestehenden Haushalt bei. Dafür benötigst Du die EMail Adresse des Erstellers sowie ein Passwort. Oder erstelle deinen eigenen Haushalt und lade andere Leute ein!</string>
+    <string name="create_join_household_join_mail_hint">EMail des Gründers</string>
+    <string name="create_join_household_join_groupheader">Haushalt beitreten</string>
+    <string name="create_join_household_create_groupheader">Erstelle deinen eigenen</string>
+    <string name="create_join_household_join_name_hint">Name</string>
+    <string name="done">Fertig</string>
+    <string name="expense_overview_title">Ausgaben</string>
+    <string name="edit_expense_title">Ausgabe bearbeiten</string>
+    <string name="create_expense_title">Ausgabe erstellen</string>
+    <string name="join_household">Beitreten</string>
+    <string name="join_household_title">Haushalt beitreten</string>
+    <string name="create_household">Erstelle deinen eigenen Haushalt</string>
+    <string name="create_edit_expense_cause_hint">Grund</string>
+    <string name="create_edit_expense_amount_hint">Kosten</string>
+    <string name="save">Speichern</string>
+    <string name="placeholder">Komt bald…</string>
+    <string name="create_join_household_button">Beitreten</string>
+    <string name="create_join_household_secret_hint">Geheimnis</string>
+    <string name="join_household_info">Gib hier die Mail Adresse des Gründers sowie das Passwort für den Haushalt ein.</string>
+    <string name="delete_action_title">Löschen</string>
+    <string name="create_household_intro">Erstelle hier einen Haushalt, um direkt loszulegen.</string>
+    <string name="action_clear_expenses">Abrechnen</string>
+</resources>
