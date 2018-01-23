@@ -37,6 +37,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
+                android:layout_marginBottom="0dp"
                 android:text="@string/create_household_intro"
                 android:textColor="@color/greyText" />
 
@@ -44,8 +45,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp">
+                android:layout_marginStart="16dp">
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/nameText"
