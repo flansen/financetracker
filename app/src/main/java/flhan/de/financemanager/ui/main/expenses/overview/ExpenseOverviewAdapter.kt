@@ -1,5 +1,6 @@
 package flhan.de.financemanager.ui.main.expenses.overview
 
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import com.amulyakhare.textdrawable.TextDrawable
@@ -30,6 +31,7 @@ class ExpenseOverviewAdapter(private val clickListener: (String) -> Unit) : Recy
                     .beginConfig()
                     .width(bubbleSize)
                     .height(bubbleSize)
+                    .textColor(ContextCompat.getColor(itemView.context, android.R.color.black))
                     .endConfig()
                     .buildRound(item.creator, generator.getColor(item.creatorId))
             itemView.apply {

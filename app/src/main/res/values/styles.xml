@@ -5,6 +5,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:itemTextAppearance">@style/TextAppearance</item>
+        <item name="colorControlNormal">@android:color/black</item>
     </style>
 
     <style name="TextAppearance">
