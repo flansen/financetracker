@@ -19,14 +19,16 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        mainBottombar.setOnTabSelectListener { selectedTabId ->
-            when (selectedTabId) {
+        mainBottombar.setOnNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
                 R.id.tab_expenses -> {
                     showTab(ExpenseOverviewFragment.newInstance())
                 }
                 else -> showTab(PlaceholderFragment())
             }
+            true
         }
+        mainBottombar.selectedItemId = R.id.tab_expenses
     }
 
     private fun showTab(fragment: Fragment) {
@@ -36,10 +38,6 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector {
                 .commit()
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
-        super.onSaveInstanceState(outState)
-        mainBottombar.onSaveInstanceState()
-    }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> = fragmentDispatchingAndroidInjector
 }

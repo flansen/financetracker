@@ -76,7 +76,6 @@ dependencies {
 
     // UI
     implementation "com.amulyakhare:com.amulyakhare.textdrawable:$libVersions.textdrawable"
-    implementation "com.roughike:bottom-bar:$libVersions.roughike"
 
     // Butterknife
     implementation "com.jakewharton:butterknife:$libVersions.butterknife"

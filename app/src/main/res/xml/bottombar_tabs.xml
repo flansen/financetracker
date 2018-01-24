@@ -1,14 +1,15 @@
-<tabs>
-    <tab
-        icon="@drawable/ic_shopping_cart_black"
-        id="@+id/tab_expenses"
-        title="@string/tab_expenses" />
-    <tab
-        icon="@drawable/ic_note_black"
-        id="@+id/tab_shopping_items"
-        title="@string/tab_shopping_items" />
-    <tab
-        icon="@drawable/ic_attach_money_black"
-        id="@+id/tab_cash_disbursements"
-        title="@string/tab_cash_disbursements" />
-</tabs>
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:icon="@drawable/ic_shopping_cart_black"
+        android:id="@+id/tab_expenses"
+        android:title="@string/tab_expenses" />
+    <item
+        android:icon="@drawable/ic_note_black"
+        android:id="@+id/tab_shopping_items"
+        android:title="@string/tab_shopping_items" />
+    <item
+        android:icon="@drawable/ic_attach_money_black"
+        android:id="@+id/tab_cash_disbursements"
+        android:title="@string/tab_cash_disbursements" />
+</menu>
