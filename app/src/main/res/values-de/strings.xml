@@ -27,7 +27,7 @@
     <string name="create_edit_expense_cause_hint">Grund</string>
     <string name="create_edit_expense_amount_hint">Kosten</string>
     <string name="save">Speichern</string>
-    <string name="placeholder">Komt bald…</string>
+    <string name="placeholder">Kommt bald…</string>
     <string name="create_join_household_button">Beitreten</string>
     <string name="create_join_household_secret_hint">Geheimnis</string>
     <string name="join_household_info">Gib hier die Mail Adresse des Gründers sowie das Passwort für den Haushalt ein.</string>
