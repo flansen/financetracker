@@ -190,7 +190,6 @@ class CreateEditExpenseActivity : BaseActivity() {
         }
     }
 
-    @CreateEditExpenseModule.ExpenseId
     fun retrieveExpenseId(): String? {
         return intent.getStringExtra(ID_KEY)
     }
