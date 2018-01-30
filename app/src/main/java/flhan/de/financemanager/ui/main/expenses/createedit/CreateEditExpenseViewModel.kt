@@ -20,8 +20,7 @@ import io.reactivex.functions.BiFunction
 import io.reactivex.rxkotlin.addTo
 import java.util.*
 
-class CreateEditExpenseViewModel
-(
+class CreateEditExpenseViewModel(
         private val saveExpenseInteractor: CreateUpdateExpenseInteractor,
         private val scheduler: SchedulerProvider,
         private val deleteInteractor: DeleteExpenseInteractor,
@@ -107,6 +106,7 @@ class CreateEditExpenseViewModel
             amount = this@CreateEditExpenseViewModel.amount.value!!.amount
             createdAt = createdAt ?: Date()
             creator = userItems.value!![selectedUserIndex.value!!].id!!
+            creatorName = userItems.value!![selectedUserIndex.value!!].name
         }
 
         saveExpenseInteractor

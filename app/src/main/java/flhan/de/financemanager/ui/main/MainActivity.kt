@@ -1,7 +1,11 @@
 package flhan.de.financemanager.ui.main
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
@@ -10,6 +14,7 @@ import flhan.de.financemanager.base.BaseActivity
 import flhan.de.financemanager.ui.main.expenses.overview.ExpenseOverviewFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
+
 
 class MainActivity : BaseActivity(), HasSupportFragmentInjector {
 
@@ -28,7 +33,14 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector {
             }
             true
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // Create channel to show notifications.
+            val notificationManager = getSystemService(NotificationManager::class.java)
+            notificationManager!!.createNotificationChannel(NotificationChannel("channelId",
+                    "channelName", NotificationManager.IMPORTANCE_LOW))
+        }
         mainBottombar.selectedItemId = R.id.tab_expenses
+        FirebaseMessaging.getInstance().subscribeToTopic("pushNotifications")
     }
 
     private fun showTab(fragment: Fragment) {
