@@ -2,9 +2,7 @@ package flhan.de.financemanager.ui.main.expenses.createedit
 
 import dagger.Module
 import dagger.Provides
-import javax.inject.Qualifier
-import kotlin.annotation.AnnotationRetention.RUNTIME
-
+import flhan.de.financemanager.di.ExpenseId
 
 @Module
 class CreateEditExpenseModule {
@@ -25,10 +23,5 @@ class CreateEditExpenseModule {
     @Provides
     fun deleteInteractor(interactor: DeleteExpenseInteractorImpl): DeleteExpenseInteractor = interactor
 
-
-    @Qualifier
-    @MustBeDocumented
-    @Retention(RUNTIME)
-    annotation class ExpenseId
 }
 

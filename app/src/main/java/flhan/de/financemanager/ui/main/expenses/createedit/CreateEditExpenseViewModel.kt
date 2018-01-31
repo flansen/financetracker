@@ -14,6 +14,7 @@ import flhan.de.financemanager.common.datastore.UserSettings
 import flhan.de.financemanager.common.extensions.cleanUp
 import flhan.de.financemanager.common.extensions.toListItem
 import flhan.de.financemanager.common.util.CurrencyString
+import flhan.de.financemanager.di.ExpenseId
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
@@ -27,7 +28,7 @@ class CreateEditExpenseViewModel(
         findExpenseByIdInteractor: FindExpenseByIdInteractor,
         fetchUsersInteractor: FetchUsersInteractor,
         userSettings: UserSettings,
-        @CreateEditExpenseModule.ExpenseId expenseId: String?
+        @ExpenseId expenseId: String?
 ) : ViewModel() {
 
     val isLoading = MutableLiveData<Boolean>()
