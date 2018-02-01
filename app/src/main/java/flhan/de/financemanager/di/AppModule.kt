@@ -18,7 +18,6 @@ import flhan.de.financemanager.common.datastore.UserSettings
 import flhan.de.financemanager.common.datastore.UserSettingsImpl
 import flhan.de.financemanager.common.notifications.FirebaseNotificationManager
 import flhan.de.financemanager.common.notifications.FirebaseNotificationManagerImpl
-import javax.inject.Named
 import javax.inject.Singleton
 
 /**
@@ -59,7 +58,7 @@ class AppModule {
     fun firebaseNotificationManager(impl: FirebaseNotificationManagerImpl): FirebaseNotificationManager = impl
 
     @Provides
-    @Named("channelId")
+    @ChannelId
     fun channelId(): String = "channelid"
 
     @Provides

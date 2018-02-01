@@ -9,15 +9,15 @@ import com.google.firebase.messaging.RemoteMessage
 import dagger.android.AndroidInjection
 import flhan.de.financemanager.R
 import flhan.de.financemanager.common.util.CurrencyString
+import flhan.de.financemanager.di.ChannelId
 import flhan.de.financemanager.ui.main.MainActivity
 import javax.inject.Inject
-import javax.inject.Named
 
 
 class FirebaseMessagingServiceImpl : FirebaseMessagingService() {
 
     @Inject
-    @field:Named("channelId")
+    @field:ChannelId
     lateinit var channelId: String
 
     @Inject
