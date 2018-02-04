@@ -4,6 +4,7 @@ import flhan.de.financemanager.base.InteractorResult
 import flhan.de.financemanager.base.InteractorStatus
 import flhan.de.financemanager.common.data.Household
 import flhan.de.financemanager.common.datastore.RemoteDataStore
+import flhan.de.financemanager.common.notifications.FirebaseNotificationManager
 import io.reactivex.Observable
 import javax.inject.Inject
 
@@ -14,7 +15,10 @@ interface CreateHouseholdInteractor {
     fun execute(name: String, secret: String): Observable<InteractorResult<Household>>
 }
 
-class CreateHouseholdInteractorImpl @Inject constructor(private val dataStore: RemoteDataStore) : CreateHouseholdInteractor {
+class CreateHouseholdInteractorImpl @Inject constructor(
+        private val dataStore: RemoteDataStore,
+        private val notificationManager: FirebaseNotificationManager
+) : CreateHouseholdInteractor {
 
     override fun execute(name: String, secret: String): Observable<InteractorResult<Household>> {
         val household = Household(name, secret = secret)
@@ -23,7 +27,11 @@ class CreateHouseholdInteractorImpl @Inject constructor(private val dataStore: R
                 .flatMap {
                     return@flatMap dataStore.joinHousehold(it.result!!)
                 }
+                //TODO: Error Handling
                 .map {
+                    if (it.isSuccess()) {
+                        notificationManager.subscribe(it.result!!.id)
+                    }
                     InteractorResult(InteractorStatus.Success, it.result!!)
                 }
                 .toObservable()

@@ -11,6 +11,7 @@ import flhan.de.financemanager.ui.main.expenses.overview.ExpenseOverviewFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
+
 class MainActivity : BaseActivity(), HasSupportFragmentInjector {
 
     @Inject
@@ -37,7 +38,6 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector {
                 .replace(R.id.main_content_container, fragment)
                 .commit()
     }
-
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> = fragmentDispatchingAndroidInjector
 }

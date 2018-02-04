@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import flhan.de.financemanager.base.scheduler.SchedulerProvider
 import flhan.de.financemanager.common.datastore.UserSettings
+import flhan.de.financemanager.di.ExpenseId
 import javax.inject.Inject
 
 class CreateEditExpenseViewModelFactory @Inject constructor(
@@ -13,7 +14,7 @@ class CreateEditExpenseViewModelFactory @Inject constructor(
         private val createUpdateExpenseInteractor: CreateUpdateExpenseInteractor,
         private val userSettings: UserSettings,
         private val schedulerProvider: SchedulerProvider,
-        @CreateEditExpenseModule.ExpenseId private val id: String?) : ViewModelProvider.Factory {
+        @ExpenseId private val id: String?) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(CreateEditExpenseViewModel::class.java)) {

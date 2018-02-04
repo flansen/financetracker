@@ -34,4 +34,6 @@
     <string name="delete_action_title">Löschen</string>
     <string name="create_household_intro">Erstelle hier einen Haushalt, um direkt loszulegen.</string>
     <string name="action_clear_expenses">Abrechnen</string>
+    <string name="notification_expense_title">Neue Ausgabe</string>
+    <string name="notification_expense_body">%1$s hat schon wieder %3$s für %2$s ausgegeben.</string>
 </resources>

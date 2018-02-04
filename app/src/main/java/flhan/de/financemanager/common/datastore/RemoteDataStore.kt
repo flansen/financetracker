@@ -384,6 +384,7 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
             updateMap[Expense.AMOUNT] = expense.amount!!
             updateMap[Expense.CAUSE] = expense.cause
             updateMap[Expense.CREATOR] = expense.creator
+            updateMap[Expense.CREATOR_NAME] = expense.creatorName
 
             expenseRef.updateChildren(updateMap) { databaseError, _ ->
                 if (databaseError == null) {

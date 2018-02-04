@@ -4,6 +4,7 @@ import flhan.de.financemanager.base.InteractorResult
 import flhan.de.financemanager.base.InteractorStatus.*
 import flhan.de.financemanager.common.data.Household
 import flhan.de.financemanager.common.datastore.RemoteDataStore
+import flhan.de.financemanager.common.notifications.FirebaseNotificationManager
 import io.reactivex.Observable
 import javax.inject.Inject
 
@@ -15,13 +16,16 @@ interface JoinHouseholdByMailInteractor {
 }
 
 // TODO: Check secret
-class JoinHouseholdByMailInteractorImpl @Inject constructor(private val dataStore: RemoteDataStore
+class JoinHouseholdByMailInteractorImpl @Inject constructor(
+        private val dataStore: RemoteDataStore,
+        private val notificationManager: FirebaseNotificationManager
 ) : JoinHouseholdByMailInteractor {
 
     override fun execute(email: String, secret: String): Observable<InteractorResult<Household>> {
         return dataStore.joinHouseholdByMail(email, secret)
                 .map {
-                    if (it.exception == null) {
+                    if (it.isSuccess()) {
+                        notificationManager.subscribe(it.result!!.id)
                         InteractorResult(Success, it.result)
                     } else {
                         InteractorResult<Household>(Error, null, it.exception)

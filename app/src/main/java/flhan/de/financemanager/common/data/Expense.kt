@@ -9,6 +9,7 @@ import java.util.*
  */
 data class Expense(var cause: String = "",
                    var creator: String = "",
+                   var creatorName: String = "",
                    var createdAt: Date? = null,
                    var amount: Double? = null,
                    var id: String = "",
@@ -16,6 +17,7 @@ data class Expense(var cause: String = "",
     companion object {
         const val CAUSE = "cause"
         const val CREATOR = "creator"
+        const val CREATOR_NAME = "creatorName"
         const val AMOUNT = "amount"
     }
 }
