@@ -6,4 +6,8 @@ package flhan.de.financemanager.base
 data class RequestResult<T>(
         var result: T? = null,
         var exception: Throwable? = null
-)
+) {
+    fun isSuccess(): Boolean {
+        return result != null && exception == null
+    }
+}

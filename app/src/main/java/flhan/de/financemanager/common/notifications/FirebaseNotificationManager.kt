@@ -5,9 +5,9 @@ import android.app.NotificationManager
 import android.app.NotificationManager.IMPORTANCE_LOW
 import android.os.Build
 import com.google.firebase.messaging.FirebaseMessaging
+import flhan.de.financemanager.di.ChannelId
 import flhan.de.financemanager.di.ChannelName
 import javax.inject.Inject
-import javax.inject.Named
 
 interface FirebaseNotificationManager {
     fun subscribe(householdId: String)
@@ -17,7 +17,7 @@ interface FirebaseNotificationManager {
 class FirebaseNotificationManagerImpl @Inject constructor(
         private val notificationManager: NotificationManager,
         @ChannelName private val channelName: String,
-        @Named("channelId") private val channelId: String
+        @ChannelId private val channelId: String
 ) : FirebaseNotificationManager {
 
     override fun subscribe(householdId: String) {

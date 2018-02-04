@@ -7,6 +7,8 @@ import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import dagger.android.HasServiceInjector
+import flhan.de.financemanager.common.datastore.UserSettings
+import flhan.de.financemanager.common.notifications.FirebaseNotificationManager
 import flhan.de.financemanager.di.DaggerAppComponent
 import javax.inject.Inject
 
@@ -22,6 +24,12 @@ class App : Application(), HasActivityInjector, HasServiceInjector {
     @Inject
     lateinit var activityDispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
 
+    @Inject
+    lateinit var notificationManager: FirebaseNotificationManager
+
+    @Inject
+    lateinit var settings: UserSettings
+
     override fun onCreate() {
         super.onCreate()
         DaggerAppComponent.builder()
@@ -29,6 +37,8 @@ class App : Application(), HasActivityInjector, HasServiceInjector {
                 .build()
                 .inject(this)
 
+        //FIXME: Remove after update
+        notificationManager.subscribe(settings.getHouseholdId())
         /*if (LeakCanary.isInAnalyzerProcess(this)) {
             return
         }

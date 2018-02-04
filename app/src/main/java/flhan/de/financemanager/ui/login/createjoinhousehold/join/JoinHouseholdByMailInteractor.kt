@@ -24,7 +24,7 @@ class JoinHouseholdByMailInteractorImpl @Inject constructor(
     override fun execute(email: String, secret: String): Observable<InteractorResult<Household>> {
         return dataStore.joinHouseholdByMail(email, secret)
                 .map {
-                    if (it.exception == null) {
+                    if (it.isSuccess()) {
                         notificationManager.subscribe(it.result!!.id)
                         InteractorResult(Success, it.result)
                     } else {
