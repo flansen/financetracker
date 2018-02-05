@@ -8,9 +8,10 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import dagger.android.AndroidInjection
 import flhan.de.financemanager.R
-import flhan.de.financemanager.common.util.CurrencyString
 import flhan.de.financemanager.di.ChannelId
 import flhan.de.financemanager.ui.main.MainActivity
+import java.text.DecimalFormat
+import java.util.*
 import javax.inject.Inject
 
 class FirebaseMessagingServiceImpl : FirebaseMessagingService() {
@@ -31,7 +32,12 @@ class FirebaseMessagingServiceImpl : FirebaseMessagingService() {
         val amount = data[AMOUNT_KEY] ?: return
         val cause = data[CAUSE_KEY]
         val issuer = data[CREATOR_NAME_KEY]
-        val currencyString = CurrencyString(amount).displayString
+
+        //TODO: Remove Code Duplicate
+        val decimalFormat = DecimalFormat.getInstance(Locale.getDefault()) as DecimalFormat
+        decimalFormat.applyPattern(CURRENCY_NUMBER_PATTERN)
+        val currencyAmount = decimalFormat.format(amount.toDouble())
+        val currencyString = String.format(CURRENCY_PATTERN, currencyAmount, decimalFormat.currency.symbol)
 
         val notificationTitle = applicationContext.getString(R.string.notification_expense_title)
         val notificationBody = applicationContext.getString(R.string.notification_expense_body, issuer, cause, currencyString)
@@ -60,5 +66,7 @@ class FirebaseMessagingServiceImpl : FirebaseMessagingService() {
         const val AMOUNT_KEY = "amount"
         const val CAUSE_KEY = "cause"
         const val CREATOR_NAME_KEY = "creatorName"
+        const val CURRENCY_NUMBER_PATTERN = "###,##0.00"
+        const val CURRENCY_PATTERN = "%s %s"
     }
 }

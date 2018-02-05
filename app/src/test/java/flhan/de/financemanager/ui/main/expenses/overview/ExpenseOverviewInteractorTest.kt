@@ -44,10 +44,10 @@ class ExpenseOverviewInteractorTest {
         val expected1 = "3" + decimalSeparator + "30 " + currencySymbol
         val expected2 = "19" + decimalSeparator + "20 " + currencySymbol
         val expenses = mutableListOf(
-                Expense("Cause1", "email1", Date(), 2.2, "id1", user1),
-                Expense("Cause2", "email2", Date(), 6.0, "id2", user2),
-                Expense("Cause3", "email2", Date(), 13.2, "id3", user2),
-                Expense("Cause4", "email1", Date(), 1.1, "id4", user1)
+                Expense("Cause1", "email1", "Name1", Date(), 2.2, "id1", user1),
+                Expense("Cause2", "email2", "Name1", Date(), 6.0, "id2", user2),
+                Expense("Cause3", "email2", "Name1", Date(), 13.2, "id3", user2),
+                Expense("Cause4", "email1", "Name1", Date(), 1.1, "id4", user1)
         )
         whenever(remoteDatastore.loadExpenses()).thenReturn(Observable.just(expenses))
 
