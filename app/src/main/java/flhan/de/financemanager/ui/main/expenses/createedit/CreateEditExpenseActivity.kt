@@ -133,8 +133,8 @@ class CreateEditExpenseActivity : BaseActivity() {
             }
         }
         viewModel = ViewModelProviders.of(this, factory).get(CreateEditExpenseViewModel::class.java)
-        viewModel.mode.observe(this, Observer { mode ->
-            val mode = mode ?: return@Observer
+        viewModel.mode.observe(this, Observer {
+            val mode = it ?: return@Observer
             setTitleForMode(mode)
             when (mode) {
                 CreateEditMode.Create -> {
@@ -166,8 +166,8 @@ class CreateEditExpenseActivity : BaseActivity() {
                 createEditExpenseCauseText.setText(cause ?: "")
             }
         })
-        viewModel.showAdvancedInput.observe(this, Observer { showAdvanced ->
-            val showAdvanced = showAdvanced ?: return@Observer
+        viewModel.showAdvancedInput.observe(this, Observer {
+            val showAdvanced = it ?: return@Observer
             if (createEditAdvancedContainer.alpha >= 0.99f && showAdvanced
                     || createEditAdvancedContainer.alpha <= 0.01f && !showAdvanced) {
                 return@Observer
