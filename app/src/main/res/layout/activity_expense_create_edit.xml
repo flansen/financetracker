@@ -32,46 +32,66 @@
             <include
                 layout="@layout/money_input"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="36dp" />
 
             <LinearLayout
-                android:id="@+id/createEditAdvancedContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:alpha="0"
-                android:orientation="vertical"
-                tools:alpha="1">
+                android:orientation="horizontal">
 
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
+                <android.support.v4.widget.Space
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <LinearLayout
+                    android:id="@+id/createEditAdvancedContainer"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="24dp"
-                    android:layout_marginTop="16dp">
+                    android:layout_weight="7"
+                    android:alpha="0"
+                    android:orientation="vertical"
+                    tools:alpha="1">
 
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/createEditExpenseCauseText"
+                    <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/create_edit_expense_cause_hint"
-                        android:inputType="textAutoComplete"
-                        android:singleLine="true" />
-                </android.support.design.widget.TextInputLayout>
+                        android:layout_marginBottom="24dp"
+                        android:layout_marginTop="16dp">
 
-                <Spinner
-                    android:id="@+id/createEditExpenseUserSpinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true" />
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/createEditExpenseCauseText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/create_edit_expense_cause_hint"
+                            android:inputType="textAutoComplete"
+                            android:singleLine="true" />
+                    </android.support.design.widget.TextInputLayout>
 
-                <Button
-                    android:id="@+id/createEditExpenseSave"
-                    style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text="@string/save" />
+                    <Spinner
+                        android:id="@+id/createEditExpenseUserSpinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true" />
+
+                    <Button
+                        android:id="@+id/createEditExpenseSave"
+                        style="@style/Base.Widget.AppCompat.Button.Colored"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="16dp"
+                        android:text="@string/save" />
+                </LinearLayout>
+
+                <android.support.v4.widget.Space
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
             </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 </FrameLayout>

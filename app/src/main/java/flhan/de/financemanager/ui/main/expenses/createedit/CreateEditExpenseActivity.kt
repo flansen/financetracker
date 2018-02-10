@@ -1,5 +1,6 @@
 package flhan.de.financemanager.ui.main.expenses.createedit
 
+import android.animation.Animator
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
@@ -136,7 +137,10 @@ class CreateEditExpenseActivity : BaseActivity() {
             val mode = mode ?: return@Observer
             setTitleForMode(mode)
             when (mode) {
-                CreateEditMode.Create -> createEditAdvancedContainer.alpha = 0f
+                CreateEditMode.Create -> {
+                    createEditAdvancedContainer.alpha = 0f
+                    createEditAdvancedContainer.visibility = View.INVISIBLE
+                }
                 CreateEditMode.Edit -> createEditAdvancedContainer.alpha = 1f
             }
         })
@@ -174,13 +178,30 @@ class CreateEditExpenseActivity : BaseActivity() {
 
     private fun handleShowAdvancedValue(showAdvanced: Boolean) {
         val duration = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
-        val alpha: Float
-        alpha = if (showAdvanced) {
+        createEditAdvancedContainer.visibility = View.VISIBLE
+        val alpha: Float = if (showAdvanced) {
             1f
         } else {
             0f
         }
-        createEditAdvancedContainer.animate().alpha(alpha).setDuration(duration).start()
+        createEditAdvancedContainer.animate().alpha(alpha).setDuration(duration).setListener(object : Animator.AnimatorListener {
+            override fun onAnimationRepeat(animation: Animator?) {
+            }
+
+            override fun onAnimationEnd(animation: Animator?) {
+                if (alpha <= 0.01f) {
+                    createEditAdvancedContainer.visibility = View.INVISIBLE
+                }
+            }
+
+            override fun onAnimationCancel(animation: Animator?) {
+            }
+
+            override fun onAnimationStart(animation: Animator?) {
+
+            }
+
+        }).start()
     }
 
     private fun setUserItems(names: List<String>) {
