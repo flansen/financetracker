@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/amountDisplayText"
         style="@style/Base.TextAppearance.AppCompat.Display1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:background="@android:color/transparent"
         android:clickable="false"
         android:focusable="false"
@@ -16,6 +17,7 @@
         android:foreground="@android:color/transparent"
         android:gravity="center_horizontal"
         android:textColor="@drawable/money_input_color_selector"
+        app:autoSizeTextType="uniform"
         tools:text="0.00 €" />
 
     <EditText

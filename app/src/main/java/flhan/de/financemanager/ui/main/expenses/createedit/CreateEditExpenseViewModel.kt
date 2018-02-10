@@ -1,6 +1,8 @@
 package flhan.de.financemanager.ui.main.expenses.createedit
 
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
 import flhan.de.financemanager.base.InteractorResult
 import flhan.de.financemanager.base.InteractorStatus.*
@@ -33,6 +35,7 @@ class CreateEditExpenseViewModel(
 
     val isLoading = MutableLiveData<Boolean>()
     val hasError = MutableLiveData<Boolean>()
+    var showAdvancedInput: LiveData<Boolean>
     val mode = MutableLiveData<CreateEditMode>()
     val cause = MutableLiveData<String>()
     val amount = MutableLiveData<CurrencyString>()
@@ -93,6 +96,12 @@ class CreateEditExpenseViewModel(
         isLoading.value = false
         hasError.value = false
         currentUserId = userSettings.getUserId()
+
+        showAdvancedInput = Transformations.map(amount, { currencyString ->
+            val actualAmount = currencyString.amount
+            val shouldShow = !(actualAmount == null || actualAmount <= 0.0)
+            shouldShow
+        })
     }
 
     fun onUserSelected(position: Int) {
@@ -127,7 +136,6 @@ class CreateEditExpenseViewModel(
     fun onAmountChanged(amountString: String) {
         amount.value = CurrencyString(amountString)
     }
-
 
     fun delete(success: () -> Unit) {
         deleteInteractor.delete(expense!!.id)

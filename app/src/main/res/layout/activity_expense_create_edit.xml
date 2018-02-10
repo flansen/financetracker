@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -24,7 +25,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
             android:orientation="vertical">
@@ -34,35 +34,44 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <android.support.design.widget.TextInputLayout
+            <LinearLayout
+                android:id="@+id/createEditAdvancedContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                android:layout_marginTop="16dp">
+                android:alpha="0"
+                android:orientation="vertical"
+                tools:alpha="1">
 
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/causeText"
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/create_edit_expense_cause_hint"
-                    android:inputType="textAutoComplete"
-                    android:singleLine="true" />
-            </android.support.design.widget.TextInputLayout>
+                    android:layout_marginBottom="24dp"
+                    android:layout_marginTop="16dp">
 
-            <Spinner
-                android:id="@+id/createEditExpenseUserSpinner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:focusable="true"
-                android:focusableInTouchMode="true" />
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/createEditExpenseCauseText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/create_edit_expense_cause_hint"
+                        android:inputType="textAutoComplete"
+                        android:singleLine="true" />
+                </android.support.design.widget.TextInputLayout>
 
-            <Button
-                android:id="@+id/create_edit_expense_save"
-                style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="@string/save" />
+                <Spinner
+                    android:id="@+id/createEditExpenseUserSpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true" />
+
+                <Button
+                    android:id="@+id/createEditExpenseSave"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/save" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </FrameLayout>

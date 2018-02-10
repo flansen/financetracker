@@ -79,7 +79,7 @@ class CreateEditExpenseActivity : BaseActivity() {
         super.onDestroy()
     }
 
-    @OnTextChanged(R.id.causeText, callback = AFTER_TEXT_CHANGED)
+    @OnTextChanged(R.id.createEditExpenseCauseText, callback = AFTER_TEXT_CHANGED)
     fun onCauseChanged(cause: Editable) {
         viewModel.cause.value = cause.toString()
     }
@@ -92,7 +92,7 @@ class CreateEditExpenseActivity : BaseActivity() {
     @OnEditorAction(R.id.amountEditText)
     fun onAmountEditorAction(actionId: Int): Boolean {
         return if (actionId == IME_ACTION_NEXT) {
-            causeText.requestFocus()
+            createEditExpenseCauseText.requestFocus()
             true
         } else {
             false
@@ -111,7 +111,7 @@ class CreateEditExpenseActivity : BaseActivity() {
         inputMethodManager.showSoftInput(amountEditText, SHOW_IMPLICIT)
     }
 
-    @OnClick(R.id.create_edit_expense_save)
+    @OnClick(R.id.createEditExpenseSave)
     fun onSaveClicked() {
         viewModel.onSaveClicked({ finish() })
     }
@@ -132,7 +132,14 @@ class CreateEditExpenseActivity : BaseActivity() {
             }
         }
         viewModel = ViewModelProviders.of(this, factory).get(CreateEditExpenseViewModel::class.java)
-        viewModel.mode.observe(this, Observer { mode -> setTitleForMode(mode) })
+        viewModel.mode.observe(this, Observer { mode ->
+            val mode = mode ?: return@Observer
+            setTitleForMode(mode)
+            when (mode) {
+                CreateEditMode.Create -> createEditAdvancedContainer.alpha = 0f
+                CreateEditMode.Edit -> createEditAdvancedContainer.alpha = 1f
+            }
+        })
         viewModel.isLoading.observe(this, Observer { isLoading ->
             createEditExpenseLoadingView.visible(isLoading ?: true)
         })
@@ -151,10 +158,29 @@ class CreateEditExpenseActivity : BaseActivity() {
             }
         })
         viewModel.cause.observe(this, Observer { cause ->
-            if (cause != causeText.text.toString()) {
-                causeText.setText(cause ?: "")
+            if (cause != createEditExpenseCauseText.text.toString()) {
+                createEditExpenseCauseText.setText(cause ?: "")
             }
         })
+        viewModel.showAdvancedInput.observe(this, Observer { showAdvanced ->
+            val showAdvanced = showAdvanced ?: return@Observer
+            if (createEditAdvancedContainer.alpha >= 0.99f && showAdvanced
+                    || createEditAdvancedContainer.alpha <= 0.01f && !showAdvanced) {
+                return@Observer
+            }
+            handleShowAdvancedValue(showAdvanced)
+        })
+    }
+
+    private fun handleShowAdvancedValue(showAdvanced: Boolean) {
+        val duration = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
+        val alpha: Float
+        alpha = if (showAdvanced) {
+            1f
+        } else {
+            0f
+        }
+        createEditAdvancedContainer.animate().alpha(alpha).setDuration(duration).start()
     }
 
     private fun setUserItems(names: List<String>) {
