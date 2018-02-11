@@ -1,12 +1,14 @@
 package flhan.de.financemanager.ui.views
 
 import android.content.Context
-import android.support.v4.content.ContextCompat
+import android.graphics.Typeface.DEFAULT_BOLD
+import android.support.v4.content.ContextCompat.getColor
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import com.amulyakhare.textdrawable.TextDrawable
+import com.amulyakhare.textdrawable.util.ColorGenerator
 import flhan.de.financemanager.R
 import flhan.de.financemanager.ui.main.expenses.overview.ExpensePaymentItem
 import kotlinx.android.synthetic.main.payment_item.view.*
@@ -50,13 +52,15 @@ class HorizontalItemView @JvmOverloads constructor(
 
     private fun bindView(view: View, item: ExpensePaymentItem) {
         val bubbleSize = context.resources.getDimension(R.dimen.bubble_size).toInt()
+        val generator = ColorGenerator.MATERIAL
         val drawable = TextDrawable.builder()
                 .beginConfig()
                 .width(bubbleSize)
                 .height(bubbleSize)
-                .textColor(ContextCompat.getColor(context, android.R.color.primary_text_light))
+                .textColor(generator.getColor(item.userId))
+                .useFont(DEFAULT_BOLD)
                 .endConfig()
-                .buildRound(item.name, ContextCompat.getColor(context, android.R.color.white))
+                .buildRound(item.name, getColor(context, android.R.color.white))
         view.paymentItemImage.setImageDrawable(drawable)
         view.paymentItemAmount.text = item.amount
     }

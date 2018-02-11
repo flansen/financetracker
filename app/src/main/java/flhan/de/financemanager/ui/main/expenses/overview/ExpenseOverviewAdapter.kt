@@ -12,7 +12,8 @@ import kotlinx.android.synthetic.main.expense_overview_item.view.*
 /**
  * Created by Florian on 06.10.2017.
  */
-class ExpenseOverviewAdapter(private val clickListener: (String) -> Unit) : RecyclerView.Adapter<ExpenseOverviewAdapter.ExpenseOverviewViewHolder>() {
+class ExpenseOverviewAdapter(private val clickListener: (String) -> Unit)
+    : RecyclerView.Adapter<ExpenseOverviewAdapter.ExpenseOverviewViewHolder>() {
 
     var items: List<ExpenseOverviewItem> = mutableListOf()
         set(value) {

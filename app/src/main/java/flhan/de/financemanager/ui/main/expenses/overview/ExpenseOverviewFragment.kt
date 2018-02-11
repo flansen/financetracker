@@ -69,7 +69,7 @@ class ExpenseOverviewFragment : Fragment() {
         super.onStart()
         (activity as AppCompatActivity).supportActionBar?.applyWhiteStyle()
         paymentItemView.minimumWidth = screenWidth
-        val adapter = ExpenseOverviewAdapter({ id -> presentCreateEdit(id) })
+        val adapter = ExpenseOverviewAdapter { id -> presentCreateEdit(id) }
         expense_overview_recycler.adapter = adapter
         viewModel.listItems.observe(this, Observer { listItems ->
             adapter.items = listItems ?: mutableListOf()
