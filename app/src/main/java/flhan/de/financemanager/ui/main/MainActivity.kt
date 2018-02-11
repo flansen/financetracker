@@ -31,7 +31,9 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector {
             handleBottomNavigationClicked(menuItem)
             true
         }
-        mainBottombar.selectedItemId = R.id.tab_expenses
+        if (savedInstanceState == null) {
+            mainBottombar.selectedItemId = R.id.tab_expenses
+        }
     }
 
     private fun handleBottomNavigationClicked(menuItem: MenuItem) {
