@@ -19,7 +19,7 @@ class ExpenseOverviewViewModel(private val expenseOverviewInteractor: ExpenseOve
         expenseOverviewInteractor.fetchAll()
                 .filter { result -> result.status == Success }
                 .map { expenses ->
-                    expenses.result?.map { it.toOverviewItem() } ?: listOf()
+                    expenses.result?.map { it.toOverviewItem() }?.reversed() ?: listOf()
                 }
                 .subscribe { listItems.value = it }
                 .addTo(disposables)

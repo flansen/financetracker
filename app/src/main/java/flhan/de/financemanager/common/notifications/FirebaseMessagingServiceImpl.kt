@@ -9,6 +9,7 @@ import com.google.firebase.messaging.RemoteMessage
 import dagger.android.AndroidInjection
 import flhan.de.financemanager.R
 import flhan.de.financemanager.di.ChannelId
+import flhan.de.financemanager.di.UserId
 import flhan.de.financemanager.ui.main.MainActivity
 import java.text.DecimalFormat
 import java.util.*
@@ -23,6 +24,9 @@ class FirebaseMessagingServiceImpl : FirebaseMessagingService() {
     @Inject
     lateinit var notificationManager: NotificationManager
 
+    @Inject
+    @field:UserId
+    lateinit var userId: String
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         AndroidInjection.inject(this)
@@ -31,7 +35,12 @@ class FirebaseMessagingServiceImpl : FirebaseMessagingService() {
 
         val amount = data[AMOUNT_KEY] ?: return
         val cause = data[CAUSE_KEY]
-        val issuer = data[CREATOR_NAME_KEY]
+        val creatorName = data[CREATOR_NAME_KEY]
+        val creatorId = data[CREATOR_ID]
+
+        if (creatorId == userId) {
+            return
+        }
 
         //TODO: Remove Code Duplicate
         val decimalFormat = DecimalFormat.getInstance(Locale.getDefault()) as DecimalFormat
@@ -40,7 +49,7 @@ class FirebaseMessagingServiceImpl : FirebaseMessagingService() {
         val currencyString = String.format(CURRENCY_PATTERN, currencyAmount, decimalFormat.currency.symbol)
 
         val notificationTitle = applicationContext.getString(R.string.notification_expense_title)
-        val notificationBody = applicationContext.getString(R.string.notification_expense_body, issuer, cause, currencyString)
+        val notificationBody = applicationContext.getString(R.string.notification_expense_body, creatorName, cause, currencyString)
 
         sendNotification(notificationTitle, notificationBody)
     }
@@ -66,6 +75,7 @@ class FirebaseMessagingServiceImpl : FirebaseMessagingService() {
         const val AMOUNT_KEY = "amount"
         const val CAUSE_KEY = "cause"
         const val CREATOR_NAME_KEY = "creatorName"
+        const val CREATOR_ID = "creatorId"
         const val CURRENCY_NUMBER_PATTERN = "###,##0.00"
         const val CURRENCY_PATTERN = "%s %s"
     }

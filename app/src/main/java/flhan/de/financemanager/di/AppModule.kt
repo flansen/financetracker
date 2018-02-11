@@ -62,6 +62,10 @@ class AppModule {
     fun channelId(): String = "channelid"
 
     @Provides
+    @UserId
+    fun userId(userSettings: UserSettings) = userSettings.getUserId()
+
+    @Provides
     @ChannelName
     fun channelName(context: Context): String = context.getString(R.string.app_name)
 }
