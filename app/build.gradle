@@ -13,8 +13,8 @@ android {
         applicationId "flhan.de.financemanager"
         minSdkVersion toolVersions.minSdk
         targetSdkVersion toolVersions.compileSdk
-        versionCode 7
-        versionName "0.1.3"
+        versionCode 8
+        versionName "0.1.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
