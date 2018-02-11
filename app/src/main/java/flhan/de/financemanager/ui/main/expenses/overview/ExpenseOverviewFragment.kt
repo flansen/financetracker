@@ -63,11 +63,6 @@ class ExpenseOverviewFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         expense_overview_recycler.layoutManager = LinearLayoutManager(context, VERTICAL, false)
         expense_overview_recycler.addItemDecoration(LineListDivider(context!!))
-    }
-
-    override fun onStart() {
-        super.onStart()
-        (activity as AppCompatActivity).supportActionBar?.applyWhiteStyle()
         paymentItemView.minimumWidth = screenWidth
         val adapter = ExpenseOverviewAdapter { id -> presentCreateEdit(id) }
         expense_overview_recycler.adapter = adapter
@@ -83,6 +78,11 @@ class ExpenseOverviewFragment : Fragment() {
                 paymentItemView.visibility = GONE
             }
         })
+    }
+
+    override fun onStart() {
+        super.onStart()
+        (activity as AppCompatActivity).supportActionBar?.applyWhiteStyle()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -110,5 +110,6 @@ class ExpenseOverviewFragment : Fragment() {
 
     companion object {
         fun newInstance(): ExpenseOverviewFragment = ExpenseOverviewFragment()
+        const val TAG = "expenseoverviewfragment"
     }
 }
