@@ -1,7 +1,9 @@
 package flhan.de.financemanager.ui.views
 
 import android.content.Context
-import android.graphics.Typeface.DEFAULT_BOLD
+import android.graphics.Typeface
+import android.graphics.Typeface.NORMAL
+import android.graphics.Typeface.create
 import android.support.v4.content.ContextCompat.getColor
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -18,6 +20,7 @@ class HorizontalItemView @JvmOverloads constructor(
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
     private val views: MutableMap<String, Int> = mutableMapOf()
+    private val bubbleTypeface: Typeface by lazy { create(TYPEFACE_NAME, NORMAL) }
 
     fun setItems(items: List<ExpensePaymentItem>) {
         if (items.isEmpty()) {
@@ -58,7 +61,7 @@ class HorizontalItemView @JvmOverloads constructor(
                 .width(bubbleSize)
                 .height(bubbleSize)
                 .textColor(generator.getColor(item.userId))
-                .useFont(DEFAULT_BOLD)
+                .useFont(bubbleTypeface)
                 .endConfig()
                 .buildRound(item.name, getColor(context, android.R.color.white))
         view.paymentItemImage.setImageDrawable(drawable)
@@ -76,5 +79,9 @@ class HorizontalItemView @JvmOverloads constructor(
     private fun removeViewByKey(key: String) {
         removeViewAt(views[key]!!)
         views.remove(key)
+    }
+
+    companion object {
+        const val TYPEFACE_NAME = "sans-serif-medium"
     }
 }
