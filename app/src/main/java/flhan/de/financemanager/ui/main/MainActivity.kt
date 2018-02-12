@@ -62,9 +62,8 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector {
             fragmentTransaction.attach(fragment)
         }
 
-        val curFrag = supportFragmentManager.primaryNavigationFragment
-        if (curFrag != null) {
-            fragmentTransaction.detach(curFrag)
+        supportFragmentManager.primaryNavigationFragment?.apply {
+            fragmentTransaction.detach(this)
         }
 
         fragmentTransaction.setPrimaryNavigationFragment(fragment)
