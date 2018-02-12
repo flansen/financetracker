@@ -66,9 +66,11 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector {
             fragmentTransaction.detach(this)
         }
 
-        fragmentTransaction.setPrimaryNavigationFragment(fragment)
-        fragmentTransaction.setReorderingAllowed(true)
-        fragmentTransaction.commitNowAllowingStateLoss()
+        fragmentTransaction.apply {
+            setPrimaryNavigationFragment(fragment)
+            setReorderingAllowed(true)
+            commitNowAllowingStateLoss()
+        }
     }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> = fragmentDispatchingAndroidInjector
