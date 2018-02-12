@@ -33,7 +33,16 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector {
         }
         if (savedInstanceState == null) {
             mainBottombar.selectedItemId = R.id.tab_expenses
+        } else if (savedInstanceState.containsKey(SELECTED_ID_KEY)) {
+            presentedId = savedInstanceState[SELECTED_ID_KEY] as Int
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        presentedId?.apply {
+            outState?.putInt(SELECTED_ID_KEY, this)
+        }
+        super.onSaveInstanceState(outState)
     }
 
     private fun handleBottomNavigationClicked(menuItem: MenuItem) {
@@ -64,4 +73,8 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector {
     }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> = fragmentDispatchingAndroidInjector
+
+    companion object {
+        const val SELECTED_ID_KEY = "selectedId"
+    }
 }
