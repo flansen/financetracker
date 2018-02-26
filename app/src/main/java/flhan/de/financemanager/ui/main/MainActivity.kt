@@ -9,6 +9,7 @@ import dagger.android.support.HasSupportFragmentInjector
 import flhan.de.financemanager.R
 import flhan.de.financemanager.base.BaseActivity
 import flhan.de.financemanager.ui.main.expenses.overview.ExpenseOverviewFragment
+import flhan.de.financemanager.ui.main.shoppingitems.overview.ShoppingItemOverviewFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
@@ -48,6 +49,7 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector {
     private fun handleBottomNavigationClicked(menuItem: MenuItem) {
         val tag = when (menuItem.itemId) {
             R.id.tab_expenses -> ExpenseOverviewFragment.TAG
+            R.id.tab_shopping_items -> ShoppingItemOverviewFragment.TAG
             else -> PlaceholderFragment.TAG
         }
         val fragmentTransaction = supportFragmentManager.beginTransaction()
@@ -55,6 +57,7 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector {
         if (fragment == null) {
             fragment = when (menuItem.itemId) {
                 R.id.tab_expenses -> ExpenseOverviewFragment.newInstance()
+                R.id.tab_shopping_items -> ShoppingItemOverviewFragment.newInstance()
                 else -> PlaceholderFragment()
             }
             fragmentTransaction.add(R.id.main_content_container, fragment, tag)

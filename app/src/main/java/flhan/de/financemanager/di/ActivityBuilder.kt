@@ -15,6 +15,7 @@ import flhan.de.financemanager.ui.main.MainActivityModule
 import flhan.de.financemanager.ui.main.expenses.createedit.CreateEditExpenseActivity
 import flhan.de.financemanager.ui.main.expenses.createedit.CreateEditExpenseModule
 import flhan.de.financemanager.ui.main.expenses.overview.ExpenseOverviewFragmentBuilder
+import flhan.de.financemanager.ui.main.shoppingitems.overview.ShoppingItemOverviewFragmentBuilder
 
 @Module
 abstract class ActivityBuilder {
@@ -31,7 +32,11 @@ abstract class ActivityBuilder {
     @ContributesAndroidInjector(modules = [JoinHouseholdModule::class])
     abstract fun bindJoinHouseholdActivity(): JoinHouseholdActivity
 
-    @ContributesAndroidInjector(modules = [MainActivityModule::class, ExpenseOverviewFragmentBuilder::class])
+    @ContributesAndroidInjector(modules = [
+        MainActivityModule::class,
+        ExpenseOverviewFragmentBuilder::class,
+        ShoppingItemOverviewFragmentBuilder::class
+    ])
     abstract fun bindMainActivity(): MainActivity
 
     @ContributesAndroidInjector(modules = [CreateEditExpenseModule::class])

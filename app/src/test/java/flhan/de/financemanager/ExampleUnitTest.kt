@@ -12,5 +12,9 @@ class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
         assertEquals(4, 2 + 2)
+        val s = myHigherOrderFun { "the string is $it" }
+        println(s)
     }
+
+    fun myHigherOrderFun(functionArg: (Int) -> String) = functionArg(5)
 }
