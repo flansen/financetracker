@@ -12,7 +12,7 @@ class CreateEditExpenseModule {
 
     @Provides
     @ExpenseId
-    fun providesId(activity: CreateEditExpenseActivity): String? = activity.retrieveExpenseId()
+    fun providesId(activity: CreateEditExpenseActivity): String? = activity.id
 
     @Provides
     fun fetchUsersInteractor(interactor: FetchUsersInteractorImpl): FetchUsersInteractor = interactor

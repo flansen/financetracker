@@ -19,6 +19,7 @@ import butterknife.*
 import butterknife.OnTextChanged.Callback.AFTER_TEXT_CHANGED
 import flhan.de.financemanager.R
 import flhan.de.financemanager.base.BaseActivity
+import flhan.de.financemanager.base.IntentDelegate
 import flhan.de.financemanager.common.CreateEditMode
 import flhan.de.financemanager.common.CreateEditMode.Create
 import flhan.de.financemanager.common.CreateEditMode.Edit
@@ -30,6 +31,8 @@ import kotlinx.android.synthetic.main.toolbar.*
 import javax.inject.Inject
 
 class CreateEditExpenseActivity : BaseActivity() {
+
+    val id by lazy { intent.id }
 
     @Inject
     lateinit var factory: CreateEditExpenseViewModelFactory
@@ -227,17 +230,12 @@ class CreateEditExpenseActivity : BaseActivity() {
     }
 
     companion object {
-        private const val ID_KEY = "id"
-        private const val USER_LAYOUT_RESOURCE = android.R.layout.simple_list_item_activated_1
+        var Intent.id by IntentDelegate.String("id")
 
         fun createIntent(context: Context, id: String?): Intent {
             val intent = Intent(context, CreateEditExpenseActivity::class.java)
-            intent.putExtra(ID_KEY, id)
+            intent.apply { this.id = id }
             return intent
         }
-    }
-
-    fun retrieveExpenseId(): String? {
-        return intent.getStringExtra(ID_KEY)
     }
 }
