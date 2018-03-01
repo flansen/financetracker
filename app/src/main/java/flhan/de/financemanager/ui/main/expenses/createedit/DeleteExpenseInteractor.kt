@@ -1,6 +1,6 @@
 package flhan.de.financemanager.ui.main.expenses.createedit
 
-import flhan.de.financemanager.common.datastore.RemoteDataStore
+import flhan.de.financemanager.common.datastore.UserExpenseDataStore
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -9,10 +9,10 @@ interface DeleteExpenseInteractor {
 }
 
 class DeleteExpenseInteractorImpl @Inject constructor(
-        private val remoteDataStore: RemoteDataStore
+        private val userExpenseDataStore: UserExpenseDataStore
 ) : DeleteExpenseInteractor {
 
     override fun delete(id: String): Single<Boolean> {
-        return remoteDataStore.deleteExpense(id)
+        return userExpenseDataStore.deleteExpense(id)
     }
 }

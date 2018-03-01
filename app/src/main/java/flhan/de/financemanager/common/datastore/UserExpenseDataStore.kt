@@ -3,7 +3,10 @@ package flhan.de.financemanager.common.datastore
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import flhan.de.financemanager.base.RequestResult
-import flhan.de.financemanager.common.data.*
+import flhan.de.financemanager.common.data.Billing
+import flhan.de.financemanager.common.data.Expense
+import flhan.de.financemanager.common.data.Household
+import flhan.de.financemanager.common.data.User
 import flhan.de.financemanager.ui.login.createjoinhousehold.join.InvalidSecretThrowable
 import flhan.de.financemanager.ui.login.createjoinhousehold.join.NoSuchHouseholdThrowable
 import flhan.de.financemanager.ui.main.expenses.createedit.NoExpenseFoundThrowable
@@ -18,22 +21,21 @@ import javax.inject.Inject
 /**
  * Created by Florian on 14.09.2017.
  */
-interface RemoteDataStore {
+interface UserExpenseDataStore {
     fun createHousehold(household: Household): Single<RequestResult<Household>>
     fun joinHousehold(household: Household): Single<RequestResult<Household>>
     fun joinHouseholdByMail(email: String, secret: String): Single<RequestResult<Household>>
     fun getCurrentUser(): User
-    fun loadExpenses(): Observable<MutableList<Expense>>
-    fun loadShoppingItems(): Observable<MutableList<ShoppingItem>>
-    fun findExpenseBy(id: String): Observable<RequestResult<Expense>>
     fun loadUsers(): Observable<MutableList<User>>
+    fun deleteExpenses(): Single<Boolean>
+    fun loadExpenses(): Observable<MutableList<Expense>>
+    fun findExpenseBy(id: String): Observable<RequestResult<Expense>>
     fun saveExpense(expense: Expense): Observable<Unit>
     fun deleteExpense(id: String): Single<Boolean>
     fun saveBilling(billing: Billing): Single<RequestResult<Billing>>
-    fun deleteExpenses(): Single<Boolean>
 }
 
-class FirebaseClient @Inject constructor(private val userSettings: UserSettings) : RemoteDataStore {
+class UserExpenseDataStoreImpl @Inject constructor(private val userSettings: UserSettings) : UserExpenseDataStore {
 
     private val firebaseDatabase by lazy { FirebaseDatabase.getInstance() }
     private val rootReference by lazy { firebaseDatabase.getReference(HOUSEHOLD) }
@@ -197,87 +199,6 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
             })
         }
     }
-
-    override fun loadShoppingItems(): Observable<MutableList<ShoppingItem>> {
-        return Observable.create { emitter ->
-            val shoppingItems = mutableListOf<ShoppingItem>()
-            var isInitialLoadingDone = false
-
-            val valueListener = object : ValueEventListener {
-                override fun onCancelled(databaseError: DatabaseError?) {
-                    emitter.onError(databaseError?.toException()
-                            ?: Throwable("Listener.OnCancelled"))
-                }
-
-                override fun onDataChange(dataSnapshot: DataSnapshot?) {
-                    isInitialLoadingDone = true
-                    dataSnapshot?.apply {
-                        for (snapshot in children) {
-                            val shoppingItem = snapshot.getValue(ShoppingItem::class.java)
-                            shoppingItem?.apply {
-                                id = snapshot.key
-                                shoppingItems.add(this)
-                            }
-                        }
-                        emitter.onNext(shoppingItems)
-                    }
-                }
-            }
-
-            val childEventListener = object : ChildEventListener {
-                override fun onCancelled(databaseError: DatabaseError?) {
-                    emitter.onError(databaseError?.toException()?.cause
-                            ?: Throwable("Listener.OnCancelled"))
-                }
-
-                override fun onChildMoved(dataSnapshot: DataSnapshot?, p1: String?) {
-                }
-
-                override fun onChildChanged(dataSnapshot: DataSnapshot?, p1: String?) {
-                    dataSnapshot?.let {
-                        val shoppingItem = dataSnapshot.getValue(ShoppingItem::class.java)
-                        shoppingItem?.apply {
-                            id = dataSnapshot.key
-                            shoppingItems.add(this)
-                        }
-                        emitter.onNext(shoppingItems)
-                    }
-
-                }
-
-                override fun onChildAdded(dataSnapshot: DataSnapshot?, p1: String?) {
-                    if (isInitialLoadingDone) {
-                        dataSnapshot?.apply {
-                            val shoppingItem = dataSnapshot.getValue(ShoppingItem::class.java)
-                            shoppingItem?.apply {
-                                id = dataSnapshot.key
-                                shoppingItems.add(this)
-                            }
-                            emitter.onNext(shoppingItems)
-                        }
-                    }
-                }
-
-                override fun onChildRemoved(dataSnapshot: DataSnapshot?) {
-                    dataSnapshot?.apply {
-                        val key = key
-                        val index = shoppingItems.indexOfFirst { key == it.id }
-                        shoppingItems.removeAt(index)
-                        emitter.onNext(shoppingItems)
-                    }
-                }
-            }
-
-            val ref = rootReference.child("${userSettings.getHouseholdId()}/$SHOPPING_ITEMS")
-            ref.apply {
-                keepSynced(true)
-                addChildEventListener(childEventListener)
-                addListenerForSingleValueEvent(valueListener)
-            }
-            emitter.setCancellable { rootReference.removeEventListener(childEventListener) }
-        }
-    }
-
 
     private fun createUserObservable(): Observable<MutableList<User>> {
         return Observable.create { emitter: ObservableEmitter<MutableList<User>> ->
@@ -489,7 +410,6 @@ class FirebaseClient @Inject constructor(private val userSettings: UserSettings)
 
     companion object {
         const val EXPENSES = "expenses"
-        const val SHOPPING_ITEMS = "shoppingitems"
         const val USERS = "users"
         const val HOUSEHOLD = "households"
         const val CREATOR = "creator"

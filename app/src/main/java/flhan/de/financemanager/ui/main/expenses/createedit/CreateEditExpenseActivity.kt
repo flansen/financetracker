@@ -233,9 +233,8 @@ class CreateEditExpenseActivity : BaseActivity() {
         var Intent.id by IntentDelegate.String("id")
 
         fun createIntent(context: Context, id: String?): Intent {
-            val intent = Intent(context, CreateEditExpenseActivity::class.java)
-            intent.apply { this.id = id }
-            return intent
+            return Intent(context, CreateEditExpenseActivity::class.java)
+                    .apply { this.id = id }
         }
     }
 }

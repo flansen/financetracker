@@ -3,7 +3,7 @@ package flhan.de.financemanager.ui.login.createjoinhousehold.join
 import flhan.de.financemanager.base.InteractorResult
 import flhan.de.financemanager.base.InteractorStatus.*
 import flhan.de.financemanager.common.data.Household
-import flhan.de.financemanager.common.datastore.RemoteDataStore
+import flhan.de.financemanager.common.datastore.UserExpenseDataStore
 import flhan.de.financemanager.common.notifications.FirebaseNotificationManager
 import io.reactivex.Observable
 import javax.inject.Inject
@@ -17,7 +17,7 @@ interface JoinHouseholdByMailInteractor {
 
 // TODO: Check secret
 class JoinHouseholdByMailInteractorImpl @Inject constructor(
-        private val dataStore: RemoteDataStore,
+        private val dataStore: UserExpenseDataStore,
         private val notificationManager: FirebaseNotificationManager
 ) : JoinHouseholdByMailInteractor {
 

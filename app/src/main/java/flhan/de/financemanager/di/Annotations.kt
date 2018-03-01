@@ -21,3 +21,8 @@ annotation class ChannelName
 @MustBeDocumented
 @Retention(AnnotationRetention.RUNTIME)
 annotation class UserId
+
+@Qualifier
+@MustBeDocumented
+@Retention(AnnotationRetention.RUNTIME)
+annotation class HouseholdId

@@ -16,6 +16,4 @@ sealed class IntentDelegate<T>(protected val key: kotlin.String) : ReadWriteProp
             thisRef.putExtra(key, value)
         }
     }
-
-
 }

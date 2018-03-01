@@ -7,7 +7,7 @@ import flhan.de.financemanager.common.data.Billing
 import flhan.de.financemanager.common.data.BillingItem
 import flhan.de.financemanager.common.data.Expense
 import flhan.de.financemanager.common.data.User
-import flhan.de.financemanager.common.datastore.RemoteDataStore
+import flhan.de.financemanager.common.datastore.UserExpenseDataStore
 import flhan.de.financemanager.common.util.CurrencyString
 import io.reactivex.Observable
 import java.util.*
@@ -22,7 +22,7 @@ interface ExpenseOverviewInteractor {
     fun billAll(): Observable<InteractorResult<Unit>>
 }
 
-class ExpenseOverviewInteractorImpl @Inject constructor(private val dataStore: RemoteDataStore
+class ExpenseOverviewInteractorImpl @Inject constructor(private val dataStore: UserExpenseDataStore
 ) : ExpenseOverviewInteractor {
 
     override fun calculatePaymentItems(): Observable<List<ExpensePaymentItem>> {

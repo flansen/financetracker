@@ -3,7 +3,7 @@ package flhan.de.financemanager.ui.main.expenses.overview
 import com.nhaarman.mockito_kotlin.whenever
 import flhan.de.financemanager.common.data.Expense
 import flhan.de.financemanager.common.data.User
-import flhan.de.financemanager.common.datastore.RemoteDataStore
+import flhan.de.financemanager.common.datastore.UserExpenseDataStore
 import io.reactivex.Observable
 import io.reactivex.observers.TestObserver
 import org.junit.Assert.assertEquals
@@ -17,7 +17,7 @@ import java.util.*
 class ExpenseOverviewInteractorTest {
 
     @Mock
-    private lateinit var remoteDatastore: RemoteDataStore
+    private lateinit var userExpenseDatastore: UserExpenseDataStore
 
     private lateinit var sut: ExpenseOverviewInteractor
 
@@ -33,7 +33,7 @@ class ExpenseOverviewInteractorTest {
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        sut = ExpenseOverviewInteractorImpl(remoteDatastore)
+        sut = ExpenseOverviewInteractorImpl(userExpenseDatastore)
     }
 
     @Test
@@ -49,7 +49,7 @@ class ExpenseOverviewInteractorTest {
                 Expense("Cause3", "email2", "Name1", Date(), 13.2, "id3", user2),
                 Expense("Cause4", "email1", "Name1", Date(), 1.1, "id4", user1)
         )
-        whenever(remoteDatastore.loadExpenses()).thenReturn(Observable.just(expenses))
+        whenever(userExpenseDatastore.loadExpenses()).thenReturn(Observable.just(expenses))
 
         sut.calculatePaymentItems().subscribe(testObserver)
 

@@ -12,8 +12,8 @@ import flhan.de.financemanager.base.scheduler.SchedulerProvider
 import flhan.de.financemanager.base.scheduler.SchedulerProviderImpl
 import flhan.de.financemanager.common.auth.AuthManager
 import flhan.de.financemanager.common.auth.AuthManagerImpl
-import flhan.de.financemanager.common.datastore.FirebaseClient
-import flhan.de.financemanager.common.datastore.RemoteDataStore
+import flhan.de.financemanager.common.datastore.UserExpenseDataStore
+import flhan.de.financemanager.common.datastore.UserExpenseDataStoreImpl
 import flhan.de.financemanager.common.datastore.UserSettings
 import flhan.de.financemanager.common.datastore.UserSettingsImpl
 import flhan.de.financemanager.common.notifications.FirebaseNotificationManager
@@ -40,7 +40,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun remoteDataStore(firebaseClient: FirebaseClient): RemoteDataStore = firebaseClient
+    fun remoteDataStore(userExpenseDataStoreImpl: UserExpenseDataStoreImpl): UserExpenseDataStore = userExpenseDataStoreImpl
 
     @Provides
     @Singleton
@@ -64,6 +64,10 @@ class AppModule {
     @Provides
     @UserId
     fun userId(userSettings: UserSettings) = userSettings.getUserId()
+
+    @Provides
+    @HouseholdId
+    fun householdId(userSettings: UserSettings) = userSettings.getHouseholdId()
 
     @Provides
     @ChannelName
