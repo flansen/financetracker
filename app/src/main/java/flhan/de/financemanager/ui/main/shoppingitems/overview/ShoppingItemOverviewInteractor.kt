@@ -2,7 +2,7 @@ package flhan.de.financemanager.ui.main.shoppingitems.overview
 
 import flhan.de.financemanager.base.InteractorResult
 import flhan.de.financemanager.common.data.ShoppingItem
-import flhan.de.financemanager.common.datastore.UserExpenseDataStore
+import flhan.de.financemanager.common.datastore.HouseholdDataStore
 import io.reactivex.Observable
 import javax.inject.Inject
 
@@ -13,7 +13,7 @@ interface ShoppingItemOverviewInteractor {
     fun fetchAll(): Observable<InteractorResult<List<ShoppingItem>>>
 }
 
-class ShoppingItemOverviewInteractorImpl @Inject constructor(private val dataStore: UserExpenseDataStore
+class ShoppingItemOverviewInteractorImpl @Inject constructor(private val dataStore: HouseholdDataStore
 ) : ShoppingItemOverviewInteractor {
     override fun fetchAll(): Observable<InteractorResult<List<ShoppingItem>>> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

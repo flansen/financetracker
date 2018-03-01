@@ -12,12 +12,11 @@ import flhan.de.financemanager.base.scheduler.SchedulerProvider
 import flhan.de.financemanager.base.scheduler.SchedulerProviderImpl
 import flhan.de.financemanager.common.auth.AuthManager
 import flhan.de.financemanager.common.auth.AuthManagerImpl
-import flhan.de.financemanager.common.datastore.UserExpenseDataStore
-import flhan.de.financemanager.common.datastore.UserExpenseDataStoreImpl
-import flhan.de.financemanager.common.datastore.UserSettings
-import flhan.de.financemanager.common.datastore.UserSettingsImpl
+import flhan.de.financemanager.common.data.User
+import flhan.de.financemanager.common.datastore.*
 import flhan.de.financemanager.common.notifications.FirebaseNotificationManager
 import flhan.de.financemanager.common.notifications.FirebaseNotificationManagerImpl
+import io.reactivex.Observable
 import javax.inject.Singleton
 
 /**
@@ -40,7 +39,19 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun remoteDataStore(userExpenseDataStoreImpl: UserExpenseDataStoreImpl): UserExpenseDataStore = userExpenseDataStoreImpl
+    fun householdDataStore(householdDataStore: HouseholdDataStoreImpl): HouseholdDataStore = householdDataStore
+
+    @Provides
+    @Singleton
+    fun expenseDataStore(store: ExpenseDataStoreImpl): ExpenseDataStore = store
+
+    @Provides
+    @Singleton
+    fun userDataStore(store: UserDataStoreImpl): UserDataStore = store
+
+    @Provides
+    @Singleton
+    fun shoppingItemDataStore(store: ShoppingItemDataStoreImpl): ShoppingItemDataStore = store
 
     @Provides
     @Singleton
@@ -72,4 +83,9 @@ class AppModule {
     @Provides
     @ChannelName
     fun channelName(context: Context): String = context.getString(R.string.app_name)
+
+    @Provides
+    fun usersObservable(userDataStore: UserDataStore): Observable<MutableList<User>> {
+        return userDataStore.loadUsers()
+    }
 }
