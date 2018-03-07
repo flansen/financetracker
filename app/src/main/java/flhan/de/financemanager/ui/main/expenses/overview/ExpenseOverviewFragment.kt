@@ -61,11 +61,15 @@ class ExpenseOverviewFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        expense_overview_recycler.layoutManager = LinearLayoutManager(context, VERTICAL, false)
-        expense_overview_recycler.addItemDecoration(LineListDivider(context!!))
-        paymentItemView.minimumWidth = screenWidth
         val adapter = ExpenseOverviewAdapter { id -> presentCreateEdit(id) }
-        expense_overview_recycler.adapter = adapter
+
+        expense_overview_recycler.apply {
+            layoutManager = LinearLayoutManager(context, VERTICAL, false)
+            addItemDecoration(LineListDivider(view.context))
+            this.adapter = adapter
+        }
+
+        paymentItemView.minimumWidth = screenWidth
         viewModel.listItems.observe(this, Observer { listItems ->
             adapter.items = listItems ?: mutableListOf()
         })
@@ -104,7 +108,8 @@ class ExpenseOverviewFragment : Fragment() {
     }
 
     private fun presentCreateEdit(id: String?) {
-        val intent = CreateEditExpenseActivity.createIntent(context!!, id)
+        val context = context ?: return
+        val intent = CreateEditExpenseActivity.createIntent(context, id)
         startActivity(intent)
     }
 
