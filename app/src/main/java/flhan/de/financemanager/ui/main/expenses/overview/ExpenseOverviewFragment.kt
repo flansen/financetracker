@@ -104,10 +104,10 @@ class ExpenseOverviewFragment : Fragment() {
 
     @OnClick(R.id.expense_overview_fab)
     fun onCreateExpenseClicked() {
-        presentCreateEdit(null)
+        presentCreateEdit()
     }
 
-    private fun presentCreateEdit(id: String?) {
+    private fun presentCreateEdit(id: String? = null) {
         val context = context ?: return
         val intent = CreateEditExpenseActivity.createIntent(context, id)
         startActivity(intent)

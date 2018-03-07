@@ -88,7 +88,9 @@ class ExpenseOverviewInteractorImpl @Inject constructor(private val dataStore: E
     }
 
     private fun convertExpensesToMapByUser(expenseList: List<Expense>): Map<User?, Double> {
-        val expensesByCreator = expenseList.groupBy { it.user }.filterKeys { it != null }
+        val expensesByCreator = expenseList
+                .groupBy { it.user }
+                .filterKeys { it != null }
         return expensesByCreator.mapValues { expenseEntry ->
             expenseEntry.value.sumByDouble { it.amount ?: 0.0 }
         }
