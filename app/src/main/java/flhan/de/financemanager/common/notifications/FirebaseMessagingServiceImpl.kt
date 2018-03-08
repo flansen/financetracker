@@ -8,11 +8,10 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import dagger.android.AndroidInjection
 import flhan.de.financemanager.R
+import flhan.de.financemanager.common.util.toCurrencyString
 import flhan.de.financemanager.di.ChannelId
 import flhan.de.financemanager.di.UserId
 import flhan.de.financemanager.ui.main.MainActivity
-import java.text.DecimalFormat
-import java.util.*
 import javax.inject.Inject
 
 class FirebaseMessagingServiceImpl : FirebaseMessagingService() {
@@ -42,12 +41,7 @@ class FirebaseMessagingServiceImpl : FirebaseMessagingService() {
             return
         }
 
-        //TODO: Remove Code Duplicate
-        val decimalFormat = DecimalFormat.getInstance(Locale.getDefault()) as DecimalFormat
-        decimalFormat.applyPattern(CURRENCY_NUMBER_PATTERN)
-        val currencyAmount = decimalFormat.format(amount.toDouble())
-        val currencyString = String.format(CURRENCY_PATTERN, currencyAmount, decimalFormat.currency.symbol)
-
+        val currencyString = amount.toCurrencyString()
         val notificationTitle = applicationContext.getString(R.string.notification_expense_title)
         val notificationBody = applicationContext.getString(R.string.notification_expense_body, creatorName, cause, currencyString)
 

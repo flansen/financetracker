@@ -1,5 +1,7 @@
 package flhan.de.financemanager.common.util
 
+import flhan.de.financemanager.common.util.CurrencyString.Companion.CURRENCY_NUMBER_PATTERN
+import flhan.de.financemanager.common.util.CurrencyString.Companion.CURRENCY_PATTERN
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.*
@@ -19,11 +21,7 @@ class CurrencyString(
             } else {
                 baseString
             }
-            val amountDouble = amountString.toDouble() / 100
-            val decimalFormat = DecimalFormat.getInstance(locale) as DecimalFormat
-            decimalFormat.applyPattern(CURRENCY_NUMBER_PATTERN)
-            val currencyAmount = decimalFormat.format(amountDouble)
-            return String.format(CURRENCY_PATTERN, currencyAmount, decimalFormat.currency.symbol)
+            return (amountString.toDouble() / 100.0).toCurrencyString()
         }
         set(value) {
             baseString = value
@@ -71,4 +69,15 @@ class CurrencyString(
         const val CURRENCY_PATTERN = "%s %s"
         private val NUMBER_FORMAT = DecimalFormat("0.00", DecimalFormatSymbols(US))
     }
+}
+
+fun String.toCurrencyString(): String {
+    return this.toDouble().toCurrencyString()
+}
+
+fun Double.toCurrencyString(): String {
+    val decimalFormat = DecimalFormat.getInstance(Locale.getDefault()) as DecimalFormat
+    decimalFormat.applyPattern(CURRENCY_NUMBER_PATTERN)
+    val currencyAmount = decimalFormat.format(this)
+    return String.format(CURRENCY_PATTERN, currencyAmount, decimalFormat.currency.symbol)
 }
