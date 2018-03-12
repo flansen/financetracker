@@ -87,6 +87,9 @@ dependencies {
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$libVersions.leakCanary"
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$libVersions.leakCanary"
 
+    // Util
+    implementation "androidx.core:core-ktx:$libVersions.ktx"
+
     // Test
     testImplementation "junit:junit:$libVersions.jUnit"
     androidTestImplementation("com.android.support.test.espresso:espresso-core:$libVersions.espresso", {

@@ -12,7 +12,7 @@ buildscript {
                 compileSdk: 27,
                 targetSdk : 27,
                 buildTools: "27.0.2",
-                kotlin    : "1.2.21",
+                kotlin    : "1.2.30",
         ]
         libVersions = [
                 androidSupport: "27.0.2",
@@ -22,6 +22,7 @@ buildscript {
                 espresso      : "3.0.1",
                 firebase      : "11.8.0",
                 jUnit         : "4.12",
+                ktx           : "0.2",
                 mockito       : "2.+",
                 mockitoKotlin : "1.5.0",
                 leakCanary    : "1.5.4",

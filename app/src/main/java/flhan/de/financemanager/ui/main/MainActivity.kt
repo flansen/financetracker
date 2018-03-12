@@ -72,7 +72,7 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector {
         fragmentTransaction.apply {
             setPrimaryNavigationFragment(fragment)
             setReorderingAllowed(true)
-            commitNowAllowingStateLoss()
+            commit()
         }
     }
 

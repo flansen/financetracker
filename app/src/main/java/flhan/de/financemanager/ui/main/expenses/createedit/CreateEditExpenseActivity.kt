@@ -1,6 +1,5 @@
 package flhan.de.financemanager.ui.main.expenses.createedit
 
-import android.animation.Animator
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
@@ -187,24 +186,11 @@ class CreateEditExpenseActivity : BaseActivity() {
         } else {
             0f
         }
-        createEditAdvancedContainer.animate().alpha(alpha).setDuration(duration).setListener(object : Animator.AnimatorListener {
-            override fun onAnimationRepeat(animation: Animator?) {
+        createEditAdvancedContainer.animate().alpha(alpha).setDuration(duration).withEndAction {
+            if (alpha <= 0.01f) {
+                createEditAdvancedContainer.visibility = View.INVISIBLE
             }
-
-            override fun onAnimationEnd(animation: Animator?) {
-                if (alpha <= 0.01f) {
-                    createEditAdvancedContainer.visibility = View.INVISIBLE
-                }
-            }
-
-            override fun onAnimationCancel(animation: Animator?) {
-            }
-
-            override fun onAnimationStart(animation: Animator?) {
-
-            }
-
-        }).start()
+        }.start()
     }
 
     private fun setUserItems(names: List<String>) {

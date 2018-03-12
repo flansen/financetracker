@@ -1,6 +1,7 @@
 package flhan.de.financemanager.common.datastore
 
 import android.content.SharedPreferences
+import androidx.content.edit
 import com.google.firebase.auth.FirebaseAuth
 import flhan.de.financemanager.common.data.User
 import io.reactivex.Single
@@ -38,11 +39,11 @@ class UserSettingsImpl @Inject constructor(private val sharedPreferences: Shared
     }
 
     override fun setHouseholdId(id: String) {
-        sharedPreferences.edit().putString(HOUSEHOLD_ID_KEY, id).commit()
+        sharedPreferences.edit { putString(HOUSEHOLD_ID_KEY, id) }
     }
 
     override fun setUserId(id: String) {
-        sharedPreferences.edit().putString(USER_ID_KEY, id).commit()
+        sharedPreferences.edit { putString(USER_ID_KEY, id) }
     }
 
     override fun getUserId(): String {
@@ -54,7 +55,6 @@ class UserSettingsImpl @Inject constructor(private val sharedPreferences: Shared
             return@fromCallable getUserId().isNotBlank() && getHouseholdId().isNotBlank()
         }
     }
-
 
     companion object {
         private const val USER_ID_KEY = "userId"

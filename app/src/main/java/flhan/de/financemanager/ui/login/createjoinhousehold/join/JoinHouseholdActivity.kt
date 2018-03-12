@@ -58,24 +58,28 @@ class JoinHouseholdActivity : BaseActivity() {
     private fun setupView() {
         setSupportActionBar(toolbar)
         supportActionBar?.setTitle(R.string.join_household)
-        viewModel.joinEnabled.observe(this, Observer {
-            val isEnabled = it ?: false
-            joinHousehold.isEnabled = isEnabled
-        })
-        viewModel.errorState.observe(this, Observer { handleError(it) })
-        viewModel.isLoading.observe(this, Observer { joinLoadingView.visible(it ?: false) })
-        viewModel.mail.observe(this, Observer {
-            val text = mailText.text
-            if (text.toString() != it) {
-                mailText.setText(it)
-            }
-        })
-        viewModel.secret.observe(this, Observer {
-            val text = secretText.text
-            if (text.toString() != it) {
-                secretText.setText(it)
-            }
-        })
+        viewModel.apply {
+            joinEnabled.observe(this@JoinHouseholdActivity, Observer {
+                val isEnabled = it ?: false
+                joinHousehold.isEnabled = isEnabled
+            })
+            errorState.observe(this@JoinHouseholdActivity, Observer { handleError(it) })
+            isLoading.observe(this@JoinHouseholdActivity, Observer {
+                joinLoadingView.visible(it ?: false)
+            })
+            mail.observe(this@JoinHouseholdActivity, Observer {
+                val text = mailText.text
+                if (text.toString() != it) {
+                    mailText.setText(it)
+                }
+            })
+            secret.observe(this@JoinHouseholdActivity, Observer {
+                val text = secretText.text
+                if (text.toString() != it) {
+                    secretText.setText(it)
+                }
+            })
+        }
     }
 
     private fun handleError(errorState: CreateJoinErrorState?) {
