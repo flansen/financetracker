@@ -4,7 +4,7 @@ import java.util.*
 
 data class ShoppingItem(
         val name: String = "",
-        val tags: MutableList<Tag> = mutableListOf(),
+        val tags: MutableSet<Tag> = mutableSetOf(),
         var id: String = "",
         val isChecked: Boolean = false,
         val createdAt: Date? = null

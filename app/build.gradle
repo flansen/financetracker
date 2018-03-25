@@ -64,9 +64,9 @@ dependencies {
     implementation "com.google.android.gms:play-services-auth:$libVersions.firebase"
     implementation "com.google.firebase:firebase-messaging:$libVersions.firebase"
 
-
     // Dagger
     implementation "com.google.dagger:dagger:$libVersions.dagger"
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     kapt "com.google.dagger:dagger-compiler:$libVersions.dagger"
     kapt "com.google.dagger:dagger-android-processor:$libVersions.dagger"
     implementation "com.google.dagger:dagger-android-support:$libVersions.dagger"

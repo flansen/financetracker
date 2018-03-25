@@ -36,4 +36,7 @@
     <string name="notification_expense_title">New Expense</string>
     <string name="notification_expense_body">%1$s bought %2$s for %3$s.</string>
     <string name="shopping_items_overview_title">Shopping Items</string>
+    <string name="create_edit_shopping_item_name_hint">Name</string>
+    <string name="create_edit_shopping_item_create">Create Shopping Item</string>
+    <string name="create_edit_shopping_item_edit">Edit Shopping Item</string>
 </resources>

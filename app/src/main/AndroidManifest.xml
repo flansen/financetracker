@@ -20,6 +20,17 @@
             android:launchMode="singleTop"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".ui.launcher.LauncherActivity" />
+
+        <activity-alias
+            android:name=".RoutingActivity"
+            android:targetActivity=".ui.launcher.LauncherActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
         <activity
             android:name=".ui.main.MainActivity"
             android:launchMode="singleTop" />
@@ -28,20 +39,13 @@
             android:parentActivityName=".ui.main.MainActivity"
             android:windowSoftInputMode="adjustResize" />
 
-        <activity-alias
-            android:name="RoutingActivity"
-            android:targetActivity=".ui.launcher.LauncherActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity-alias>
         <service android:name=".common.notifications.FirebaseMessagingServiceImpl">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
+        <activity android:name=".ui.main.shoppingitems.createedit.CreateEditShoppingItemActivity"></activity>
     </application>
+
 </manifest>

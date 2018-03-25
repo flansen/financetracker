@@ -15,7 +15,7 @@ buildscript {
                 kotlin    : "1.2.30",
         ]
         libVersions = [
-                androidSupport: "27.0.2",
+                androidSupport: "27.1.0",
                 archComponents: "1.0.0",
                 butterknife   : "8.8.1",
                 dagger        : "2.13",

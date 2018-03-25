@@ -15,13 +15,14 @@ import kotlinx.android.synthetic.main.expense_overview_item.view.*
 class ExpenseOverviewAdapter(private val clickListener: (String) -> Unit)
     : RecyclerView.Adapter<ExpenseOverviewAdapter.ExpenseOverviewViewHolder>() {
 
+    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int) = ExpenseOverviewViewHolder(parent)
+
     var items: List<ExpenseOverviewItem> = mutableListOf()
         set(value) {
             field = value
             notifyDataSetChanged()
         }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int) = ExpenseOverviewViewHolder(parent)
 
     override fun onBindViewHolder(holder: ExpenseOverviewViewHolder?, position: Int) {
         holder?.apply {
