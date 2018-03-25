@@ -1,8 +1,8 @@
-package flhan.de.financemanager.ui.main.shoppingitems.overview
+package flhan.de.financemanager.ui.main.shoppingitems.createedit
 
 import android.arch.lifecycle.ViewModel
 
-class CreateEditShoppingItemOverviewViewModel(private val interactor: ShoppingItemOverviewInteractor) : ViewModel() {
+class CreateEditShoppingItemViewModel(private val interactor: CreateEditShoppingItemInteractor) : ViewModel() {
 
     fun createEditSelected() {}
 }

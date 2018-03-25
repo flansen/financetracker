@@ -1,21 +1,14 @@
-package flhan.de.financemanager.ui.main.shoppingitems.overview
+package flhan.de.financemanager.ui.main.shoppingitems.createedit
 
-import flhan.de.financemanager.base.InteractorResult
-import flhan.de.financemanager.common.data.ShoppingItem
-import flhan.de.financemanager.common.datastore.HouseholdDataStore
-import io.reactivex.Observable
+import flhan.de.financemanager.common.datastore.ShoppingItemDataStore
 import javax.inject.Inject
 
 /**
  * Created by Florian on 07.10.2017.
  */
-interface ShoppingItemOverviewInteractor {
-    fun fetchAll(): Observable<InteractorResult<List<ShoppingItem>>>
+interface CreateEditShoppingItemInteractor {
 }
 
-class ShoppingItemOverviewInteractorImpl @Inject constructor(private val dataStore: HouseholdDataStore
-) : ShoppingItemOverviewInteractor {
-    override fun fetchAll(): Observable<InteractorResult<List<ShoppingItem>>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+class CreateEditShoppingItemInteractorImpl @Inject constructor(private val dataStore: ShoppingItemDataStore) : CreateEditShoppingItemInteractor {
+
 }
