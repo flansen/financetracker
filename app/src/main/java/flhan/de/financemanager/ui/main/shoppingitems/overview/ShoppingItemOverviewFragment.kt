@@ -42,7 +42,7 @@ class ShoppingItemOverviewFragment : Fragment() {
         return view
     }
 
-    @OnClick(R.id.expense_overview_fab)
+    @OnClick(R.id.shopping_item_overview_fab)
     fun onCreateExpenseClicked() {
         presentCreateEdit()
     }

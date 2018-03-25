@@ -66,15 +66,14 @@ dependencies {
 
     // Dagger
     implementation "com.google.dagger:dagger:$libVersions.dagger"
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     kapt "com.google.dagger:dagger-compiler:$libVersions.dagger"
     kapt "com.google.dagger:dagger-android-processor:$libVersions.dagger"
     implementation "com.google.dagger:dagger-android-support:$libVersions.dagger"
 
     // Architecture Components
-    implementation "android.arch.lifecycle:extensions:$libVersions.archComponents"
+    implementation "android.arch.lifecycle:extensions:$libVersions.archComponentsLC"
     testImplementation "android.arch.core:core-testing:$libVersions.archComponents"
-    implementation "android.arch.lifecycle:reactivestreams:$libVersions.archComponents"
+    implementation "android.arch.lifecycle:reactivestreams:$libVersions.archComponentsLC"
 
     // UI
     implementation "com.amulyakhare:com.amulyakhare.textdrawable:$libVersions.textdrawable"
