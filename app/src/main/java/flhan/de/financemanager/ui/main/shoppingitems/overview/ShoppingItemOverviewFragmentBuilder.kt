@@ -8,6 +8,6 @@ import dagger.android.ContributesAndroidInjector
 abstract class ShoppingItemOverviewFragmentBuilder {
 
     @ContributesAndroidInjector(modules = [ShoppingItemOverviewModule::class])
-    abstract fun provideShoppingItemOverviewFragmentFactory(): ShoppingItemOverviewFragment
+    abstract fun bindShoppingItemOverviewFragment(): ShoppingItemOverviewFragment
 
 }

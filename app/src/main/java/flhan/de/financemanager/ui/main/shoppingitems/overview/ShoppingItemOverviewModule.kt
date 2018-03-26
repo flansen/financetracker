@@ -7,6 +7,7 @@ import dagger.Provides
 class ShoppingItemOverviewModule {
 
     @Provides
-    fun fetchInteractor(interactor: ShoppingItemOverviewInteractorImpl): ShoppingItemOverviewInteractor = interactor
-
+    fun fetchInteractor(interactor: ShoppingItemOverviewInteractorImpl): ShoppingItemOverviewInteractor {
+        return interactor
+    }
 }

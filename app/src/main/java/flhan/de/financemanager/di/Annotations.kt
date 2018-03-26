@@ -26,3 +26,8 @@ annotation class UserId
 @MustBeDocumented
 @Retention(AnnotationRetention.RUNTIME)
 annotation class HouseholdId
+
+@Qualifier
+@MustBeDocumented
+@Retention(AnnotationRetention.RUNTIME)
+annotation class ShoppingItemId

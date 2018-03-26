@@ -2,13 +2,15 @@ package flhan.de.financemanager.common.datastore
 
 import com.google.firebase.database.*
 import flhan.de.financemanager.common.data.ShoppingItem
+import flhan.de.financemanager.di.HouseholdId
 import io.reactivex.Observable
+import javax.inject.Inject
 
 interface ShoppingItemDataStore {
     fun loadShoppingItems(): Observable<MutableList<ShoppingItem>>
 }
 
-class ShoppingItemDataStoreImpl(private val householdId: String) : ShoppingItemDataStore {
+class ShoppingItemDataStoreImpl @Inject constructor(@HouseholdId private val householdId: String) : ShoppingItemDataStore {
 
     private val firebaseDatabase by lazy { FirebaseDatabase.getInstance() }
     private val rootReference by lazy { firebaseDatabase.getReference(HOUSEHOLD) }

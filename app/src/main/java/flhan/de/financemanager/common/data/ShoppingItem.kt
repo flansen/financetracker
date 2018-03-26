@@ -4,8 +4,9 @@ import java.util.*
 
 data class ShoppingItem(
         val name: String = "",
+        val creatorId: String? = null,
+        val createdAt: Date = Date(),
         val tags: MutableSet<Tag> = mutableSetOf(),
-        var id: String = "",
         val isChecked: Boolean = false,
-        val createdAt: Date? = null
+        var id: String = ""
 )
