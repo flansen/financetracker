@@ -33,6 +33,7 @@
 
         <activity
             android:name=".ui.main.MainActivity"
+            android:theme="@style/AppTheme"
             android:launchMode="singleTop" />
         <activity
             android:name=".ui.main.expenses.createedit.CreateEditExpenseActivity"

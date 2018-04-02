@@ -1,6 +1,5 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-
     repositories {
         google()
         jcenter()
@@ -11,7 +10,7 @@ buildscript {
                 minSdk    : 21,
                 compileSdk: 27,
                 targetSdk : 27,
-                buildTools: "27.0.2",
+                buildTools: "27.0.3",
                 kotlin    : "1.2.30",
         ]
         libVersions = [
@@ -35,7 +34,7 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.android.tools.build:gradle:3.0.1"
+        classpath 'com.android.tools.build:gradle:3.1.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$toolVersions.kotlin"
         classpath "com.google.gms:google-services:$libVersions.googleServices"
     }
