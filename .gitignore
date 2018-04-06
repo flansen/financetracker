@@ -39,6 +39,11 @@ captures/
 .idea/gradle.xml
 .idea/dictionaries
 .idea/libraries
+.idea/vcs.xml
+.idea/runConfigurations.xml
+.idea/modules.xml
+.idea/misc.xml
+.idea/encodings.xml
 
 # External native build folder generated in Android Studio 2.2 and later
 .externalNativeBuild
@@ -51,14 +56,10 @@ signing.properties
 freeline.py
 freeline/
 freeline_project_description.json
+
 gradlew.bat
 gradlew
 gradle/wrapper/gradle-wrapper.properties
 gradle/wrapper/gradle-wrapper.jar
 gradle.properties
 app/debug/output.json
-.idea/vcs.xml
-.idea/runConfigurations.xml
-.idea/modules.xml
-.idea/misc.xml
-.idea/encodings.xml
