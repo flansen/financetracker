@@ -6,7 +6,7 @@ import flhan.de.financemanager.common.data.Billing
 import flhan.de.financemanager.common.data.Expense
 import flhan.de.financemanager.common.data.User
 import flhan.de.financemanager.di.HouseholdId
-import flhan.de.financemanager.ui.main.expenses.createedit.NoExpenseFoundThrowable
+import flhan.de.financemanager.ui.main.expenses.createedit.NoItemFoundThrowable
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
 import io.reactivex.Single
@@ -36,7 +36,7 @@ class ExpenseDataStoreImpl @Inject constructor(
                 val ref = rootReference.child("$householdId/$EXPENSES/$id")
                 val listener = object : ValueEventListener {
                     override fun onCancelled(databaseError: DatabaseError?) {
-                        emitter.onNext(RequestResult(null, NoExpenseFoundThrowable("Could not find Expense for id $id")))
+                        emitter.onNext(RequestResult(null, NoItemFoundThrowable("Could not find Expense for id $id")))
                     }
 
                     override fun onDataChange(dataSnapshot: DataSnapshot?) {
@@ -46,7 +46,7 @@ class ExpenseDataStoreImpl @Inject constructor(
                                 expense.user = users.firstOrNull { expense.creator == it.id }
                                 emitter.onNext(RequestResult(expense))
                             } else {
-                                emitter.onNext(RequestResult(null, NoExpenseFoundThrowable("Could not find Expense for id $id")))
+                                emitter.onNext(RequestResult(null, NoItemFoundThrowable("Could not find Expense for id $id")))
                             }
                         }
                         emitter.onComplete()
@@ -55,7 +55,7 @@ class ExpenseDataStoreImpl @Inject constructor(
                 ref.addListenerForSingleValueEvent(listener)
                 emitter.setCancellable { ref.removeEventListener(listener) }
             }
-        }.onErrorReturn { RequestResult(null, NoExpenseFoundThrowable("Could not find Expense for id $id")) }
+        }.onErrorReturn { RequestResult(null, NoItemFoundThrowable("Could not find Expense for id $id")) }
     }
 
     override fun saveExpense(expense: Expense): Observable<Unit> {
@@ -112,7 +112,6 @@ class ExpenseDataStoreImpl @Inject constructor(
             })
         }
     }
-
 
     private fun updateExpense(expense: Expense): Observable<Unit> {
         return Observable.create { emitter ->
