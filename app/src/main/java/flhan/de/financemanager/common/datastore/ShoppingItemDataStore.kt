@@ -62,7 +62,8 @@ class ShoppingItemDataStoreImpl @Inject constructor(@HouseholdId private val hou
                         val shoppingItem = dataSnapshot.getValue(ShoppingItem::class.java)
                         shoppingItem?.apply {
                             id = dataSnapshot.key
-                            shoppingItems.add(this)
+                            val index = shoppingItems.indexOfFirst { id == it.id }
+                            shoppingItems[index] = this
                         }
                         emitter.onNext(shoppingItems)
                     }
