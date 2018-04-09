@@ -13,6 +13,6 @@ data class ShoppingItem(
 
     companion object {
         const val NAME = "name"
-        const val CHECKED = "isChecked"
+        const val CHECKED = "checked"
     }
 }

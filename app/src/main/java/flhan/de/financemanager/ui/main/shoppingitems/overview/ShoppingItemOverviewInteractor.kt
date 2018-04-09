@@ -12,6 +12,7 @@ import javax.inject.Inject
  */
 interface ShoppingItemOverviewInteractor {
     fun fetchAll(): Observable<InteractorResult<List<ShoppingItem>>>
+    fun itemCheckedChanged(item: ShoppingOverviewItem): Observable<Unit>
 }
 
 class ShoppingItemOverviewInteractorImpl @Inject constructor(private val dataStore: ShoppingItemDataStore
@@ -26,4 +27,13 @@ class ShoppingItemOverviewInteractorImpl @Inject constructor(private val dataSto
                 .replay(1)
                 .refCount()
     }
+
+    override fun itemCheckedChanged(item: ShoppingOverviewItem): Observable<Unit> {
+        val shoppingItem = item.toModel()
+        return dataStore.saveItem(shoppingItem)
+    }
+}
+
+private fun ShoppingOverviewItem.toModel(): ShoppingItem {
+    return ShoppingItem(name, creatorId, null, mutableListOf(), done, id)
 }

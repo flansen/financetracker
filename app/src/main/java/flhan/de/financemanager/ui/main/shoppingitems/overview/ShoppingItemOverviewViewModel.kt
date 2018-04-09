@@ -7,8 +7,9 @@ import flhan.de.financemanager.common.data.ShoppingItem
 import flhan.de.financemanager.common.extensions.cleanUp
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
+import io.reactivex.schedulers.Schedulers
 
-class ShoppingItemOverviewViewModel(interactor: ShoppingItemOverviewInteractor) : ViewModel() {
+class ShoppingItemOverviewViewModel(private val interactor: ShoppingItemOverviewInteractor) : ViewModel() {
 
     val listItems = MutableLiveData<List<ShoppingOverviewItem>>()
 
@@ -27,6 +28,15 @@ class ShoppingItemOverviewViewModel(interactor: ShoppingItemOverviewInteractor) 
     override fun onCleared() {
         disposables.cleanUp()
         super.onCleared()
+    }
+
+    fun onItemChecked(item: ShoppingOverviewItem, checkedState: Boolean) {
+        if (listItems.value?.first { it.id == item.id }?.done != checkedState) {
+            item.done = checkedState
+            interactor.itemCheckedChanged(item)
+                    .subscribeOn(Schedulers.io())
+                    .subscribe()
+        }
     }
 }
 

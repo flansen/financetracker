@@ -10,7 +10,8 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import flhan.de.financemanager.R
 
-class ShoppingItemOverviewAdapter(val clickListener: (String) -> Unit) : RecyclerView.Adapter<ShoppingItemOverviewAdapter.ShoppingItemHolder>() {
+class ShoppingItemOverviewAdapter(private val clickListener: (String) -> Unit,
+                                  private val checkedListener: (ShoppingOverviewItem, Boolean) -> Unit) : RecyclerView.Adapter<ShoppingItemOverviewAdapter.ShoppingItemHolder>() {
 
     var items: List<ShoppingOverviewItem> = mutableListOf()
         set(value) {
@@ -18,13 +19,11 @@ class ShoppingItemOverviewAdapter(val clickListener: (String) -> Unit) : Recycle
             notifyDataSetChanged()
         }
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ShoppingItemHolder(LayoutInflater.from(parent.context).inflate(R.layout.shopping_item_overview_item, parent, false))
 
     override fun getItemCount() = items.count()
 
-    override fun onBindViewHolder(holder: ShoppingItemHolder, position: Int) = holder.bind(items[position])
-
+    override fun onBindViewHolder(holder: ShoppingItemHolder, position: Int) = holder.bind(items[position], checkedListener)
 
     inner class ShoppingItemHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
@@ -38,10 +37,11 @@ class ShoppingItemOverviewAdapter(val clickListener: (String) -> Unit) : Recycle
             ButterKnife.bind(this, view)
         }
 
-        fun bind(shoppingOverviewItem: ShoppingOverviewItem) {
+        fun bind(shoppingOverviewItem: ShoppingOverviewItem, checkedCallback: (ShoppingOverviewItem, Boolean) -> Unit) {
             name.text = shoppingOverviewItem.name
             checked.isChecked = shoppingOverviewItem.done
             itemView.setOnClickListener { clickListener(shoppingOverviewItem.id) }
+            checked.setOnCheckedChangeListener { _, isChecked -> checkedCallback(shoppingOverviewItem, isChecked) }
         }
     }
 }
