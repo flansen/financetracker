@@ -7,14 +7,17 @@ android {
     signingConfigs {
         release
     }
+    lintOptions {
+        abortOnError false
+    }
     compileSdkVersion toolVersions.compileSdk
     buildToolsVersion toolVersions.buildTools
     defaultConfig {
         applicationId "flhan.de.financemanager"
         minSdkVersion toolVersions.minSdk
         targetSdkVersion toolVersions.compileSdk
-        versionCode 9
-        versionName "0.1.5"
+        versionCode 10
+        versionName "0.1.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -34,6 +37,7 @@ android {
             applicationIdSuffix ".development"
         }
     }
+
     configurations.all { final config ->
         if (config.name.contains('UnitTest') || config.name.contains('AndroidTest')) {
             config.resolutionStrategy.eachDependency { final details ->
