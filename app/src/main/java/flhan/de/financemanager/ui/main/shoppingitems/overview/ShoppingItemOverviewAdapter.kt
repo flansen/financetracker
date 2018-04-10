@@ -11,7 +11,7 @@ import butterknife.ButterKnife
 import flhan.de.financemanager.R
 
 class ShoppingItemOverviewAdapter(private val clickListener: (String) -> Unit,
-                                  private val checkedListener: (ShoppingOverviewItem, Boolean) -> Unit) : RecyclerView.Adapter<ShoppingItemOverviewAdapter.ShoppingItemHolder>() {
+                                  private val checkedListener: (ShoppingOverviewItem) -> Unit) : RecyclerView.Adapter<ShoppingItemOverviewAdapter.ShoppingItemHolder>() {
 
     var items: List<ShoppingOverviewItem> = mutableListOf()
         set(value) {
@@ -37,11 +37,11 @@ class ShoppingItemOverviewAdapter(private val clickListener: (String) -> Unit,
             ButterKnife.bind(this, view)
         }
 
-        fun bind(shoppingOverviewItem: ShoppingOverviewItem, checkedCallback: (ShoppingOverviewItem, Boolean) -> Unit) {
+        fun bind(shoppingOverviewItem: ShoppingOverviewItem, checkedCallback: (ShoppingOverviewItem) -> Unit) {
             name.text = shoppingOverviewItem.name
             checked.isChecked = shoppingOverviewItem.done
             itemView.setOnClickListener { clickListener(shoppingOverviewItem.id) }
-            checked.setOnCheckedChangeListener { _, isChecked -> checkedCallback(shoppingOverviewItem, isChecked) }
+            checked.setOnClickListener { _ -> checkedCallback(shoppingOverviewItem) }
         }
     }
 }

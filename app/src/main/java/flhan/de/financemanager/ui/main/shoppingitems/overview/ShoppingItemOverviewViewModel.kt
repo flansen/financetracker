@@ -8,6 +8,7 @@ import flhan.de.financemanager.common.extensions.cleanUp
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
+import java.util.*
 
 class ShoppingItemOverviewViewModel(private val interactor: ShoppingItemOverviewInteractor) : ViewModel() {
 
@@ -21,6 +22,9 @@ class ShoppingItemOverviewViewModel(private val interactor: ShoppingItemOverview
                 .map { it.result ?: mutableListOf() }
                 .map { it.map { it.toOverviewItem() } }
                 .map { it.reversed() }
+                .map { items ->
+                    items.sortedWith(compareBy<ShoppingOverviewItem> { it.done }.thenByDescending { it.createdAt })
+                }
                 .subscribe { listItems.value = it }
                 .addTo(disposables)
     }
@@ -30,17 +34,17 @@ class ShoppingItemOverviewViewModel(private val interactor: ShoppingItemOverview
         super.onCleared()
     }
 
-    fun onItemChecked(item: ShoppingOverviewItem, checkedState: Boolean) {
-        if (listItems.value?.first { it.id == item.id }?.done != checkedState) {
-            item.done = checkedState
-            interactor.itemCheckedChanged(item)
-                    .subscribeOn(Schedulers.io())
-                    .subscribe()
-        }
+    fun onItemChecked(item: ShoppingOverviewItem) {
+        item.done = !item.done
+        interactor.itemCheckedChanged(item)
+                .subscribeOn(Schedulers.io())
+                .subscribe()
+
     }
 }
 
 private fun ShoppingItem.toOverviewItem(): ShoppingOverviewItem {
-    return ShoppingOverviewItem(id, creatorId ?: "", name, createdAt.toString(), isChecked)
+    return ShoppingOverviewItem(id, creatorId
+            ?: "", name, createdAt.toString(), isChecked, createdAt ?: Date())
 }
 
