@@ -116,7 +116,7 @@ class CreateEditExpenseActivity : BaseActivity() {
 
     @OnClick(R.id.createEditExpenseSave)
     fun onSaveClicked() {
-        viewModel.onSaveClicked({ finish() })
+        viewModel.onSaveClicked { finish() }
     }
 
     @OnTouch(R.id.createEditExpenseUserSpinner)

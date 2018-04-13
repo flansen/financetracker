@@ -9,6 +9,13 @@
     android:paddingStart="16dp"
     android:paddingTop="20dp">
 
+    <CheckBox
+        android:id="@+id/shopping_item_checked"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true" />
+
     <TextView
         android:id="@+id/shopping_item_name"
         style="@style/TextAppearance.AppCompat.Body1"
@@ -20,10 +27,4 @@
         android:maxLines="1"
         tools:text="Item Name" />
 
-    <CheckBox
-        android:id="@+id/shopping_item_checked"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true" />
 </RelativeLayout>

@@ -47,7 +47,9 @@ class ShoppingItemOverviewFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val adapter = ShoppingItemOverviewAdapter(this::presentCreateEdit)
+        val adapter = ShoppingItemOverviewAdapter(this::presentCreateEdit, checkedListener = { item ->
+            viewModel.onItemChecked(item)
+        })
         shopping_item_overview_recycler.apply {
             layoutManager = LinearLayoutManager(context, VERTICAL, false)
             addItemDecoration(LineListDivider(view.context))

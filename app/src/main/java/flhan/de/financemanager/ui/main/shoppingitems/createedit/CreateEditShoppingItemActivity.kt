@@ -13,7 +13,9 @@ import butterknife.OnTextChanged
 import flhan.de.financemanager.R
 import flhan.de.financemanager.base.BaseActivity
 import flhan.de.financemanager.base.IntentDelegate
+import flhan.de.financemanager.common.extensions.visible
 import kotlinx.android.synthetic.main.activity_create_edit_shopping_item.*
+import kotlinx.android.synthetic.main.toolbar.*
 import javax.inject.Inject
 
 class CreateEditShoppingItemActivity : BaseActivity() {
@@ -36,10 +38,14 @@ class CreateEditShoppingItemActivity : BaseActivity() {
             this.setDisplayHomeAsUpEnabled(true)
         }
 
-        viewModel.name.observe(this, Observer { name ->
+        viewModel.itemName.observe(this, Observer { name ->
             if (name != create_edit_shopping_item_text.text.toString()) {
                 create_edit_shopping_item_text.setText(name ?: "")
             }
+        })
+
+        viewModel.isLoading.observe(this, Observer { isLoading ->
+            loadingView.visible(isLoading ?: true)
         })
     }
 
@@ -54,13 +60,12 @@ class CreateEditShoppingItemActivity : BaseActivity() {
 
     @OnClick(R.id.create_edit_shopping_item_save)
     fun onSaveClicked() {
-        viewModel.save()
-        finish()
+        viewModel.save { finish() }
     }
 
     @OnTextChanged(R.id.create_edit_shopping_item_text, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
     fun onCauseChanged(cause: Editable) {
-        viewModel.name.value = cause.toString()
+        viewModel.itemName.value = cause.toString()
     }
 
     companion object {

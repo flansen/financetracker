@@ -33,8 +33,8 @@
 
         <activity
             android:name=".ui.main.MainActivity"
-            android:theme="@style/AppTheme"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".ui.main.expenses.createedit.CreateEditExpenseActivity"
             android:parentActivityName=".ui.main.MainActivity"
@@ -46,7 +46,7 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".ui.main.shoppingitems.createedit.CreateEditShoppingItemActivity"></activity>
+        <activity android:name=".ui.main.shoppingitems.createedit.CreateEditShoppingItemActivity" />
     </application>
 
 </manifest>
