@@ -1,5 +1,6 @@
 package flhan.de.financemanager.ui.main.shoppingitems.overview
 
+import android.graphics.Paint.STRIKE_THRU_TEXT_FLAG
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -36,7 +37,7 @@ class ShoppingItemOverviewAdapter(private val clickListener: (String) -> Unit,
     inner class ShoppingItemHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
         @BindView(R.id.shopping_item_name)
-        lateinit var name: TextView
+        lateinit var nameTextView: TextView
 
         @BindView(R.id.shopping_item_checked)
         lateinit var checked: CheckBox
@@ -46,9 +47,16 @@ class ShoppingItemOverviewAdapter(private val clickListener: (String) -> Unit,
         }
 
         fun bind(shoppingOverviewItem: ShoppingOverviewItem, checkedCallback: (ShoppingOverviewItem) -> Unit) {
-            name.text = shoppingOverviewItem.name
-            checked.isChecked = shoppingOverviewItem.done
-            itemView.setOnClickListener { clickListener(shoppingOverviewItem.id) }
+            with(shoppingOverviewItem) {
+                nameTextView.text = name
+                checked.isChecked = done
+                itemView.setOnClickListener { clickListener(id) }
+                if (done) {
+                    nameTextView.paintFlags = nameTextView.paintFlags or STRIKE_THRU_TEXT_FLAG
+                } else {
+                    nameTextView.paintFlags = nameTextView.paintFlags and STRIKE_THRU_TEXT_FLAG.inv()
+                }
+            }
             checked.setOnClickListener { _ -> checkedCallback(shoppingOverviewItem) }
         }
     }
