@@ -19,11 +19,19 @@ class ShoppingItemOverviewAdapter(private val clickListener: (String) -> Unit,
             notifyDataSetChanged()
         }
 
+    init {
+        setHasStableIds(true)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ShoppingItemHolder(LayoutInflater.from(parent.context).inflate(R.layout.shopping_item_overview_item, parent, false))
 
     override fun getItemCount() = items.count()
 
     override fun onBindViewHolder(holder: ShoppingItemHolder, position: Int) = holder.bind(items[position], checkedListener)
+
+    override fun getItemId(position: Int): Long {
+        return items[position].id.hashCode().toLong()
+    }
 
     inner class ShoppingItemHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
