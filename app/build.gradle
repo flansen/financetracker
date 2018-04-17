@@ -18,7 +18,6 @@ android {
         targetSdkVersion toolVersions.compileSdk
         versionCode 11
         versionName "0.1.7"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -94,9 +93,6 @@ dependencies {
 
     // Test
     testImplementation "junit:junit:$libVersions.jUnit"
-    androidTestImplementation("com.android.support.test.espresso:espresso-core:$libVersions.espresso", {
-        exclude group: "com.android.support", module: "support-annotations"
-    })
     testImplementation "org.mockito:mockito-core:$libVersions.mockito"
     testImplementation "com.nhaarman:mockito-kotlin:$libVersions.mockitoKotlin"
 
