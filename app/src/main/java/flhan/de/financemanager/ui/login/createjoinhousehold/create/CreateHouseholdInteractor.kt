@@ -3,7 +3,7 @@ package flhan.de.financemanager.ui.login.createjoinhousehold.create
 import flhan.de.financemanager.base.InteractorResult
 import flhan.de.financemanager.base.InteractorStatus
 import flhan.de.financemanager.common.data.Household
-import flhan.de.financemanager.common.datastore.RemoteDataStore
+import flhan.de.financemanager.common.datastore.HouseholdDataStore
 import flhan.de.financemanager.common.notifications.FirebaseNotificationManager
 import io.reactivex.Observable
 import javax.inject.Inject
@@ -16,7 +16,7 @@ interface CreateHouseholdInteractor {
 }
 
 class CreateHouseholdInteractorImpl @Inject constructor(
-        private val dataStore: RemoteDataStore,
+        private val dataStore: HouseholdDataStore,
         private val notificationManager: FirebaseNotificationManager
 ) : CreateHouseholdInteractor {
 

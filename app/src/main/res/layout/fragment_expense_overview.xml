@@ -36,6 +36,7 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                android:theme="@style/white_control_toolbar"
                 app:layout_collapseMode="pin"
                 app:title="@string/expense_overview_title"
                 app:titleTextColor="@android:color/white" />

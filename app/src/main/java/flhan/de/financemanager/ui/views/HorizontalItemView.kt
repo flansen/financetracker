@@ -46,9 +46,8 @@ class HorizontalItemView @JvmOverloads constructor(
             }
         } else {
             view = createView()
-            val index = childCount
-            addView(view, index)
-            views[item.userId] = index
+            addView(view, childCount)
+            views[item.userId] = childCount
         }
         bindView(view, item)
     }
@@ -64,8 +63,10 @@ class HorizontalItemView @JvmOverloads constructor(
                 .useFont(bubbleTypeface)
                 .endConfig()
                 .buildRound(item.name, getColor(context, android.R.color.white))
-        view.paymentItemImage.setImageDrawable(drawable)
-        view.paymentItemAmount.text = item.amount
+        view.apply {
+            view.paymentItemImage.setImageDrawable(drawable)
+            view.paymentItemAmount.text = item.amount
+        }
     }
 
     private fun createView(): View {
@@ -77,7 +78,8 @@ class HorizontalItemView @JvmOverloads constructor(
     }
 
     private fun removeViewByKey(key: String) {
-        removeViewAt(views[key]!!)
+        val item = views[key] ?: return
+        removeViewAt(item)
         views.remove(key)
     }
 

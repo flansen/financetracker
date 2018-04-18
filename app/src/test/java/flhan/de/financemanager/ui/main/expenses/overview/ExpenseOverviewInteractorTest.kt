@@ -3,7 +3,8 @@ package flhan.de.financemanager.ui.main.expenses.overview
 import com.nhaarman.mockito_kotlin.whenever
 import flhan.de.financemanager.common.data.Expense
 import flhan.de.financemanager.common.data.User
-import flhan.de.financemanager.common.datastore.RemoteDataStore
+import flhan.de.financemanager.common.datastore.ExpenseDataStore
+import flhan.de.financemanager.common.datastore.UserSettings
 import io.reactivex.Observable
 import io.reactivex.observers.TestObserver
 import org.junit.Assert.assertEquals
@@ -17,7 +18,10 @@ import java.util.*
 class ExpenseOverviewInteractorTest {
 
     @Mock
-    private lateinit var remoteDatastore: RemoteDataStore
+    private lateinit var expenseDataStore: ExpenseDataStore
+
+    @Mock
+    private lateinit var userSettings: UserSettings
 
     private lateinit var sut: ExpenseOverviewInteractor
 
@@ -33,7 +37,7 @@ class ExpenseOverviewInteractorTest {
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        sut = ExpenseOverviewInteractorImpl(remoteDatastore)
+        sut = ExpenseOverviewInteractorImpl(expenseDataStore, userSettings)
     }
 
     @Test
@@ -49,7 +53,7 @@ class ExpenseOverviewInteractorTest {
                 Expense("Cause3", "email2", "Name1", Date(), 13.2, "id3", user2),
                 Expense("Cause4", "email1", "Name1", Date(), 1.1, "id4", user1)
         )
-        whenever(remoteDatastore.loadExpenses()).thenReturn(Observable.just(expenses))
+        whenever(expenseDataStore.loadExpenses()).thenReturn(Observable.just(expenses))
 
         sut.calculatePaymentItems().subscribe(testObserver)
 
@@ -59,12 +63,12 @@ class ExpenseOverviewInteractorTest {
         assertEquals(2, result.count())
 
         val resultValue1 = result[0]
-        assertEquals("Name1", resultValue1.name)
+        assertEquals("N", resultValue1.name)
         assertEquals("uid1", resultValue1.userId)
         assertEquals(expected1, resultValue1.amount)
 
         val resultValue2 = result[1]
-        assertEquals("Name2", resultValue2.name)
+        assertEquals("N", resultValue2.name)
         assertEquals("uid2", resultValue2.userId)
         assertEquals(expected2, resultValue2.amount)
     }

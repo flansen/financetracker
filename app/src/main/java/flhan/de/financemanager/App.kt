@@ -3,6 +3,7 @@ package flhan.de.financemanager
 import android.app.Activity
 import android.app.Application
 import android.app.Service
+import com.google.firebase.database.FirebaseDatabase
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
@@ -24,15 +25,11 @@ class App : Application(), HasActivityInjector, HasServiceInjector {
 
     override fun onCreate() {
         super.onCreate()
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
         DaggerAppComponent.builder()
                 .application(this)
                 .build()
                 .inject(this)
-
-        /*if (LeakCanary.isInAnalyzerProcess(this)) {
-            return
-        }
-        LeakCanary.install(this)*/
     }
 
     override fun activityInjector(): AndroidInjector<Activity> {

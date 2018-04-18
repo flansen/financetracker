@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.expense_overview_item.view.*
  */
 class ExpenseOverviewAdapter(private val clickListener: (String) -> Unit)
     : RecyclerView.Adapter<ExpenseOverviewAdapter.ExpenseOverviewViewHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExpenseOverviewViewHolder = ExpenseOverviewViewHolder(parent)
 
     var items: List<ExpenseOverviewItem> = mutableListOf()
         set(value) {
@@ -21,13 +22,12 @@ class ExpenseOverviewAdapter(private val clickListener: (String) -> Unit)
             notifyDataSetChanged()
         }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int) = ExpenseOverviewViewHolder(parent)
+    override fun onBindViewHolder(holder: ExpenseOverviewViewHolder, position: Int) {
+        val item = items[position]
+        val generator = MATERIAL
 
-    override fun onBindViewHolder(holder: ExpenseOverviewViewHolder?, position: Int) {
-        holder?.apply {
-            val item = items[position]
+        holder.apply {
             val bubbleSize = itemView.context.resources.getDimension(R.dimen.bubble_size).toInt()
-            val generator = MATERIAL
             val drawable = TextDrawable.builder()
                     .beginConfig()
                     .width(bubbleSize)

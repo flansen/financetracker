@@ -36,4 +36,8 @@
     <string name="action_clear_expenses">Abrechnen</string>
     <string name="notification_expense_title">Neue Ausgabe</string>
     <string name="notification_expense_body">%1$s hat schon wieder %3$s für %2$s ausgegeben.</string>
+    <string name="shopping_items_overview_title">Einkaufsliste</string>
+    <string name="create_edit_shopping_item_name_hint">Name</string>
+    <string name="create_edit_shopping_item_create">Gegenstand hinzufügen</string>
+    <string name="create_edit_shopping_item_edit">Gegenstand editieren</string>
 </resources>

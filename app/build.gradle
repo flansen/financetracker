@@ -7,19 +7,20 @@ android {
     signingConfigs {
         release
     }
+    lintOptions {
+        abortOnError false
+    }
     compileSdkVersion toolVersions.compileSdk
     buildToolsVersion toolVersions.buildTools
     defaultConfig {
         applicationId "flhan.de.financemanager"
         minSdkVersion toolVersions.minSdk
         targetSdkVersion toolVersions.compileSdk
-        versionCode 9
-        versionName "0.1.5"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        versionCode 11
+        versionName "0.1.7"
     }
     buildTypes {
         release {
-            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
@@ -34,6 +35,7 @@ android {
             applicationIdSuffix ".development"
         }
     }
+
     configurations.all { final config ->
         if (config.name.contains('UnitTest') || config.name.contains('AndroidTest')) {
             config.resolutionStrategy.eachDependency { final details ->
@@ -64,7 +66,6 @@ dependencies {
     implementation "com.google.android.gms:play-services-auth:$libVersions.firebase"
     implementation "com.google.firebase:firebase-messaging:$libVersions.firebase"
 
-
     // Dagger
     implementation "com.google.dagger:dagger:$libVersions.dagger"
     kapt "com.google.dagger:dagger-compiler:$libVersions.dagger"
@@ -72,9 +73,9 @@ dependencies {
     implementation "com.google.dagger:dagger-android-support:$libVersions.dagger"
 
     // Architecture Components
-    implementation "android.arch.lifecycle:extensions:$libVersions.archComponents"
+    implementation "android.arch.lifecycle:extensions:$libVersions.archComponentsLC"
     testImplementation "android.arch.core:core-testing:$libVersions.archComponents"
-    implementation "android.arch.lifecycle:reactivestreams:$libVersions.archComponents"
+    implementation "android.arch.lifecycle:reactivestreams:$libVersions.archComponentsLC"
 
     // UI
     implementation "com.amulyakhare:com.amulyakhare.textdrawable:$libVersions.textdrawable"
@@ -87,11 +88,11 @@ dependencies {
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$libVersions.leakCanary"
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$libVersions.leakCanary"
 
+    // Util
+    implementation "androidx.core:core-ktx:$libVersions.ktx"
+
     // Test
     testImplementation "junit:junit:$libVersions.jUnit"
-    androidTestImplementation("com.android.support.test.espresso:espresso-core:$libVersions.espresso", {
-        exclude group: "com.android.support", module: "support-annotations"
-    })
     testImplementation "org.mockito:mockito-core:$libVersions.mockito"
     testImplementation "com.nhaarman:mockito-kotlin:$libVersions.mockitoKotlin"
 

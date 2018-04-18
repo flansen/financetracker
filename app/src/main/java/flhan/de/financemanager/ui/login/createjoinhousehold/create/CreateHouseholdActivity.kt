@@ -61,26 +61,32 @@ class CreateHouseholdActivity : BaseActivity() {
 
     private fun setupView() {
         setSupportActionBar(toolbar)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar!!.setTitle(R.string.create_household_title)
-        viewModel.createEnabled.observe(this, Observer {
-            val isEnabled = it ?: false
-            createHousehold.isEnabled = isEnabled
-        })
-        viewModel.errorState.observe(this, Observer { handleError(it) })
-        viewModel.isLoading.observe(this, Observer { createJoinLoadingView.visible(it ?: false) })
-        viewModel.name.observe(this, Observer {
-            val text = nameText.text
-            if (text.toString() != it) {
-                nameText.setText(it)
-            }
-        })
-        viewModel.secret.observe(this, Observer {
-            val text = secretText.text
-            if (text.toString() != it) {
-                secretText.setText(it)
-            }
-        })
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setTitle(R.string.create_household_title)
+        }
+        viewModel.apply {
+            createEnabled.observe(this@CreateHouseholdActivity, Observer {
+                val isEnabled = it ?: false
+                createHousehold.isEnabled = isEnabled
+            })
+            errorState.observe(this@CreateHouseholdActivity, Observer { handleError(it) })
+            isLoading.observe(this@CreateHouseholdActivity, Observer {
+                createJoinLoadingView.visible(it ?: false)
+            })
+            name.observe(this@CreateHouseholdActivity, Observer {
+                val text = nameText.text
+                if (text.toString() != it) {
+                    nameText.setText(it)
+                }
+            })
+            secret.observe(this@CreateHouseholdActivity, Observer {
+                val text = secretText.text
+                if (text.toString() != it) {
+                    secretText.setText(it)
+                }
+            })
+        }
     }
 
     private fun handleError(errorState: CreateJoinErrorState?) {

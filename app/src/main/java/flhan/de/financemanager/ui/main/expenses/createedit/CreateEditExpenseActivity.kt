@@ -1,6 +1,5 @@
 package flhan.de.financemanager.ui.main.expenses.createedit
 
-import android.animation.Animator
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
@@ -19,6 +18,7 @@ import butterknife.*
 import butterknife.OnTextChanged.Callback.AFTER_TEXT_CHANGED
 import flhan.de.financemanager.R
 import flhan.de.financemanager.base.BaseActivity
+import flhan.de.financemanager.base.IntentDelegate
 import flhan.de.financemanager.common.CreateEditMode
 import flhan.de.financemanager.common.CreateEditMode.Create
 import flhan.de.financemanager.common.CreateEditMode.Edit
@@ -30,6 +30,8 @@ import kotlinx.android.synthetic.main.toolbar.*
 import javax.inject.Inject
 
 class CreateEditExpenseActivity : BaseActivity() {
+
+    val id by lazy { intent.id }
 
     @Inject
     lateinit var factory: CreateEditExpenseViewModelFactory
@@ -114,7 +116,7 @@ class CreateEditExpenseActivity : BaseActivity() {
 
     @OnClick(R.id.createEditExpenseSave)
     fun onSaveClicked() {
-        viewModel.onSaveClicked({ finish() })
+        viewModel.onSaveClicked { finish() }
     }
 
     @OnTouch(R.id.createEditExpenseUserSpinner)
@@ -184,24 +186,11 @@ class CreateEditExpenseActivity : BaseActivity() {
         } else {
             0f
         }
-        createEditAdvancedContainer.animate().alpha(alpha).setDuration(duration).setListener(object : Animator.AnimatorListener {
-            override fun onAnimationRepeat(animation: Animator?) {
+        createEditAdvancedContainer.animate().alpha(alpha).setDuration(duration).withEndAction {
+            if (alpha <= 0.01f) {
+                createEditAdvancedContainer.visibility = View.INVISIBLE
             }
-
-            override fun onAnimationEnd(animation: Animator?) {
-                if (alpha <= 0.01f) {
-                    createEditAdvancedContainer.visibility = View.INVISIBLE
-                }
-            }
-
-            override fun onAnimationCancel(animation: Animator?) {
-            }
-
-            override fun onAnimationStart(animation: Animator?) {
-
-            }
-
-        }).start()
+        }.start()
     }
 
     private fun setUserItems(names: List<String>) {
@@ -227,17 +216,11 @@ class CreateEditExpenseActivity : BaseActivity() {
     }
 
     companion object {
-        private const val ID_KEY = "id"
-        private const val USER_LAYOUT_RESOURCE = android.R.layout.simple_list_item_activated_1
+        var Intent.id by IntentDelegate.String("id")
 
         fun createIntent(context: Context, id: String?): Intent {
-            val intent = Intent(context, CreateEditExpenseActivity::class.java)
-            intent.putExtra(ID_KEY, id)
-            return intent
+            return Intent(context, CreateEditExpenseActivity::class.java)
+                    .apply { this.id = id }
         }
-    }
-
-    fun retrieveExpenseId(): String? {
-        return intent.getStringExtra(ID_KEY)
     }
 }

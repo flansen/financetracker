@@ -1,29 +1,25 @@
 package flhan.de.financemanager.common.util
 
+import flhan.de.financemanager.common.util.CurrencyString.Companion.CURRENCY_NUMBER_PATTERN
+import flhan.de.financemanager.common.util.CurrencyString.Companion.CURRENCY_PATTERN
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.*
 import java.util.Locale.US
-import java.util.Locale.getDefault
 
-class CurrencyString(
-        initialString: String = "",
-        private val locale: Locale = getDefault()) {
+class CurrencyString(initialString: String = EMPTY_STRING) {
 
-    constructor(initialDouble: Double?) : this(initialDouble?.let { NUMBER_FORMAT.format(it).toString() } ?: "")
+    constructor(initialDouble: Double?) : this(initialDouble?.let { NUMBER_FORMAT.format(it).toString() }
+            ?: EMPTY_STRING)
 
     var displayString: String
         get() {
             val amountString = if (baseString.isEmpty()) {
-                "0"
+                ZERO
             } else {
                 baseString
             }
-            val amountDouble = amountString.toDouble() / 100
-            val decimalFormat = DecimalFormat.getInstance(locale) as DecimalFormat
-            decimalFormat.applyPattern(CURRENCY_NUMBER_PATTERN)
-            val currencyAmount = decimalFormat.format(amountDouble)
-            return String.format(CURRENCY_PATTERN, currencyAmount, decimalFormat.currency.symbol)
+            return (amountString.toDouble() / 100.0).toCurrencyString()
         }
         set(value) {
             baseString = value
@@ -42,27 +38,25 @@ class CurrencyString(
         private set
 
     init {
-        if (initialString.contains('.')) {
-            var valueString = initialString.replace(',', '.')
-            valueString = fillUpTrailingZeros(valueString)
-            baseString = valueString
+        baseString = if (initialString.contains(DOT)) {
+            fillUpTrailingZeros(initialString.replace(COMMA, DOT))
         } else {
-            baseString = initialString
+            initialString
         }
     }
 
     private fun fillUpTrailingZeros(amountString: String): String {
         val numberOfDecimals = amountString.numberOfDecimalPlaces()
-        val index = amountString.indexOfFirst { it == '.' }
+        val index = amountString.indexOfFirst { it == DOT }
         var valueString = amountString.removeRange(index, index + 1)
         for (i in 1..(2 - numberOfDecimals)) {
-            valueString += "0"
+            valueString += ZERO
         }
         return valueString
     }
 
     private fun String.numberOfDecimalPlaces(): Int {
-        val decimalsString = split('.')[1]
+        val decimalsString = split(DOT)[1]
         return decimalsString.length
     }
 
@@ -70,5 +64,21 @@ class CurrencyString(
         const val CURRENCY_NUMBER_PATTERN = "###,##0.00"
         const val CURRENCY_PATTERN = "%s %s"
         private val NUMBER_FORMAT = DecimalFormat("0.00", DecimalFormatSymbols(US))
+
+        private const val ZERO = "0"
+        private const val EMPTY_STRING = ""
+        private const val COMMA = ','
+        private const val DOT = '.'
     }
+}
+
+fun String.toCurrencyString(): String {
+    return this.toDouble().toCurrencyString()
+}
+
+fun Double.toCurrencyString(): String {
+    val decimalFormat = DecimalFormat.getInstance(Locale.getDefault()) as DecimalFormat
+    decimalFormat.applyPattern(CURRENCY_NUMBER_PATTERN)
+    val currencyAmount = decimalFormat.format(this)
+    return String.format(CURRENCY_PATTERN, currencyAmount, decimalFormat.currency.symbol)
 }

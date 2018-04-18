@@ -18,7 +18,6 @@ import butterknife.ButterKnife
 import butterknife.OnClick
 import dagger.android.support.AndroidSupportInjection
 import flhan.de.financemanager.R
-import flhan.de.financemanager.common.extensions.applyWhiteStyle
 import flhan.de.financemanager.common.ui.LineListDivider
 import flhan.de.financemanager.ui.main.expenses.createedit.CreateEditExpenseActivity
 import kotlinx.android.synthetic.main.fragment_expense_overview.*
@@ -61,11 +60,15 @@ class ExpenseOverviewFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        expense_overview_recycler.layoutManager = LinearLayoutManager(context, VERTICAL, false)
-        expense_overview_recycler.addItemDecoration(LineListDivider(context!!))
+        val adapter = ExpenseOverviewAdapter(clickListener = { id -> presentCreateEdit(id) })
+
+        expense_overview_recycler.apply {
+            layoutManager = LinearLayoutManager(context, VERTICAL, false)
+            addItemDecoration(LineListDivider(view.context))
+            this.adapter = adapter
+        }
+
         paymentItemView.minimumWidth = screenWidth
-        val adapter = ExpenseOverviewAdapter { id -> presentCreateEdit(id) }
-        expense_overview_recycler.adapter = adapter
         viewModel.listItems.observe(this, Observer { listItems ->
             adapter.items = listItems ?: mutableListOf()
         })
@@ -78,11 +81,6 @@ class ExpenseOverviewFragment : Fragment() {
                 paymentItemView.visibility = GONE
             }
         })
-    }
-
-    override fun onStart() {
-        super.onStart()
-        (activity as AppCompatActivity).supportActionBar?.applyWhiteStyle()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -100,11 +98,12 @@ class ExpenseOverviewFragment : Fragment() {
 
     @OnClick(R.id.expense_overview_fab)
     fun onCreateExpenseClicked() {
-        presentCreateEdit(null)
+        presentCreateEdit()
     }
 
-    private fun presentCreateEdit(id: String?) {
-        val intent = CreateEditExpenseActivity.createIntent(context!!, id)
+    private fun presentCreateEdit(id: String? = null) {
+        val context = context ?: return
+        val intent = CreateEditExpenseActivity.createIntent(context, id)
         startActivity(intent)
     }
 

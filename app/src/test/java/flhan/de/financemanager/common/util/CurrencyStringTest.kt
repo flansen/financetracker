@@ -38,6 +38,17 @@ class CurrencyStringTest {
     }
 
     @Test
+    fun displayStringFillingUpTrailingZeros() {
+        val initialValue = "123.0"
+        val expected = "123" + decimalSeparator + "00 " + currencySymbol
+        val currencyString = CurrencyString(initialValue)
+
+        val result = currencyString.displayString
+
+        assertEquals(expected, result)
+    }
+
+    @Test
     fun displayStringWithNullValue() {
         val expected = "0" + decimalSeparator + "00 " + currencySymbol
         val currencyString = CurrencyString(null)
@@ -45,6 +56,17 @@ class CurrencyStringTest {
         val result = currencyString.displayString
 
         assertEquals(expected, result)
+    }
+
+    @Test
+    fun setDisplayString() {
+        val valueToBeSet = "123.41"
+        val expected = "1" + decimalSeparator + "23 " + currencySymbol
+        val currencyString = CurrencyString(null)
+
+        currencyString.displayString = valueToBeSet
+
+        assertEquals(expected, currencyString.displayString)
     }
 
     @Test
@@ -129,4 +151,21 @@ class CurrencyStringTest {
 
         assertEquals(initialValue, result)
     }
+
+    @Test
+    fun stringToCurrencyString() {
+        val initialValue = "123.41"
+        val expected = "123" + decimalSeparator + "41 " + currencySymbol
+
+        assertEquals(expected, initialValue.toCurrencyString())
+    }
+
+    @Test
+    fun doubleToCurrencyString() {
+        val initialValue = 123.456
+        val expected = "123" + decimalSeparator + "46 " + currencySymbol
+
+        assertEquals(expected, initialValue.toCurrencyString())
+    }
+
 }
