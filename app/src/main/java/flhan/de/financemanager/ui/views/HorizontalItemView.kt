@@ -23,11 +23,13 @@ class HorizontalItemView @JvmOverloads constructor(
     private val bubbleTypeface: Typeface by lazy { create(TYPEFACE_NAME, NORMAL) }
 
     fun setItems(items: List<ExpensePaymentItem>) {
+        removeAllViews()
+        views.clear()
+
         if (items.isEmpty()) {
-            removeAllViews()
-            views.clear()
             return
         }
+
         val userIds = items.map { it.userId }
         val keysToRemove = views.keys.filterNot { userIds.contains(it) }
         keysToRemove.forEach { removeViewByKey(it) }
