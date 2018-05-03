@@ -24,19 +24,8 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        mainBottombar.setOnNavigationItemSelectedListener { menuItem ->
-            if (presentedId == menuItem.itemId) {
-                return@setOnNavigationItemSelectedListener false
-            }
-            presentedId = menuItem.itemId
-            handleBottomNavigationClicked(menuItem)
-            true
-        }
-        if (savedInstanceState == null) {
-            mainBottombar.selectedItemId = R.id.tab_expenses
-        } else if (savedInstanceState.containsKey(SELECTED_ID_KEY)) {
-            presentedId = savedInstanceState[SELECTED_ID_KEY] as Int
-        }
+        setupFragmentAdapter()
+        setupBottomNavigation(savedInstanceState)
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -47,33 +36,39 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector {
     }
 
     private fun handleBottomNavigationClicked(menuItem: MenuItem) {
-        val tag = when (menuItem.itemId) {
-            R.id.tab_expenses -> ExpenseOverviewFragment.TAG
-            R.id.tab_shopping_items -> ShoppingItemOverviewFragment.TAG
-            else -> PlaceholderFragment.TAG
+        val selectedIndex = when (menuItem.itemId) {
+            R.id.tab_expenses -> 0
+            R.id.tab_shopping_items -> 1
+            else -> 2
         }
-        val fragmentTransaction = supportFragmentManager.beginTransaction()
-        var fragment = supportFragmentManager.findFragmentByTag(tag)
-        if (fragment == null) {
-            fragment = when (menuItem.itemId) {
-                R.id.tab_expenses -> ExpenseOverviewFragment.newInstance()
-                R.id.tab_shopping_items -> ShoppingItemOverviewFragment.newInstance()
-                else -> PlaceholderFragment()
+        main_content_container.currentItem = selectedIndex
+    }
+
+    private fun setupBottomNavigation(savedInstanceState: Bundle?) {
+        if (savedInstanceState == null) {
+            mainBottombar.selectedItemId = R.id.tab_expenses
+        } else if (savedInstanceState.containsKey(SELECTED_ID_KEY)) {
+            presentedId = savedInstanceState[SELECTED_ID_KEY] as Int
+        }
+
+        mainBottombar.setOnNavigationItemSelectedListener { menuItem ->
+            if (presentedId == menuItem.itemId) {
+                return@setOnNavigationItemSelectedListener false
             }
-            fragmentTransaction.add(R.id.main_content_container, fragment, tag)
-        } else {
-            fragmentTransaction.attach(fragment)
+            presentedId = menuItem.itemId
+            handleBottomNavigationClicked(menuItem)
+            true
         }
+    }
 
-        supportFragmentManager.primaryNavigationFragment?.apply {
-            fragmentTransaction.detach(this)
+    private fun setupFragmentAdapter() {
+        val fragmentAdapter = FragmentAdapter(supportFragmentManager)
+        fragmentAdapter.apply {
+            addFragment(ExpenseOverviewFragment.newInstance())
+            addFragment(ShoppingItemOverviewFragment.newInstance())
+            addFragment(PlaceholderFragment())
         }
-
-        fragmentTransaction.apply {
-            setPrimaryNavigationFragment(fragment)
-            setReorderingAllowed(true)
-            commit()
-        }
+        main_content_container.adapter = fragmentAdapter
     }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> = fragmentDispatchingAndroidInjector
