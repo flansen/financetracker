@@ -9,21 +9,22 @@ import java.lang.ref.WeakReference
 
 
 class FragmentAdapter internal constructor(manager: FragmentManager) : FragmentPagerAdapter(manager) {
+
     private val instantiatedFragments = SparseArray<WeakReference<Fragment>>()
-    private val mFragmentList = mutableListOf<Fragment>()
-    private val mFragmentTitleList = mutableListOf<String?>()
+    private val fragmentList = mutableListOf<Fragment>()
+    private val fragmentTitleList = mutableListOf<String?>()
 
     override fun getItem(position: Int): Fragment {
-        return mFragmentList[position]
+        return fragmentList[position]
     }
 
     override fun getCount(): Int {
-        return mFragmentList.size
+        return fragmentList.size
     }
 
     internal fun addFragment(fragment: Fragment, title: String? = null) {
-        mFragmentList.add(fragment)
-        mFragmentTitleList.add(title)
+        fragmentList.add(fragment)
+        fragmentTitleList.add(title)
     }
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
@@ -37,11 +38,7 @@ class FragmentAdapter internal constructor(manager: FragmentManager) : FragmentP
         super.destroyItem(container, position, `object`)
     }
 
-    internal fun getFragment(position: Int): Fragment? {
-        return instantiatedFragments.get(position)?.get()
-    }
-
     override fun getPageTitle(position: Int): CharSequence? {
-        return mFragmentTitleList[position]
+        return fragmentTitleList[position]
     }
 }
