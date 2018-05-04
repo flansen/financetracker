@@ -22,11 +22,6 @@ class FragmentAdapter internal constructor(manager: FragmentManager) : FragmentP
         return fragmentList.size
     }
 
-    internal fun addFragment(fragment: Fragment, title: String? = null) {
-        fragmentList.add(fragment)
-        fragmentTitleList.add(title)
-    }
-
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val fragment = super.instantiateItem(container, position) as Fragment
         instantiatedFragments.put(position, WeakReference(fragment))
@@ -40,5 +35,10 @@ class FragmentAdapter internal constructor(manager: FragmentManager) : FragmentP
 
     override fun getPageTitle(position: Int): CharSequence? {
         return fragmentTitleList[position]
+    }
+
+    internal fun addFragment(fragment: Fragment, title: String? = null) {
+        fragmentList.add(fragment)
+        fragmentTitleList.add(title)
     }
 }
