@@ -5,6 +5,7 @@ import flhan.de.financemanager.base.InteractorStatus
 import flhan.de.financemanager.common.data.ShoppingItem
 import flhan.de.financemanager.common.datastore.ShoppingItemDataStore
 import io.reactivex.Observable
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -30,10 +31,15 @@ class ShoppingItemOverviewInteractorImpl @Inject constructor(private val dataSto
 
     override fun itemCheckedChanged(item: ShoppingOverviewItem): Observable<Unit> {
         val shoppingItem = item.toModel()
+        shoppingItem.checkedAt = if (shoppingItem.isChecked && shoppingItem.checkedAt == null) {
+            Date()
+        } else {
+            null
+        }
         return dataStore.saveItem(shoppingItem)
     }
 }
 
 private fun ShoppingOverviewItem.toModel(): ShoppingItem {
-    return ShoppingItem(name, creatorId, null, mutableListOf(), done, id)
+    return ShoppingItem(name, creatorId, null, mutableListOf(), done, id, checkedAt)
 }

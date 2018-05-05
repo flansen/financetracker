@@ -8,5 +8,6 @@ data class ShoppingOverviewItem(
         val name: String,
         val date: String,
         var done: Boolean,
-        var createdAt: Date
+        var createdAt: Date,
+        var checkedAt: Date?
 )

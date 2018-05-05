@@ -39,12 +39,12 @@ class ShoppingItemOverviewViewModel(private val interactor: ShoppingItemOverview
         interactor.itemCheckedChanged(item)
                 .subscribeOn(Schedulers.io())
                 .subscribe()
-
+                .addTo(disposables)
     }
 }
 
 private fun ShoppingItem.toOverviewItem(): ShoppingOverviewItem {
     return ShoppingOverviewItem(id, creatorId
-            ?: "", name, createdAt.toString(), isChecked, createdAt ?: Date())
+            ?: "", name, createdAt.toString(), isChecked, createdAt ?: Date(), checkedAt)
 }
 
