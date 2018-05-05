@@ -15,15 +15,21 @@ class ShoppingItemOverviewViewModel(private val interactor: ShoppingItemOverview
     val listItems = MutableLiveData<List<ShoppingOverviewItem>>()
 
     private val disposables = CompositeDisposable()
+    private val minDate by lazy {
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.DAY_OF_YEAR, -3)
+        calendar.time
+    }
 
     init {
         interactor.fetchAll()
                 .filter { it.status == InteractorStatus.Success }
                 .map { it.result ?: mutableListOf() }
-                .map { it.map { it.toOverviewItem() } }
-                .map { it.reversed() }
                 .map { items ->
-                    items.sortedWith(compareBy<ShoppingOverviewItem> { it.done }.thenByDescending { it.createdAt })
+                    val filteredList = items.filter { !it.isChecked || it.isChecked && it.checkedAt?.after(minDate) ?: false }
+                    filteredList.map { it.toOverviewItem() }
+                            .reversed()
+                            .sortedWith(compareBy<ShoppingOverviewItem> { it.done }.thenByDescending { it.createdAt })
                 }
                 .subscribe { listItems.value = it }
                 .addTo(disposables)
