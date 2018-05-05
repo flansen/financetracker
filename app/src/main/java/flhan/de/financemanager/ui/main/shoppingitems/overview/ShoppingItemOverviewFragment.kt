@@ -5,9 +5,9 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.LinearLayoutManager.VERTICAL
+import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,16 +16,20 @@ import butterknife.OnClick
 import dagger.android.support.AndroidSupportInjection
 import flhan.de.financemanager.R
 import flhan.de.financemanager.common.ui.LineListDivider
+import flhan.de.financemanager.ui.main.ToolbarProvider
 import flhan.de.financemanager.ui.main.shoppingitems.createedit.CreateEditShoppingItemActivity
 import kotlinx.android.synthetic.main.fragment_shopping_item_overview.*
 import javax.inject.Inject
 
-class ShoppingItemOverviewFragment : Fragment() {
+class ShoppingItemOverviewFragment : Fragment(), ToolbarProvider {
 
     @Inject
     lateinit var factory: ShoppingItemOverviewViewModelFactory
 
     private lateinit var viewModel: ShoppingItemOverviewViewModel
+
+    override val toolbar: Toolbar?
+        get() = shoppingItemsToolbar
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -41,7 +45,6 @@ class ShoppingItemOverviewFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_shopping_item_overview, container, false)
         ButterKnife.bind(this, view)
-        (activity as AppCompatActivity).setSupportActionBar(toolbar)
         return view
     }
 
@@ -60,11 +63,10 @@ class ShoppingItemOverviewFragment : Fragment() {
             items ?: return@Observer
             adapter.items = items
         })
-
     }
 
     @OnClick(R.id.shopping_item_overview_fab)
-    fun onCreateExpenseClicked() {
+    fun onCreateShoppingItemClicked() {
         presentCreateEdit()
     }
 
@@ -76,6 +78,5 @@ class ShoppingItemOverviewFragment : Fragment() {
 
     companion object {
         fun newInstance(): ShoppingItemOverviewFragment = ShoppingItemOverviewFragment()
-        const val TAG = "shoppingItemOverviewFragment"
     }
 }

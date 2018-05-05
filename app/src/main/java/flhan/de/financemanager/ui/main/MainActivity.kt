@@ -2,6 +2,7 @@ package flhan.de.financemanager.ui.main
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -20,6 +21,7 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector {
     lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
     private var presentedId: Int? = null
+    private lateinit var fragmentAdapter: FragmentAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,13 +37,14 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector {
         super.onSaveInstanceState(outState)
     }
 
-    private fun handleBottomNavigationClicked(menuItem: MenuItem) {
-        val selectedIndex = when (menuItem.itemId) {
-            R.id.tab_expenses -> 0
-            R.id.tab_shopping_items -> 1
-            else -> 2
+    private fun setupFragmentAdapter() {
+        fragmentAdapter = FragmentAdapter(supportFragmentManager)
+        fragmentAdapter.apply {
+            addFragment(ExpenseOverviewFragment.newInstance())
+            addFragment(ShoppingItemOverviewFragment.newInstance())
+            addFragment(PlaceholderFragment())
         }
-        main_content_container.currentItem = selectedIndex
+        main_content_container.adapter = fragmentAdapter
     }
 
     private fun setupBottomNavigation(savedInstanceState: Bundle?) {
@@ -61,14 +64,22 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector {
         }
     }
 
-    private fun setupFragmentAdapter() {
-        val fragmentAdapter = FragmentAdapter(supportFragmentManager)
-        fragmentAdapter.apply {
-            addFragment(ExpenseOverviewFragment.newInstance())
-            addFragment(ShoppingItemOverviewFragment.newInstance())
-            addFragment(PlaceholderFragment())
+    private fun handleBottomNavigationClicked(menuItem: MenuItem) {
+        val selectedIndex = when (menuItem.itemId) {
+            R.id.tab_expenses -> 0
+            R.id.tab_shopping_items -> 1
+            else -> 2
         }
-        main_content_container.adapter = fragmentAdapter
+        main_content_container.currentItem = selectedIndex
+        handleFragmentChange(selectedIndex)
+    }
+
+    private fun handleFragmentChange(selectedIndex: Int) {
+        fragmentAdapter.getItem(selectedIndex)
+                .takeIf { it is ToolbarProvider }
+                ?.apply {
+                    setSupportActionBar((this as ToolbarProvider).toolbar)
+                }
     }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> = fragmentDispatchingAndroidInjector
@@ -76,4 +87,8 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector {
     companion object {
         const val SELECTED_ID_KEY = "selectedId"
     }
+}
+
+interface ToolbarProvider {
+    val toolbar: Toolbar?
 }
