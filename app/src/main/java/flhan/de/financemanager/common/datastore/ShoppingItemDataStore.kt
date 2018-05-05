@@ -140,7 +140,7 @@ class ShoppingItemDataStoreImpl @Inject constructor(@HouseholdId private val hou
     private fun updateItem(item: ShoppingItem): Observable<Unit> {
         return Observable.create { emitter ->
             val itemRef = rootReference.child("$householdId/$SHOPPING_ITEMS/${item.id}")
-            val updateMap = mutableMapOf<String, Any?>(
+            val updateMap = mapOf<String, Any?>(
                     ShoppingItem.NAME to item.name,
                     ShoppingItem.CHECKED to item.isChecked,
                     ShoppingItem.CHECKED_AT to item.checkedAt
