@@ -6,24 +6,26 @@
     android:layout_height="match_parent"
     tools:context=".ui.main.shoppingitems.overview.ShoppingItemOverviewFragment">
 
-    <LinearLayout
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/shoppingItemsToolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/colorPrimary"
+            android:theme="@style/white_control_toolbar"
             app:title="@string/shopping_items_overview_title"
             app:titleTextColor="@android:color/white" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/shopping_item_overview_recycler"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </LinearLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/shopping_item_overview_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/shopping_item_overview_fab"
