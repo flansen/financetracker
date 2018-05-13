@@ -2,6 +2,7 @@ package flhan.de.financemanager.ui.login.createjoinhousehold.create
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.view.MenuItem
@@ -12,7 +13,10 @@ import butterknife.OnTextChanged
 import butterknife.OnTextChanged.Callback.AFTER_TEXT_CHANGED
 import flhan.de.financemanager.R
 import flhan.de.financemanager.base.BaseActivity
-import flhan.de.financemanager.common.extensions.*
+import flhan.de.financemanager.common.extensions.goUp
+import flhan.de.financemanager.common.extensions.stringByName
+import flhan.de.financemanager.common.extensions.toast
+import flhan.de.financemanager.common.extensions.visible
 import flhan.de.financemanager.ui.login.createjoinhousehold.CreateJoinErrorState
 import flhan.de.financemanager.ui.login.createjoinhousehold.ErrorType.*
 import flhan.de.financemanager.ui.main.MainActivity
@@ -105,7 +109,9 @@ class CreateHouseholdActivity : BaseActivity() {
             val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(it.windowToken, 0)
         }
-        start(MainActivity::class)
+        val intent = Intent(this, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
         finish()
     }
 }
