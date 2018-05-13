@@ -11,8 +11,10 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import flhan.de.financemanager.R
 
-class ShoppingItemOverviewAdapter(private val clickListener: (String) -> Unit,
-                                  private val checkedListener: (ShoppingOverviewItem) -> Unit) : RecyclerView.Adapter<ShoppingItemOverviewAdapter.ShoppingItemHolder>() {
+class ShoppingItemOverviewAdapter(
+        private val clickListener: (String) -> Unit,
+        private val checkedListener: (ShoppingOverviewItem.Data) -> Unit
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var items: List<ShoppingOverviewItem> = mutableListOf()
         set(value) {
@@ -24,14 +26,39 @@ class ShoppingItemOverviewAdapter(private val clickListener: (String) -> Unit,
         setHasStableIds(true)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ShoppingItemHolder(LayoutInflater.from(parent.context).inflate(R.layout.shopping_item_overview_item, parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(viewType, parent, false)
+        return when (viewType) {
+            R.layout.shopping_item_overview_item -> ShoppingItemHolder(view)
+            R.layout.shopping_item_overview_group -> ShoppingItemGroupHolder(view)
+            else -> {
+                throw IllegalArgumentException("No VeiwType for $viewType")
+            }
+        }
+    }
 
     override fun getItemCount() = items.count()
 
-    override fun onBindViewHolder(holder: ShoppingItemHolder, position: Int) = holder.bind(items[position], checkedListener)
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (holder) {
+            is ShoppingItemHolder -> holder.bind(items[position] as ShoppingOverviewItem.Data, checkedListener)
+            is ShoppingItemGroupHolder -> holder.bind(items[position] as ShoppingOverviewItem.Group)
+        }
+    }
 
     override fun getItemId(position: Int): Long {
-        return items[position].id.hashCode().toLong()
+        val item = items[position]
+        return when (item) {
+            is ShoppingOverviewItem.Data -> item.item.id.hashCode().toLong()
+            is ShoppingOverviewItem.Group -> item.name.hashCode().toLong()
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return when (items[position]) {
+            is ShoppingOverviewItem.Data -> R.layout.shopping_item_overview_item
+            is ShoppingOverviewItem.Group -> R.layout.shopping_item_overview_group
+        }
     }
 
     inner class ShoppingItemHolder(val view: View) : RecyclerView.ViewHolder(view) {
@@ -46,8 +73,8 @@ class ShoppingItemOverviewAdapter(private val clickListener: (String) -> Unit,
             ButterKnife.bind(this, view)
         }
 
-        fun bind(shoppingOverviewItem: ShoppingOverviewItem, checkedCallback: (ShoppingOverviewItem) -> Unit) {
-            with(shoppingOverviewItem) {
+        fun bind(item: ShoppingOverviewItem.Data, checkedCallback: (ShoppingOverviewItem.Data) -> Unit) {
+            with(item.item) {
                 nameTextView.text = name
                 checked.isChecked = done
                 itemView.setOnClickListener { clickListener(id) }
@@ -57,7 +84,21 @@ class ShoppingItemOverviewAdapter(private val clickListener: (String) -> Unit,
                     nameTextView.paintFlags = nameTextView.paintFlags and STRIKE_THRU_TEXT_FLAG.inv()
                 }
             }
-            checked.setOnClickListener { _ -> checkedCallback(shoppingOverviewItem) }
+            checked.setOnClickListener { _ -> checkedCallback(item) }
+        }
+    }
+
+    inner class ShoppingItemGroupHolder(val view: View) : RecyclerView.ViewHolder(view) {
+
+        @BindView(R.id.shopping_item_group_name)
+        lateinit var groupName: TextView
+
+        init {
+            ButterKnife.bind(this, view)
+        }
+
+        fun bind(item: ShoppingOverviewItem.Group) {
+            groupName.setText(item.name)
         }
     }
 }

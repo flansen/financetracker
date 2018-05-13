@@ -10,7 +10,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.EditorInfo.IME_ACTION_NEXT
 import android.widget.ArrayAdapter
 import android.widget.Filter
 import android.widget.TextView
@@ -40,10 +40,17 @@ class CreateEditShoppingItemActivity : BaseActivity() {
         ButterKnife.bind(this)
         viewModel = ViewModelProviders.of(this, factory).get(CreateEditShoppingItemViewModel::class.java)
         setSupportActionBar(toolbar)
-        supportActionBar?.apply {
+        supportActionBar?.run {
             title = if (id == null) getString(R.string.create_edit_shopping_item_create) else getString(R.string.create_edit_shopping_item_edit)
-            this.setDisplayHomeAsUpEnabled(true)
+            setDisplayHomeAsUpEnabled(true)
         }
+
+        val adapter = TagAdapter(this)
+
+        viewModel.tags.observe(this, Observer {
+            it ?: return@Observer
+            adapter.items = it
+        })
 
         viewModel.itemName.observe(this, Observer { name ->
             if (name != create_edit_shopping_item_text.text.toString()) {
@@ -66,40 +73,7 @@ class CreateEditShoppingItemActivity : BaseActivity() {
             }
         })
 
-        val adapter = TagAdapter(this)
-        viewModel.tags.observe(this, Observer {
-            it ?: return@Observer
-            adapter.items = it
-        })
-
-        create_edit_shopping_item_tag.run {
-            threshold = 1
-            setAdapter(adapter)
-            setOnEditorActionListener { _, actionId, event ->
-                return@setOnEditorActionListener if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                    create_edit_shopping_item_text.requestFocus()
-                    true
-                } else {
-                    false
-                }
-            }
-
-            setOnFocusChangeListener { _, hasFocus ->
-                if (hasFocus && !isPopupShowing && !adapter.isEmpty) {
-                    showDropDown()
-                }
-            }
-            setOnClickListener {
-                if (!isPopupShowing && !adapter.isEmpty)
-                    showDropDown()
-            }
-            setOnItemClickListener { parent, _, position, _ ->
-                val item = parent.getItemAtPosition(position) as TagItem
-                setText(item.name)
-                viewModel.selectedTag.value = item.name
-                create_edit_shopping_item_text.requestFocus()
-            }
-        }
+        configeTagInput(adapter)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -119,6 +93,44 @@ class CreateEditShoppingItemActivity : BaseActivity() {
     @OnTextChanged(R.id.create_edit_shopping_item_text, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
     fun onCauseChanged(cause: Editable) {
         viewModel.itemName.value = cause.toString()
+    }
+
+    @OnTextChanged(R.id.create_edit_shopping_item_tag, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
+    fun onTagChanged(tag: Editable) {
+        viewModel.selectedTag.value = tag.toString()
+    }
+
+    private fun configeTagInput(adapter: TagAdapter) {
+        create_edit_shopping_item_tag.run {
+            threshold = 1
+            setAdapter(adapter)
+            setOnEditorActionListener { _, actionId, event ->
+                return@setOnEditorActionListener if (actionId == IME_ACTION_NEXT) {
+                    create_edit_shopping_item_text.requestFocus()
+                    true
+                } else {
+                    false
+                }
+            }
+
+            setOnFocusChangeListener { _, hasFocus ->
+                if (hasFocus && !isPopupShowing && !adapter.isEmpty) {
+                    showDropDown()
+                }
+            }
+
+            setOnClickListener {
+                if (!isPopupShowing && !adapter.isEmpty)
+                    showDropDown()
+            }
+
+            setOnItemClickListener { parent, _, position, _ ->
+                val item = parent.getItemAtPosition(position) as TagItem
+                setText(item.name)
+                viewModel.selectedTag.value = item.name
+                create_edit_shopping_item_text.requestFocus()
+            }
+        }
     }
 
     companion object {

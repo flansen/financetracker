@@ -42,7 +42,6 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector {
         fragmentAdapter.apply {
             addFragment(ExpenseOverviewFragment.newInstance())
             addFragment(ShoppingItemOverviewFragment.newInstance())
-            addFragment(PlaceholderFragment())
         }
         main_content_container.adapter = fragmentAdapter
     }

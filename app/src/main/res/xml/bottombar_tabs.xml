@@ -8,8 +8,4 @@
         android:icon="@drawable/ic_note_black"
         android:id="@+id/tab_shopping_items"
         android:title="@string/tab_shopping_items" />
-    <item
-        android:icon="@drawable/ic_attach_money_black"
-        android:id="@+id/tab_cash_disbursements"
-        android:title="@string/tab_cash_disbursements" />
 </menu>

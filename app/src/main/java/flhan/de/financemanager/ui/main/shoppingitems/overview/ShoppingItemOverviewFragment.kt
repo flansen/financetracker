@@ -15,7 +15,6 @@ import butterknife.ButterKnife
 import butterknife.OnClick
 import dagger.android.support.AndroidSupportInjection
 import flhan.de.financemanager.R
-import flhan.de.financemanager.common.ui.LineListDivider
 import flhan.de.financemanager.ui.main.ToolbarProvider
 import flhan.de.financemanager.ui.main.shoppingitems.createedit.CreateEditShoppingItemActivity
 import kotlinx.android.synthetic.main.fragment_shopping_item_overview.*
@@ -50,18 +49,18 @@ class ShoppingItemOverviewFragment : Fragment(), ToolbarProvider {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val adapter = ShoppingItemOverviewAdapter(this::presentCreateEdit, checkedListener = { item ->
+        val recyclerAdapter = ShoppingItemOverviewAdapter(this::presentCreateEdit, checkedListener = { item ->
             viewModel.onItemChecked(item)
         })
+
         shopping_item_overview_recycler.apply {
             layoutManager = LinearLayoutManager(context, VERTICAL, false)
-            addItemDecoration(LineListDivider(view.context))
-            this.adapter = adapter
+            adapter = recyclerAdapter
         }
 
         viewModel.listItems.observe(this, Observer { items ->
             items ?: return@Observer
-            adapter.items = items
+            recyclerAdapter.items = items
         })
     }
 

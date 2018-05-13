@@ -13,7 +13,7 @@ import javax.inject.Inject
  */
 interface ShoppingItemOverviewInteractor {
     fun fetchActiveItems(): Observable<InteractorResult<List<ShoppingItem>>>
-    fun itemCheckedChanged(item: ShoppingOverviewItem): Observable<Unit>
+    fun itemCheckedChanged(item: ShoppingOverviewItemData): Observable<Unit>
 }
 
 class ShoppingItemOverviewInteractorImpl @Inject constructor(
@@ -35,16 +35,22 @@ class ShoppingItemOverviewInteractorImpl @Inject constructor(
                     dataStore.removeItems(filteredList)
                 }
                 .map {
-                    InteractorResult(InteractorStatus.Success, it.filter {
-                        !it.isChecked ||
-                                it.isChecked && it.checkedAt?.after(minDate) ?: false
-                    })
+                    val filteredAndSortedItems = it.filter { item ->
+                        !item.isChecked || item.isChecked && item.checkedAt?.after(minDate) ?: false
+                    }
+                            .reversed()
+                            .sortedWith(compareBy<ShoppingItem> { it.isChecked }.thenByDescending { it.createdAt })
+
+                    return@map filteredAndSortedItems
+                }
+                .map {
+                    InteractorResult(InteractorStatus.Success, it)
                 }
                 .replay(1)
                 .refCount()
     }
 
-    override fun itemCheckedChanged(item: ShoppingOverviewItem): Observable<Unit> {
+    override fun itemCheckedChanged(item: ShoppingOverviewItemData): Observable<Unit> {
         val shoppingItem = item.toModel()
         shoppingItem.checkedAt = if (shoppingItem.isChecked && shoppingItem.checkedAt == null) {
             Date()
@@ -55,6 +61,6 @@ class ShoppingItemOverviewInteractorImpl @Inject constructor(
     }
 }
 
-private fun ShoppingOverviewItem.toModel(): ShoppingItem {
+private fun ShoppingOverviewItemData.toModel(): ShoppingItem {
     return ShoppingItem(name, creatorId, null, tag, done, id, checkedAt)
 }
