@@ -9,6 +9,7 @@ import flhan.de.financemanager.common.CreateEditMode
 import flhan.de.financemanager.common.CreateEditMode.Create
 import flhan.de.financemanager.common.CreateEditMode.Edit
 import flhan.de.financemanager.common.data.ShoppingItem
+import flhan.de.financemanager.common.data.Tag
 import flhan.de.financemanager.common.extensions.cleanUp
 import flhan.de.financemanager.di.ShoppingItemId
 import io.reactivex.Observable
@@ -16,14 +17,17 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import java.util.*
 
-class CreateEditShoppingItemViewModel(private val interactor: CreateEditShoppingItemInteractor,
-                                      private val scheduler: SchedulerProvider,
-                                      @ShoppingItemId private val itemId: String?
+class CreateEditShoppingItemViewModel(
+        private val interactor: CreateEditShoppingItemInteractor,
+        private val scheduler: SchedulerProvider,
+        @ShoppingItemId private val itemId: String?
 ) : ViewModel() {
 
     val itemName = MutableLiveData<String>()
     val isLoading = MutableLiveData<Boolean>()
     val mode = MutableLiveData<CreateEditMode>()
+    val tags = MutableLiveData<List<TagItem>>()
+    val selectedTag = MutableLiveData<String>()
 
     private var item: ShoppingItem? = null
     private val disposables = CompositeDisposable()
@@ -57,11 +61,19 @@ class CreateEditShoppingItemViewModel(private val interactor: CreateEditShopping
         itemObservable
                 .filter { it.status == Success }
                 .subscribe { fetchResult ->
-                    if (fetchResult.status == Success && fetchResult.result != null) {
-                        item = fetchResult.result
-                        itemName.value = item!!.name
+                    item = fetchResult.result
+                    item?.run {
+                        itemName.value = name
+                        selectedTag.value = tag
                     }
-                    // TODO: Handle Error
+                }
+                .addTo(disposables)
+
+        interactor.getTags()
+                .subscribe {
+                    it.result?.run {
+                        tags.value = sortedWith(compareByDescending { it.numberOfOccurence }).map { it.toItem() }
+                    }
                 }
                 .addTo(disposables)
     }
@@ -75,8 +87,9 @@ class CreateEditShoppingItemViewModel(private val interactor: CreateEditShopping
         val itemName = itemName.value ?: return
         val item = item ?: return
         item.apply {
-            name = itemName
+            name = itemName.trim()
             createdAt = createdAt ?: Date()
+            tag = selectedTag.value
         }
 
         interactor.save(item)
@@ -98,3 +111,4 @@ class CreateEditShoppingItemViewModel(private val interactor: CreateEditShopping
 
 }
 
+private fun Tag.toItem() = TagItem(name, id)

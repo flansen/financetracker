@@ -23,7 +23,6 @@ class UserDataStoreImpl @Inject constructor(
                 .refCount()
     }
 
-
     override fun loadUsers(): Observable<MutableList<User>> {
         return usersObservable
     }

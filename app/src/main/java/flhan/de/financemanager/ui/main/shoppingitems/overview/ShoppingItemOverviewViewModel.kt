@@ -15,19 +15,14 @@ class ShoppingItemOverviewViewModel(private val interactor: ShoppingItemOverview
     val listItems = MutableLiveData<List<ShoppingOverviewItem>>()
 
     private val disposables = CompositeDisposable()
-    private val minDate by lazy {
-        val calendar = Calendar.getInstance()
-        calendar.add(Calendar.DAY_OF_YEAR, -3)
-        calendar.time
-    }
+
 
     init {
-        interactor.fetchAll()
+        interactor.fetchActiveItems()
                 .filter { it.status == InteractorStatus.Success }
                 .map { it.result ?: mutableListOf() }
                 .map { items ->
-                    val filteredList = items.filter { !it.isChecked || it.isChecked && it.checkedAt?.after(minDate) ?: false }
-                    filteredList.map { it.toOverviewItem() }
+                    items.map { it.toOverviewItem() }
                             .reversed()
                             .sortedWith(compareBy<ShoppingOverviewItem> { it.done }.thenByDescending { it.createdAt })
                 }
@@ -50,7 +45,14 @@ class ShoppingItemOverviewViewModel(private val interactor: ShoppingItemOverview
 }
 
 private fun ShoppingItem.toOverviewItem(): ShoppingOverviewItem {
-    return ShoppingOverviewItem(id, creatorId
-            ?: "", name, createdAt.toString(), isChecked, createdAt ?: Date(), checkedAt)
+    return ShoppingOverviewItem(id,
+            creatorId ?: "",
+            name,
+            createdAt.toString(),
+            isChecked,
+            createdAt ?: Date(),
+            checkedAt,
+            tag
+    )
 }
 

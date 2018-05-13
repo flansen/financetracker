@@ -12,18 +12,33 @@ import javax.inject.Inject
  * Created by Florian on 07.10.2017.
  */
 interface ShoppingItemOverviewInteractor {
-    fun fetchAll(): Observable<InteractorResult<List<ShoppingItem>>>
+    fun fetchActiveItems(): Observable<InteractorResult<List<ShoppingItem>>>
     fun itemCheckedChanged(item: ShoppingOverviewItem): Observable<Unit>
 }
 
-class ShoppingItemOverviewInteractorImpl @Inject constructor(private val dataStore: ShoppingItemDataStore
+class ShoppingItemOverviewInteractorImpl @Inject constructor(
+        private val dataStore: ShoppingItemDataStore
 ) : ShoppingItemOverviewInteractor {
 
-    override fun fetchAll(): Observable<InteractorResult<List<ShoppingItem>>> {
-        return dataStore
-                .loadShoppingItems()
-                .map { itemList ->
-                    InteractorResult(InteractorStatus.Success, itemList.toList())
+    private val minDate by lazy {
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.DAY_OF_YEAR, -1)
+        calendar.time
+    }
+
+    override fun fetchActiveItems(): Observable<InteractorResult<List<ShoppingItem>>> {
+        return dataStore.loadShoppingItems()
+                .doOnNext {
+                    val filteredList = it.filter {
+                        it.checkedAt?.before(minDate) ?: it.isChecked
+                    }
+                    dataStore.removeItems(filteredList)
+                }
+                .map {
+                    InteractorResult(InteractorStatus.Success, it.filter {
+                        !it.isChecked ||
+                                it.isChecked && it.checkedAt?.after(minDate) ?: false
+                    })
                 }
                 .replay(1)
                 .refCount()
@@ -41,5 +56,5 @@ class ShoppingItemOverviewInteractorImpl @Inject constructor(private val dataSto
 }
 
 private fun ShoppingOverviewItem.toModel(): ShoppingItem {
-    return ShoppingItem(name, creatorId, null, mutableListOf(), done, id, checkedAt)
+    return ShoppingItem(name, creatorId, null, tag, done, id, checkedAt)
 }

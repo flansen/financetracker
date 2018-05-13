@@ -39,4 +39,5 @@
     <string name="create_edit_shopping_item_name_hint">Name</string>
     <string name="create_edit_shopping_item_create">Create Shopping Item</string>
     <string name="create_edit_shopping_item_edit">Edit Shopping Item</string>
+    <string name="tag">Tag</string>
 </resources>

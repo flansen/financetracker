@@ -40,4 +40,5 @@
     <string name="create_edit_shopping_item_name_hint">Name</string>
     <string name="create_edit_shopping_item_create">Gegenstand hinzufügen</string>
     <string name="create_edit_shopping_item_edit">Gegenstand editieren</string>
+    <string name="tag">Tag</string>
 </resources>
