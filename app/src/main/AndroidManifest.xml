@@ -46,7 +46,9 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".ui.main.shoppingitems.createedit.CreateEditShoppingItemActivity" />
+        <activity
+            android:name=".ui.main.shoppingitems.createedit.CreateEditShoppingItemActivity"
+            android:configChanges="orientation|keyboard|keyboardHidden" />
     </application>
 
 </manifest>
