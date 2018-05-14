@@ -36,7 +36,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/tag"
-                android:imeOptions="actionNext"
+                android:imeOptions="actionNext|flagNoExtractUi"
                 android:inputType="text"
                 android:maxLines="1"
                 android:singleLine="true" />
