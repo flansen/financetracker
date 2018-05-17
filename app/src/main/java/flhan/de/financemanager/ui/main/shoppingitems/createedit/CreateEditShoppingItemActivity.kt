@@ -20,6 +20,9 @@ import butterknife.OnTextChanged
 import flhan.de.financemanager.R
 import flhan.de.financemanager.base.BaseActivity
 import flhan.de.financemanager.base.IntentDelegate
+import flhan.de.financemanager.common.extensions.visible
+import kotlinx.android.synthetic.main.activity_create_edit_shopping_item.*
+import kotlinx.android.synthetic.main.toolbar.*
 import javax.inject.Inject
 
 class CreateEditShoppingItemActivity : BaseActivity() {
