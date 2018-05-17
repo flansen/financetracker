@@ -20,9 +20,6 @@ import butterknife.OnTextChanged
 import flhan.de.financemanager.R
 import flhan.de.financemanager.base.BaseActivity
 import flhan.de.financemanager.base.IntentDelegate
-import flhan.de.financemanager.common.extensions.visible
-import kotlinx.android.synthetic.main.activity_create_edit_shopping_item.*
-import kotlinx.android.synthetic.main.toolbar.*
 import javax.inject.Inject
 
 class CreateEditShoppingItemActivity : BaseActivity() {
@@ -188,7 +185,7 @@ class CreateEditShoppingItemActivity : BaseActivity() {
                         items
                     } else {
                         val normalizedConstraint = constraint.toString().trim().toLowerCase()
-                        items.filter { it.name.toLowerCase().contains(normalizedConstraint) }
+                        items.filter { it.name.toLowerCase().contains(normalizedConstraint) }.take(5)
                     }
                     result.values = filteredItems
                     result.count = filteredItems.size
