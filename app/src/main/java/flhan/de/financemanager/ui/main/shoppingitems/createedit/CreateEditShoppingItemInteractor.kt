@@ -14,7 +14,7 @@ import javax.inject.Inject
 interface CreateEditShoppingItemInteractor {
     fun save(item: ShoppingItem): Observable<InteractorResult<Unit>>
     fun findById(itemId: String): Observable<InteractorResult<ShoppingItem>>
-    fun getTags(): Observable<InteractorResult<MutableList<Tag>>>
+    fun getTags(): Observable<InteractorResult<List<Tag>>>
 }
 
 class CreateEditShoppingItemInteractorImpl @Inject constructor(private val dataStore: ShoppingItemDataStore) : CreateEditShoppingItemInteractor {
@@ -40,9 +40,10 @@ class CreateEditShoppingItemInteractorImpl @Inject constructor(private val dataS
                 .onErrorResumeNext { error: Throwable -> Observable.just(InteractorResult<Unit>(InteractorStatus.Error, null, error)) }
     }
 
-    override fun getTags(): Observable<InteractorResult<MutableList<Tag>>> {
+    override fun getTags(): Observable<InteractorResult<List<Tag>>> {
         return dataStore
                 .tags
+                .map { it.filter { !it.name.isEmpty() } }
                 .map {
                     InteractorResult(InteractorStatus.Success, it)
                 }

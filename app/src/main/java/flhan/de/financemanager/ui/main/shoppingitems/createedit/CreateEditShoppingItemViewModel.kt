@@ -85,11 +85,16 @@ class CreateEditShoppingItemViewModel(
 
     fun save(success: () -> Unit) {
         val itemName = itemName.value ?: return
+        val normalizedTag = if (selectedTag.value.isNullOrEmpty()) {
+            null
+        } else {
+            selectedTag.value
+        }
         val item = item ?: return
         item.apply {
             name = itemName.trim()
             createdAt = createdAt ?: Date()
-            tag = selectedTag.value
+            tag = normalizedTag
         }
 
         interactor.save(item)
