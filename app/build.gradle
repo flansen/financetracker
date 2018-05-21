@@ -16,8 +16,8 @@ android {
         applicationId "flhan.de.financemanager"
         minSdkVersion toolVersions.minSdk
         targetSdkVersion toolVersions.compileSdk
-        versionCode 18
-        versionName "0.1.18"
+        versionCode 19
+        versionName "0.1.19"
     }
     buildTypes {
         release {
