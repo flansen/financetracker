@@ -22,14 +22,13 @@ class LauncherActivity : BaseActivity() {
         viewModel = ViewModelProviders.of(this, factory).get(LauncherViewModel::class.java)
 
         viewModel.showLogin.observe(this, Observer { presentLogin ->
-            presentLogin?.apply {
-                if (presentLogin) {
-                    start(LoginActivity::class)
-                } else {
-                    start(MainActivity::class)
-                }
-                finish()
+            presentLogin ?: return@Observer
+            if (presentLogin) {
+                start(LoginActivity::class)
+            } else {
+                start(MainActivity::class)
             }
+            finish()
         })
     }
 }

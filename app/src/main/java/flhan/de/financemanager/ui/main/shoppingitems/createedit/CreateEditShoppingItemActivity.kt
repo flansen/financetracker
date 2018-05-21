@@ -188,7 +188,7 @@ class CreateEditShoppingItemActivity : BaseActivity() {
                         items
                     } else {
                         val normalizedConstraint = constraint.toString().trim().toLowerCase()
-                        items.filter { it.name.toLowerCase().contains(normalizedConstraint) }
+                        items.filter { it.name.toLowerCase().contains(normalizedConstraint) }.take(5)
                     }
                     result.values = filteredItems
                     result.count = filteredItems.size

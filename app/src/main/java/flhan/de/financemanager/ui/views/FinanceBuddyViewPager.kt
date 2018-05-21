@@ -6,10 +6,10 @@ import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.MotionEvent
 
-class FinanceBuddyViewPager : ViewPager {
-
-    constructor(context: Context) : this(context, null)
-    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
+class FinanceBuddyViewPager @JvmOverloads constructor(
+        context: Context,
+        attrs: AttributeSet? = null
+) : ViewPager(context, attrs) {
 
     var isPagingEnabled: Boolean = false
 
