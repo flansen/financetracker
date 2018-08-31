@@ -6,16 +6,15 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.EditorInfo.IME_ACTION_NEXT
 import android.widget.ArrayAdapter
 import android.widget.Filter
 import android.widget.TextView
 import butterknife.ButterKnife
 import butterknife.OnClick
+import butterknife.OnEditorAction
 import butterknife.OnTextChanged
 import flhan.de.financemanager.R
 import flhan.de.financemanager.base.BaseActivity
@@ -73,6 +72,11 @@ class CreateEditShoppingItemActivity : BaseActivity() {
             }
         })
 
+        viewModel.shouldClose.observe(this, Observer {
+            it ?: return@Observer
+            finish()
+        })
+
         configeTagInput(adapter)
     }
 
@@ -87,7 +91,7 @@ class CreateEditShoppingItemActivity : BaseActivity() {
 
     @OnClick(R.id.create_edit_shopping_item_save)
     fun onSaveClicked() {
-        viewModel.save { finish() }
+        viewModel.save()
     }
 
     @OnTextChanged(R.id.create_edit_shopping_item_text, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
@@ -98,6 +102,14 @@ class CreateEditShoppingItemActivity : BaseActivity() {
     @OnTextChanged(R.id.create_edit_shopping_item_tag, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
     fun onTagChanged(tag: Editable) {
         viewModel.selectedTag.value = tag.toString()
+    }
+
+    @OnEditorAction(R.id.create_edit_shopping_item_text)
+    fun onTextEditorAction(actionId: Int, keyEvent: KeyEvent?): Boolean {
+        return if (actionId == EditorInfo.IME_ACTION_DONE) {
+            viewModel.save()
+            true
+        } else false
     }
 
     private fun configeTagInput(adapter: TagAdapter) {

@@ -28,6 +28,7 @@ class CreateEditShoppingItemViewModel(
     val mode = MutableLiveData<CreateEditMode>()
     val tags = MutableLiveData<List<TagItem>>()
     val selectedTag = MutableLiveData<String>()
+    val shouldClose = MutableLiveData<Unit>()
 
     private var item: ShoppingItem? = null
     private val disposables = CompositeDisposable()
@@ -83,7 +84,7 @@ class CreateEditShoppingItemViewModel(
         super.onCleared()
     }
 
-    fun save(success: () -> Unit) {
+    fun save() {
         val itemName = itemName.value ?: return
         val normalizedTag = if (selectedTag.value.isNullOrEmpty()) {
             null
@@ -103,7 +104,12 @@ class CreateEditShoppingItemViewModel(
                 .subscribe { result ->
                     isLoading.value = result.status == Loading
                     if (result.status == Success) {
-                        success()
+                        if (mode.value == Edit) {
+                            shouldClose.value = Unit
+                        } else {
+                            this.item = ShoppingItem()
+                            this.itemName.value = ""
+                        }
                     } else if (result.status == Error) {
                         handleError(result.exception!!)
                     }
